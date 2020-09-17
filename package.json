@@ -1,0 +1,91 @@
+{
+   "name": "@muzikanto/apollo-form",
+   "version": "1.0.0",
+   "description": "Form state manager",
+   "license": "MIT",
+   "maintainers": [
+      {
+         "name": "Maxim Schiriy"
+      }
+   ],
+   "main": "./index.js",
+   "typings": "./index.d.ts",
+   "homepage": "https://muzikanto.github.io/apollo-form",
+   "keywords": [
+      "react",
+      "apollo",
+      "form",
+      "state-manager",
+      "optimize renders"
+   ],
+   "repository": {
+      "url": "https://github.com/Muzikanto/apollo-form"
+   },
+   "bugs": {
+      "url": "https://github.com/Muzikanto/apollo-form/issues"
+   },
+   "scripts": {
+      "start": "start-storybook -p 5001",
+      "build:docs": "build-storybook -o docs",
+      "clean": "rm -rf *.ts && rm -rf *.tsx && rm -rf *.js && rm -rf formik",
+      "build": "tsc -b",
+      "linter": "tslint -c tslint.json 'src/**/*.ts' --fix",
+      "prepublish": "npm run build && npm run test",
+      "postpublish": "npm run clean",
+      "test": "jest",
+      "test:info": "jest --coverage",
+      "pretty": "pretty-quick --staged"
+   },
+   "husky": {
+      "hooks": {
+         "pre-commit": "npm run clean && npm run pretty",
+         "pre-push": "npm test",
+         "...": "..."
+      }
+   },
+   "jest": {
+      "preset": "ts-jest",
+      "testEnvironment": "node",
+      "verbose": true
+   },
+   "peerDependencies": {
+      "react": "16.12.0",
+      "react-dom": "16.12.0",
+      "@types/react": "16.9",
+      "@types/react-dom": "16.9",
+      "@types/yup": "0.26.33",
+      "@apollo/client": "^3.2.0",
+      "graphql": "^15.3.0"
+   },
+   "dependencies": {
+      "lodash": "^4.17.20"
+   },
+   "devDependencies": {
+      "@material-ui/core": "4.9.5",
+      "@storybook/addon-knobs": "5.1.11",
+      "@storybook/addons": "5.1.11",
+      "@storybook/react": "5.3.12",
+      "@types/jest": "25.1.4",
+      "@types/lodash": "^4.14.158",
+      "@types/node": "13.9.5",
+      "@types/react-dom": "16.9",
+      "@types/storybook__addon-knobs": "5.0.3",
+      "@types/storybook__react": "4.0.2",
+      "babel-loader": "8.0.6",
+      "babel-preset-react-app": "9.1.2",
+      "husky": "3.0.9",
+      "install-peers": "1.0.3",
+      "jest": "25.2.6",
+      "path": "0.12.7",
+      "prettier": "1.18.2",
+      "pretty-quick": "1.11.1",
+      "react-docgen-typescript-loader": "3.7.0",
+      "storybook-dep-webpack-plugin": "1.0.3",
+      "ts-jest": "25.2.1",
+      "tslint": "5.20.1",
+      "typescript": "3.6",
+      "webpack": "4.41.5",
+      "webpack-cli": "3.3.9",
+      "yup": "0.28.4"
+   }
+}
