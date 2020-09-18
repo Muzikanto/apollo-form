@@ -38,7 +38,7 @@
    },
    "husky": {
       "hooks": {
-         "pre-commit": "npm run clean && npm run pretty",
+         "pre-commit": "npm run clean && npm run pretty && npm run build:docs",
          "pre-push": "npm test",
          "...": "..."
       }

@@ -252,3 +252,7 @@ export function Example() {
       </ApolloForm>
    );
 }
+
+export function anotherPage() {
+   return <div>another page</div>;
+}
