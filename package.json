@@ -1,6 +1,6 @@
 {
    "name": "apollo-form",
-   "version": "1.0.0",
+   "version": "1.0.1",
    "description": "Form state manager",
    "license": "MIT",
    "maintainers": [
@@ -10,7 +10,7 @@
    ],
    "main": "./index.js",
    "typings": "./index.d.ts",
-   "homepage": "https://muzikanto.github.io/apollo-form",
+   "homepage": "https://github.com/Muzikanto/apollo-form/wiki",
    "keywords": [
       "react",
       "apollo",

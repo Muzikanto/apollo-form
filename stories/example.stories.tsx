@@ -12,6 +12,7 @@ import FormConsumer from '../src/consumers/FormConsumer';
 import StateConsumer from '../src/consumers/StateConsumer';
 import FieldArray from '../src/field/FieldArray';
 import FormLoader from '../src/utils/FormLoader';
+import useFieldArray from '../src/hooks/useFieldArray';
 
 function wait(time: number) {
    return new Promise(resolve => {
@@ -124,7 +125,6 @@ export function Example() {
       <ApolloForm
          name='test'
          initialState={initialState}
-         enableReinitialize
          validationSchema={validationSchema}
          validate={({ values }) => {
             if (values.email === '12') {
@@ -144,6 +144,7 @@ export function Example() {
             });
          }}
          onChange={(state, form) => console.log('onChange: ', form.get().values)}
+         enableReinitialize
       >
          <Grid container spacing={2}>
             <Grid container item xs={12} spacing={2}>

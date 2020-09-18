@@ -1,9 +1,9 @@
 ## Apollo-form
 
-[![npm version](https://badge.fury.io/js/%40muzikanto%2Fapollo-form.svg)](https://badge.fury.io/js/%40muzikanto%2Fapollo-form)
-[![downloads](https://img.shields.io/npm/dm/@muzikanto/apollo-form.svg)](https://www.npmjs.com/package/@muzikanto/apollo-form)
-[![dependencies Status](https://david-dm.org/muzikanto/apollo-form/status.svg)](https://david-dm.org/muzikanto/apollo-form)
-[![size](https://img.shields.io/bundlephobia/minzip/@muzikanto/apollo-form)](https://bundlephobia.com/result?p=@muzikanto/apollo-form)
+[![npm version](https://badge.fury.io/js/apollo-form.svg)](https://badge.fury.io/js/apollo-form)
+[![downloads](https://img.shields.io/npm/dm/apollo-form.svg)](https://www.npmjs.com/package/apollo-form)
+[![dependencies Status](https://david-dm.org/apollo-form/status.svg)](https://david-dm.org/apollo-form)
+[![size](https://img.shields.io/bundlephobia/minzip/apollo-form)](https://bundlephobia.com/result?p=apollo-form)
 ![Code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
 
 <!-- TOC -->
