@@ -34,11 +34,11 @@ yarn add apollo-form
 
 ## Links
 
-[demo](https://muzikanto.github.io/apollo-form)
+View [demo](https://muzikanto.github.io/apollo-form)
 
-[example code](examples/example.stories.tsx)
+Show [example code](examples/example.stories.tsx)
 
-[docs](https://github.com/Muzikanto/apollo-form/wiki)
+Learn [docs for use this package](https://github.com/Muzikanto/apollo-form/wiki)
 
 # Api
 
@@ -219,6 +219,27 @@ function FormError(props: { name: string; ignoreTouched?: boolean }) {
 function CustomLoader() {
    return (
       <FormLoader children={({ loading }) => <span>{loading ? 'loading...' : 'loaded'}</span>} />
+   );
+}
+```
+
+### create query
+
+```typescript jsx
+const myFormQuery = makeApolloFormQuery('my-form');
+
+function useMyFormState() {
+    return useQuery(myFormQuery);
+}
+
+function Form() {
+   return (
+      <ApolloForm
+         name='my-form'
+         ...
+      >
+         ...
+      </ApolloForm>
    );
 }
 ```
