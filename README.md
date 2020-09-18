@@ -36,7 +36,7 @@ yarn add apollo-form
 
 [demo](https://muzikanto.github.io/apollo-form)
 
-[example code](./stories/example.stories.tsx)
+[example code](examples/example.stories.tsx)
 
 [docs](https://github.com/Muzikanto/apollo-form/wiki)
 
