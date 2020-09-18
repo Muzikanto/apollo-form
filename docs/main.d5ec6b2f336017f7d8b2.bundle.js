@@ -57,7 +57,7 @@
             }.call(this, __webpack_require__(152)(module));
       },
       755: function(module, exports, __webpack_require__) {
-         var map = { './example.stories.tsx': 761, './test.stories.tsx': 759 };
+         var map = { './example.stories.tsx': 760 };
          function webpackContext(req) {
             var id = webpackContextResolve(req);
             return __webpack_require__(id);
@@ -76,26 +76,7 @@
             (module.exports = webpackContext),
             (webpackContext.id = 755);
       },
-      759: function(module, __webpack_exports__, __webpack_require__) {
-         'use strict';
-         __webpack_require__.r(__webpack_exports__),
-            __webpack_require__.d(__webpack_exports__, 'anotherPage', function() {
-               return anotherPage;
-            });
-         var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0),
-            react__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(
-               react__WEBPACK_IMPORTED_MODULE_0__,
-            );
-         function anotherPage() {
-            return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(
-               'div',
-               null,
-               'another page',
-            );
-         }
-         __webpack_exports__.default = { title: 'Components' };
-      },
-      761: function(module, __webpack_exports__, __webpack_require__) {
+      760: function(module, __webpack_exports__, __webpack_require__) {
          'use strict';
          __webpack_require__.r(__webpack_exports__);
          var regenerator = __webpack_require__(262),
@@ -848,11 +829,11 @@
                );
             },
             es = (__webpack_require__(119), __webpack_require__(93)),
-            TextField = __webpack_require__(800),
-            Grid = __webpack_require__(798),
-            Box = __webpack_require__(802),
-            Button = __webpack_require__(803),
-            Divider = __webpack_require__(799);
+            TextField = __webpack_require__(799),
+            Grid = __webpack_require__(797),
+            Box = __webpack_require__(801),
+            Button = __webpack_require__(802),
+            Divider = __webpack_require__(798);
          function wait(time) {
             return new Promise(function(resolve) {
                setTimeout(resolve, time);
@@ -860,7 +841,10 @@
          }
          __webpack_require__.d(__webpack_exports__, 'Example', function() {
             return Example;
-         });
+         }),
+            __webpack_require__.d(__webpack_exports__, 'anotherPage', function() {
+               return anotherPage;
+            });
          __webpack_exports__.default = { title: 'Components' };
          var validationSchema = es.b().shape({
             email: es
@@ -1224,8 +1208,11 @@
                ),
             );
          }
+         function anotherPage() {
+            return react.createElement('div', null, 'another page');
+         }
       },
    },
    [[403, 1, 2]],
 ]);
-//# sourceMappingURL=main.61e3e29d4af3f47f824c.bundle.js.map
+//# sourceMappingURL=main.d5ec6b2f336017f7d8b2.bundle.js.map

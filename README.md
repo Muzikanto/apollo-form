@@ -177,7 +177,7 @@ function FormTextFieldArray(props: { name: string; validate: FieldValidator<stri
 }
 ```
 
-## create submit button
+### create submit button
 
 ```typescript jsx
 function FormSubmit() {
@@ -193,7 +193,7 @@ function FormSubmit() {
 }
 ```
 
-## show error message
+### show error message
 
 ```typescript jsx
 function FormError(props: { name: string; ignoreTouched?: boolean }) {
@@ -211,7 +211,7 @@ function FormError(props: { name: string; ignoreTouched?: boolean }) {
 }
 ```
 
-## show loader
+### show loader
 
 ```typescript jsx
 function CustomLoader() {
