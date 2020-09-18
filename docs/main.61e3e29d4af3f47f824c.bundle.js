@@ -57,7 +57,7 @@
             }.call(this, __webpack_require__(152)(module));
       },
       755: function(module, exports, __webpack_require__) {
-         var map = { './example.stories.tsx': 760 };
+         var map = { './example.stories.tsx': 761, './test.stories.tsx': 759 };
          function webpackContext(req) {
             var id = webpackContextResolve(req);
             return __webpack_require__(id);
@@ -76,7 +76,26 @@
             (module.exports = webpackContext),
             (webpackContext.id = 755);
       },
-      760: function(module, __webpack_exports__, __webpack_require__) {
+      759: function(module, __webpack_exports__, __webpack_require__) {
+         'use strict';
+         __webpack_require__.r(__webpack_exports__),
+            __webpack_require__.d(__webpack_exports__, 'anotherPage', function() {
+               return anotherPage;
+            });
+         var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0),
+            react__WEBPACK_IMPORTED_MODULE_0___default = __webpack_require__.n(
+               react__WEBPACK_IMPORTED_MODULE_0__,
+            );
+         function anotherPage() {
+            return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(
+               'div',
+               null,
+               'another page',
+            );
+         }
+         __webpack_exports__.default = { title: 'Components' };
+      },
+      761: function(module, __webpack_exports__, __webpack_require__) {
          'use strict';
          __webpack_require__.r(__webpack_exports__);
          var regenerator = __webpack_require__(262),
@@ -494,13 +513,7 @@
                            customValidators: this.customValidators,
                         }),
                      )),
-                     this.set(
-                        Object(objectSpread2.a)({}, defaultState, {
-                           values: props.initialState,
-                           errors: this.initialErrors,
-                           touches: this.initialTouches,
-                        }),
-                     ),
+                     this.get(),
                      this.validate(this.validateOnMount);
                }
                return (
@@ -518,7 +531,18 @@
                         key: 'get',
                         value: function get() {
                            var data = this.apolloClient.readQuery({ query: this.query });
-                           return lodash_default.a.cloneDeep(data[this.name]);
+                           return (
+                              data ||
+                                 (this.set(
+                                    Object(objectSpread2.a)({}, defaultState, {
+                                       values: this.initialState,
+                                       errors: this.initialErrors,
+                                       touches: this.initialTouches,
+                                    }),
+                                 ),
+                                 (data = this.apolloClient.readQuery({ query: this.query }))),
+                              lodash_default.a.cloneDeep(data[this.name])
+                           );
                         },
                      },
                      {
@@ -824,11 +848,11 @@
                );
             },
             es = (__webpack_require__(119), __webpack_require__(93)),
-            TextField = __webpack_require__(799),
-            Grid = __webpack_require__(797),
-            Box = __webpack_require__(801),
-            Button = __webpack_require__(802),
-            Divider = __webpack_require__(798);
+            TextField = __webpack_require__(800),
+            Grid = __webpack_require__(798),
+            Box = __webpack_require__(802),
+            Button = __webpack_require__(803),
+            Divider = __webpack_require__(799);
          function wait(time) {
             return new Promise(function(resolve) {
                setTimeout(resolve, time);
@@ -1204,4 +1228,4 @@
    },
    [[403, 1, 2]],
 ]);
-//# sourceMappingURL=main.96066ea559e72cccfa14.bundle.js.map
+//# sourceMappingURL=main.61e3e29d4af3f47f824c.bundle.js.map
