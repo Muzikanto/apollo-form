@@ -32,11 +32,13 @@ npm i apollo-form
 yarn add apollo-form
 ```
 
-## Examples
+## Links
 
 [demo](https://muzikanto.github.io/apollo-form)
 
 [example code](./stories/example.stories.tsx)
+
+[docs](https://github.com/Muzikanto/apollo-form/wiki)
 
 ### create field
 
