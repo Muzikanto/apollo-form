@@ -196,12 +196,8 @@ class FormManager<S extends object> {
          customValidators: this.customValidators,
       });
 
-      this.set({
-         ...defaultState,
-         values: props.initialState,
-         errors: this.initialErrors,
-         touches: this.initialTouches,
-      });
+      // for set default
+      this.get();
 
       this.validate(this.validateOnMount);
    }
@@ -210,9 +206,22 @@ class FormManager<S extends object> {
       this.apolloClient.writeQuery({ query: this.query, data: { [this.name]: state } });
    }
    public get(): ApolloFormState<S> {
-      const data = this.apolloClient.readQuery<ApolloFormState<S>>({
+      let data = this.apolloClient.readQuery<ApolloFormState<S>>({
          query: this.query,
       }) as any;
+
+      if (!data) {
+         this.set({
+            ...defaultState,
+            values: this.initialState,
+            errors: this.initialErrors,
+            touches: this.initialTouches,
+         });
+
+         data = this.apolloClient.readQuery<ApolloFormState<S>>({
+            query: this.query,
+         }) as any;
+      }
 
       return _.cloneDeep(data[this.name]) as ApolloFormState<S>;
    }

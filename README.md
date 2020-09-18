@@ -48,7 +48,6 @@ function FormTextField(props: { name: string; validate?: FieldValidator<string>;
       <Field<string> name={props.name} validate={props.validate}>
          {({ field }) => {
             const err = Boolean(field.touched && field.error);
-            console.log('render ' + props.name);
 
             return (
                <TextField

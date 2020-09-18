@@ -12,7 +12,6 @@ import FormConsumer from '../src/consumers/FormConsumer';
 import StateConsumer from '../src/consumers/StateConsumer';
 import FieldArray from '../src/field/FieldArray';
 import FormLoader from '../src/utils/FormLoader';
-import useFieldArray from '../src/hooks/useFieldArray';
 
 function wait(time: number) {
    return new Promise(resolve => {
