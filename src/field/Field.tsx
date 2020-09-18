@@ -1,7 +1,6 @@
 import useField, { FieldParams, IUseFieldProps } from '../hooks/useField';
 import useApolloFormCtx from '../hooks/useApolloFormCtx';
 import FormManager from '../FormManager';
-import React from 'react';
 
 export interface FieldProps<Value, S extends object = {}> extends IUseFieldProps<Value> {
    children: (props: { field: FieldParams<Value>; form: FormManager<S> }) => JSX.Element;

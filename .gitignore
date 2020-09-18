@@ -2,3 +2,8 @@
 node_modules/
 coverage
 storybook-static
+consumers
+field
+hocs
+hooks
+utils

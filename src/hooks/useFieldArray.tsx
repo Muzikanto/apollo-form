@@ -1,4 +1,5 @@
-import useField, { FieldParams, FieldValidator } from './useField';
+import useField, { FieldParams } from './useField';
+import { FieldValidator } from '../types';
 
 export interface IUseFieldArrayProps<Value> {
    name: string;

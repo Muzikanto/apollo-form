@@ -17,16 +17,19 @@
 <!-- /TOC -->
 
 ## Introduction
--  rerender only change component
--  create form state and helpers
+
+-  partial render form
+-  easy create form
+-  form validation
 -  create form fields
+-  create form array fields
 
 ## Installation
 
 ```sh
-npm i @muzikanto/apollo-form
+npm i apollo-form
 # or
-yarn add @muzikanto/apollo-form
+yarn add apollo-form
 ```
 
 ## Examples
@@ -35,7 +38,33 @@ yarn add @muzikanto/apollo-form
 
 [example code](./stories/example.stories.tsx)
 
-### create api
+### create field
+
+```typescript jsx
+function FormTextField(props: { name: string; validate?: FieldValidator<string>; label: string }) {
+   return (
+      <Field<string> name={props.name} validate={props.validate}>
+         {({ field }) => {
+            const err = Boolean(field.touched && field.error);
+            console.log('render ' + props.name);
+
+            return (
+               <TextField
+                  value={field.value}
+                  onChange={e => field.setFieldValue(e.target.value)}
+                  onBlur={() => field.setFieldTouched(true)}
+                  helperText={err ? field.error : undefined}
+                  error={Boolean(field.touched && field.error)}
+                  label={props.label}
+               />
+            );
+         }}
+      </Field>
+   );
+}
+```
+
+### create Form
 
 ```typescript jsx
 interface State {
@@ -49,97 +78,144 @@ interface State {
 }
 
 const validationSchema = Yup.object().shape({
-   text: Yup.string()
+   email: Yup.string()
       .required()
       .max(5),
-   field: Yup.string()
-      .required()
-      .max(3),
+   deep: Yup.object().shape({
+      one: Yup.string()
+         .required()
+         .max(2),
+   }),
 });
 
-const form = createForm<FormState>({
-   validateOnMount: false,
-   initialState: {
-      text: '123',
-      field: '',
-      deep: { one: '1', two: '' },
-      arr: ['1', '2', '3'],
-   },
-   validationSchema,
-});
+const initialState = {
+   email: '1',
+   password: '',
+   deep: { one: '1' },
+   arr: ['', '2', '31'],
+};
 
-form.values.watch(state => console.log('values: ', state));
-```
-
-### create field
-
-```typescript jsx
-function FieldInput(props: { name: string }) {
-   const { value, error, touched, setFieldTouched, setFieldValue } = useField<string>({
-      name: props.name,
-      validate: v => {
-         if (false) {
-            return 'my custom error';
-         }
-      },
-   });
-
-   const touchedAndError = Boolean(touched && error);
-
+function Example() {
    return (
-      <>
-         <input
-            value={value}
-            onChange={e => setFieldValue(e.target.value)}
-            onBlur={() => setFieldTouched(true)}
+      <ApolloForm
+         name='test'
+         initialState={initialState}
+         enableReinitialize
+         validationSchema={validationSchema}
+         validate={({ values }) => {
+            if (values.email === '12') {
+               return {
+                  email: 'Not 12',
+               };
+            }
+
+            return undefined;
+         }}
+         onSubmit={async ({ values }, form) => {
+            await wait(1000);
+            console.log('submit', values);
+            form.reset({
+               ...values,
+               email: 'Reseted',
+            });
+         }}
+         onChange={(state, form) => console.log('onChange: ', form.get().values)}
+      >
+         <FormTextField
+            name='email'
+            validate={v => {
+               if (v.length === 1) {
+                  return 'custom error';
+               }
+
+               return undefined;
+            }}
          />
-         {touchedAndError && <span>{error}</span>}
-      </>
+         <FormTextField name='password' />
+         <FormTextField name='deep.one' />
+         <FormTextField name='arr.0' />
+      </ApolloForm>
    );
 }
 ```
 
-### Use
+### create array field
 
 ```typescript jsx
-function FormComponent() {
+function FormTextFieldArray(props: { name: string; validate: FieldValidator<string[]> }) {
    return (
-      <Form
-         form={form}
-         formId='form-id'
-         formProps={{}}
-         Confirm={({ open, onClose, onAccept }) => (
-            <Dialog open={open} onClose={onClose}>
-               <DialogContent>
-                  <Button
-                     onClick={() => {
-                        onClose();
-                        form.reset();
-                     }}
-                  >
-                     Reject
-                  </Button>
-                  <Button onClick={onAccept}>Accept</Button>
-               </DialogContent>
-            </Dialog>
+      <FieldArray<string> name={props.name} validate={props.validate}>
+         {({ field }) => {
+            return (
+               <>
+                  {field.value.map((el, i) => {
+                     return (
+                        <Grid item xs={3} key={'arr-field' + i}>
+                           <FormTextField
+                              key={'test' + i}
+                              name={props.name + '.' + i}
+                              label={props.name + '.' + i}
+                           />
+                        </Grid>
+                     );
+                  })}
+
+                  <Grid item xs={3}>
+                     <Box display='flex'>
+                        <Button onClick={() => field.push((field.value.length + 1).toString())}>
+                           push
+                        </Button>
+                        <Button onClick={() => field.pop()}>pop</Button>
+                     </Box>
+                  </Grid>
+               </>
+            );
+         }}
+      </FieldArray>
+   );
+}
+```
+
+## create submit button
+
+```typescript jsx
+function FormSubmit() {
+   return (
+      <Submit>
+         {({ isValid, isSubmitted, loading, existsChanges }) => (
+            <Button type='submit' disabled={loading || (isSubmitted ? !isValid : false)}>
+               Submit
+            </Button>
          )}
-      >
-         <FieldInput name='text' />
-         <FieldInput name='field' />
-         <FieldInput name='deep.one' />
+      </Submit>
+   );
+}
+```
 
-         <button onClick={() => form.reset()}>RESET</button>
-         <button onClick={() => form.validate()}>VALIDATE</button>
+## show error message
 
-         <Submit
-            component={({ onClick, disabled }) => (
-               <button onClick={onClick} disabled={disabled}>
-                  Submit
-               </button>
-            )}
-         />
-         <ErrorMessage name='field' component={props => <span {...props} />} />
-      </Form>
+```typescript jsx
+function FormError(props: { name: string; ignoreTouched?: boolean }) {
+   return (
+      <ErrorMessage
+         ignoreTouched={props.ignoreTouched}
+         name={props.name}
+         children={({ error }) => (
+            <span>
+               password-err: (<b style={{ color: 'red' }}>{error}</b>)
+            </span>
+         )}
+      />
+   );
+}
+```
+
+## show loader
+
+```typescript jsx
+function CustomLoader() {
+   return (
+      <FormLoader children={({ loading }) => <span>{loading ? 'loading...' : 'loaded'}</span>} />
    );
 }
 ```

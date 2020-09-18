@@ -235,7 +235,7 @@ class FormManager<S extends object> {
          });
 
          return unWatch;
-      }, [getValue]);
+      }, [getValue, state]);
 
       return state as P;
    }
@@ -406,6 +406,9 @@ class FormManager<S extends object> {
       this.changer.reset(state, getState);
 
       this.changer.validate(state, this.validateOnMount);
+
+      state.isSubmitted = false;
+      state.existsChanges = false;
 
       this.set(state);
    }

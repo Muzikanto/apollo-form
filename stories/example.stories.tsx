@@ -8,12 +8,10 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import ErrorMessage from '../src/utils/ErrorMessage';
 import Submit from '../src/utils/Submit';
-import FormConsumer from '../src/utils/FormConsumer';
-import StateConsumer from '../src/utils/StateConsumer';
+import FormConsumer from '../src/consumers/FormConsumer';
+import StateConsumer from '../src/consumers/StateConsumer';
 import FieldArray from '../src/field/FieldArray';
-import useApolloForm from '../src/hooks/useApolloForm';
-import useApolloFormCtx from '../src/hooks/useApolloFormCtx';
-import { ObservableQuery, useApolloClient } from '@apollo/client';
+import FormLoader from '../src/utils/FormLoader';
 
 function wait(time: number) {
    return new Promise(resolve => {
@@ -211,22 +209,18 @@ export function Example() {
                   </StateConsumer>
                </Grid>
                <Grid item xs={2}>
-                  <StateConsumer>
-                     {({ state: { loading } }) => <>{'Loading: ' + loading.toString()}</>}
-                  </StateConsumer>
+                  <FormLoader>{({ loading }) => <>{'Loading ' + loading.toString()}</>}</FormLoader>
                </Grid>
                <Grid item xs={2}>
-                  <StateConsumer>
-                     {({ state: { existsChanges } }) => (
+                  <StateConsumer selector={s => s.existsChanges}>
+                     {({ state: existsChanges }) => (
                         <>{'Exists changes: ' + existsChanges.toString()}</>
                      )}
                   </StateConsumer>
                </Grid>
                <Grid item xs={2}>
-                  <StateConsumer>
-                     {({ state: { isSubmitted } }) => (
-                        <>{'Is submitted: ' + isSubmitted.toString()}</>
-                     )}
+                  <StateConsumer selector={s => s.isSubmitted}>
+                     {({ state: isSubmitted }) => <>{'Is submitted: ' + isSubmitted.toString()}</>}
                   </StateConsumer>
                </Grid>
             </Grid>

@@ -1,7 +1,6 @@
 import useFieldArray, { FieldArrayParams, IUseFieldArrayProps } from '../hooks/useFieldArray';
 import FormManager from '../FormManager';
 import useApolloFormCtx from '../hooks/useApolloFormCtx';
-import React from 'react';
 
 export interface FieldArrayProps<Value, S extends object = {}> extends IUseFieldArrayProps<Value> {
    children: (props: { field: FieldArrayParams<Value>; form: FormManager<S> }) => JSX.Element;
