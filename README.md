@@ -10,7 +10,7 @@
 
 -  [Introduction](#introduction)
 -  [Installation](#installation)
--  [Examples](#examples)
+-  [Links](#links)
 -  [API](#api)
 -  [License](#license)
 
@@ -39,6 +39,8 @@ yarn add apollo-form
 [example code](examples/example.stories.tsx)
 
 [docs](https://github.com/Muzikanto/apollo-form/wiki)
+
+# Api
 
 ### create field
 
