@@ -17,7 +17,7 @@
 <!-- /TOC -->
 
 ## Introduction
-
+-  rerender only change component
 -  create form state and helpers
 -  create form fields
 

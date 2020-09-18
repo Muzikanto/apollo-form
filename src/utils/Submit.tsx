@@ -1,5 +1,5 @@
 import React from 'react';
-import useFormCtx from '../hooks/useFormCtx';
+import useApolloFormCtx from '../hooks/useApolloFormCtx';
 import _ from 'lodash';
 
 export interface SubmitComponentProps {
@@ -21,7 +21,7 @@ function Submit(props: SubmitProps) {
       throw new Error('Require component or children func');
    }
 
-   const apolloForm = useFormCtx();
+   const apolloForm = useApolloFormCtx();
    const state = apolloForm.get();
 
    const isValid = state.isValid;

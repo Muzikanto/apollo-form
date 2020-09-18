@@ -1,6 +1,6 @@
 import ApolloForm from './ApolloForm';
 import FormManager from './FormManager';
-import useFormCtx from './hooks/useFormCtx';
+import useApolloFormCtx from './hooks/useApolloFormCtx';
 import useField from './hooks/useField';
 import useFieldArray from './hooks/useFieldArray';
 import Field from './field/Field';
@@ -10,15 +10,22 @@ import withFieldArray from './hocs/withFieldArray';
 import ErrorMessage from './utils/ErrorMessage';
 import FormConsumer from './utils/FormConsumer';
 import FormLoader from './utils/FormLoader';
-import StateListener from './utils/StateListener';
+import StateConsumer from './utils/StateConsumer';
 import Submit from './utils/Submit';
-import useForm from './hooks/useForm';
+import useForm from './hooks/useApolloForm';
 import withForm from './hocs/withForm';
+import {
+   FormTouches,
+   ApolloFormState,
+   FormErrors,
+   FormManagerParams,
+   FieldValidator,
+} from './types';
 
 export {
    ApolloForm,
    FormManager,
-   useFormCtx,
+   useApolloFormCtx,
    useField,
    useFieldArray,
    Field,
@@ -27,9 +34,14 @@ export {
    withFieldArray,
    ErrorMessage,
    Submit,
-   StateListener,
+   StateConsumer,
    FormLoader,
    FormConsumer,
    useForm,
    withForm,
+   FormManagerParams,
+   FieldValidator,
+   FormErrors,
+   ApolloFormState,
+   FormTouches,
 };

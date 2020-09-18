@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { gql } from '@apollo/client';
 
 function objectDeepPairs(source: object) {
    const pairs = _.toPairs(source);
@@ -70,9 +71,15 @@ function setDeepStatus(state: any, path: string, value: any) {
 
    let current = state;
 
-   for (const key of arr.slice(0, -1)) {
+   for (let i = 0; i < arr.length - 1; i++) {
+      const key = arr[i];
+
       if (!current[key]) {
-         current[key] = {};
+         if (i === arr.length - 1) {
+            current[key] = {};
+         } else {
+            current[key] = [undefined, {}];
+         }
       }
 
       if (typeof current[key] === 'object') {
@@ -101,4 +108,8 @@ function setDeepStatus(state: any, path: string, value: any) {
    return state;
 }
 
-export { objectDeepPairs, getDeepStatus, setDeepStatus };
+function makeApolloFormQuery(name: string) {
+   return gql`query ApolloForm { ${name} @client }`;
+}
+
+export { objectDeepPairs, getDeepStatus, setDeepStatus, makeApolloFormQuery };

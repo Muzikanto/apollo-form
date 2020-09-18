@@ -1,7 +1,5 @@
 import React from 'react';
-import useFormCtx from '../hooks/useFormCtx';
-import _ from 'lodash';
-import { getDeepStatus } from '../utils';
+import useApolloFormCtx from '../hooks/useApolloFormCtx';
 
 export interface ErrorMessageProps<P extends { error: string | undefined }> {
    name: string;
@@ -11,13 +9,11 @@ export interface ErrorMessageProps<P extends { error: string | undefined }> {
 }
 
 function ErrorMessage<P extends { error: string | undefined }>(props: ErrorMessageProps<P>) {
-   const apolloForm = useFormCtx();
+   const apolloForm = useApolloFormCtx();
 
-   const { errors, touches } = apolloForm.useState();
+   const error = apolloForm.useError(props.name);
+   const touched = apolloForm.useTouched(props.name);
 
-   const error = getDeepStatus(_.cloneDeep(errors), props.name);
-   const touched = getDeepStatus(_.cloneDeep(touches), props.name);
-console.log({errors, touches})
    const Component = (props.children || (({ error }: any) => error)) as React.ComponentType<P>;
 
    // @ts-ignore

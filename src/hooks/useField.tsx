@@ -1,7 +1,6 @@
 import React from 'react';
-import useFormCtx from './useFormCtx';
-import _ from 'lodash';
-import { getDeepStatus } from '../utils';
+import useApolloFormCtx from './useApolloFormCtx';
+import { FieldValidator } from '../types';
 
 export interface FieldParams<Value> {
    value: Value;
@@ -13,21 +12,17 @@ export interface FieldParams<Value> {
    setFieldTouched: (touched: boolean) => void;
 }
 
-export type FieldValidator<Value> = (value: Value) => string | null | void;
-
 export interface IUseFieldProps<Value> {
    name: string;
    validate?: FieldValidator<Value>;
 }
 
 function useField<Value>(props: IUseFieldProps<Value>): FieldParams<Value> {
-   const apolloForm = useFormCtx();
+   const apolloForm = useApolloFormCtx();
 
-   const { values, errors, touches } = apolloForm.useState();
-
-   const value = _.get(values, props.name);
-   const error = getDeepStatus(_.cloneDeep(errors), props.name);
-   const touched = getDeepStatus(_.cloneDeep(touches), props.name);
+   const value = apolloForm.useValue(props.name);
+   const error = apolloForm.useError(props.name);
+   const touched = apolloForm.useTouched(props.name);
 
    const setFieldValue = React.useCallback(
       (v: Value) => {
@@ -44,7 +39,7 @@ function useField<Value>(props: IUseFieldProps<Value>): FieldParams<Value> {
    const setFieldTouched = React.useCallback(
       (v: boolean) => {
          apolloForm.setFieldTouched(props.name, v);
-         apolloForm.validateAt(props.name);
+         // apolloForm.validateAt(props.name);
       },
       [apolloForm],
    );

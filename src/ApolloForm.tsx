@@ -1,9 +1,8 @@
 import React from 'react';
-import { FormManagerParams } from './FormManager';
-import useForm from './hooks/useForm';
+import useForm, { IuseFormProps } from './hooks/useApolloForm';
 import FormContext from './FormContext';
 
-export type ApolloFormProps<S extends object> = Omit<FormManagerParams<S>, 'apolloClient'> & {
+export type ApolloFormProps<S extends object> = IuseFormProps<S> & {
    children: React.ReactNode;
 };
 

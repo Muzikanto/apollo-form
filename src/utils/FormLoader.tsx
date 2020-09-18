@@ -1,5 +1,5 @@
 import React from 'react';
-import useFormCtx from '../hooks/useFormCtx';
+import useApolloFormCtx from '../hooks/useApolloFormCtx';
 
 export interface FormLoaderComponentProps {
    loading: boolean;
@@ -12,10 +12,10 @@ export type FormLoaderProps = {
 function FormLoader(props: FormLoaderProps) {
    const Component = props.children;
 
-   const apolloForm = useFormCtx();
-   const state = apolloForm.useState();
+   const apolloForm = useApolloFormCtx();
+   const state = apolloForm.useState(s => s.loading);
 
-   return <Component loading={state.loading} />;
+   return <Component loading={state} />;
 }
 
 export default FormLoader;

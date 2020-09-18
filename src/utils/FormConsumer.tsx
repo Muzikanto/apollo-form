@@ -1,13 +1,13 @@
 import React from 'react';
 import FormManager from '../FormManager';
-import useFormCtx from '../hooks/useFormCtx';
+import useApolloFormCtx from '../hooks/useApolloFormCtx';
 
 export interface FormConsumerProps<S extends object> {
    children: React.ComponentType<{ form: FormManager<S> }>;
 }
 
 function FormConsumer<S extends object>({ children: Render }: FormConsumerProps<S>) {
-   const form = useFormCtx<S>();
+   const form = useApolloFormCtx<S>();
 
    return <Render form={form} />;
 }

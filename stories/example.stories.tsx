@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { ApolloForm, Field } from '../src';
+import { ApolloForm, Field, FieldValidator } from '../src';
 import * as Yup from 'yup';
 import TextField from '@material-ui/core/TextField';
-import { FieldValidator } from '../src/FormManager';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
@@ -10,8 +9,11 @@ import Divider from '@material-ui/core/Divider';
 import ErrorMessage from '../src/utils/ErrorMessage';
 import Submit from '../src/utils/Submit';
 import FormConsumer from '../src/utils/FormConsumer';
-import StateListener from '../src/utils/StateListener';
+import StateConsumer from '../src/utils/StateConsumer';
 import FieldArray from '../src/field/FieldArray';
+import useApolloForm from '../src/hooks/useApolloForm';
+import useApolloFormCtx from '../src/hooks/useApolloFormCtx';
+import { ObservableQuery, useApolloClient } from '@apollo/client';
 
 function wait(time: number) {
    return new Promise(resolve => {
@@ -52,7 +54,7 @@ function FormTextField(props: { name: string; validate?: FieldValidator<string>;
       <Field<string> name={props.name} validate={props.validate}>
          {({ field }) => {
             const err = Boolean(field.touched && field.error);
-            // console.log('render ' + props.name);
+            console.log('render ' + props.name);
 
             return (
                <TextField
@@ -103,15 +105,28 @@ function FormTextFieldArray(props: { name: string; validate: FieldValidator<stri
 }
 
 export function Example() {
+   const [initialState, setState] = React.useState({
+      email: '1',
+      password: '',
+      deep: { one: '1' },
+      arr: ['', '2', '31'],
+   });
+
+   // check enableReinitialize
+   // React.useEffect(() => {
+   //    const interval = setInterval(() => {
+   //       setState({ ...initialState, email: initialState.email + '1' });
+   //    }, 2000);
+   //
+   //    return () => clearInterval(interval);
+   // }, [setState, initialState]);
+   // console.log('render');
+
    return (
       <ApolloForm
          name='test'
-         initialState={{
-            email: '1',
-            password: '',
-            deep: { one: '1' },
-            arr: ['', '2', '31'],
-         }}
+         initialState={initialState}
+         enableReinitialize
          validationSchema={validationSchema}
          validate={({ values }) => {
             if (values.email === '12') {
@@ -191,24 +206,28 @@ export function Example() {
             </Grid>
             <Grid item xs={12} container spacing={2}>
                <Grid item xs={2}>
-                  <StateListener>
-                     {({ isValid }) => <>{'Is valid: ' + isValid.toString()}</>}
-                  </StateListener>
+                  <StateConsumer>
+                     {({ state: { isValid } }) => <>{'Is valid: ' + isValid.toString()}</>}
+                  </StateConsumer>
                </Grid>
                <Grid item xs={2}>
-                  <StateListener>
-                     {({ loading }) => <>{'Loading: ' + loading.toString()}</>}
-                  </StateListener>
+                  <StateConsumer>
+                     {({ state: { loading } }) => <>{'Loading: ' + loading.toString()}</>}
+                  </StateConsumer>
                </Grid>
                <Grid item xs={2}>
-                  <StateListener>
-                     {({ existsChanges }) => <>{'Exists changes: ' + existsChanges.toString()}</>}
-                  </StateListener>
+                  <StateConsumer>
+                     {({ state: { existsChanges } }) => (
+                        <>{'Exists changes: ' + existsChanges.toString()}</>
+                     )}
+                  </StateConsumer>
                </Grid>
                <Grid item xs={2}>
-                  <StateListener>
-                     {({ isSubmitted }) => <>{'Is submitted: ' + isSubmitted.toString()}</>}
-                  </StateListener>
+                  <StateConsumer>
+                     {({ state: { isSubmitted } }) => (
+                        <>{'Is submitted: ' + isSubmitted.toString()}</>
+                     )}
+                  </StateConsumer>
                </Grid>
             </Grid>
             <Grid item xs={12}>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { FormManagerParams } from '../FormManager';
-import useForm from '../hooks/useForm';
+import useForm from '../hooks/useApolloForm';
+import { FormManagerParams } from '../types';
 
 export type WithFormProps<S extends object> = Omit<FormManagerParams<S>, 'apolloClient'>;
 
