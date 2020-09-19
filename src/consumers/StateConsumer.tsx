@@ -2,16 +2,13 @@ import React from 'react';
 import useApolloFormCtx from '../hooks/useApolloFormCtx';
 import { ApolloFormState } from '../types';
 
-export interface StateListenerProps<S extends object, V = S> {
+export interface StateListenerProps<V> {
    children: React.ComponentType<{ state: V }>;
    selector?: (state: ApolloFormState<any>) => V;
 }
 
-function StateConsumer<S extends object, V = S>({
-   children: Render,
-   selector,
-}: StateListenerProps<S, V>) {
-   const apolloForm = useApolloFormCtx<S>();
+function StateConsumer<V = any>({ children: Render, selector }: StateListenerProps<V>) {
+   const apolloForm = useApolloFormCtx<any>();
    const state = apolloForm.useState<V>(selector);
 
    return <Render state={state} />;

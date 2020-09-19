@@ -21,8 +21,8 @@ function Submit(props: SubmitProps) {
       throw new Error('Require component or children func');
    }
 
-   const apolloForm = useApolloFormCtx();
-   const state = apolloForm.get();
+   const apolloForm = useApolloFormCtx<any>();
+   const state = apolloForm.useState();
 
    const isValid = state.isValid;
    const loading = state.loading;

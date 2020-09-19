@@ -4,9 +4,16 @@ import FormContext from './FormContext';
 
 export type ApolloFormProps<S extends object> = IuseFormProps<S> & {
    children: React.ReactNode;
+   style?: React.CSSProperties;
+   className?: string;
 };
 
-function ApolloForm<S extends object>({ children, ...params }: ApolloFormProps<S>) {
+function ApolloForm<S extends object>({
+   children,
+   className,
+   style,
+   ...params
+}: ApolloFormProps<S>) {
    const manager = useForm<S>(params);
 
    return (
@@ -18,6 +25,8 @@ function ApolloForm<S extends object>({ children, ...params }: ApolloFormProps<S
 
                manager.submit();
             }}
+            style={style}
+            className={className}
          >
             {children}
          </form>

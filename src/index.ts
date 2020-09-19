@@ -15,6 +15,7 @@ import Submit from './utils/Submit';
 import FormManager from './FormManager';
 import ApolloForm from './ApolloForm';
 import FormContext from './FormContext';
+import makeApolloFormQuery from './query';
 import {
    FormTouches,
    ApolloFormState,
@@ -41,6 +42,7 @@ export {
    useApolloForm,
    withForm,
    FormContext,
+   makeApolloFormQuery,
    FormManagerParams,
    FieldValidator,
    FormErrors,

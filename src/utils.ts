@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { gql } from '@apollo/client';
+import makeApolloFormQuery from './query';
 
 function objectDeepPairs(source: object) {
    const pairs = _.toPairs(source);
@@ -106,10 +106,6 @@ function setDeepStatus(state: any, path: string, value: any) {
    }
 
    return state;
-}
-
-function makeApolloFormQuery(name: string) {
-   return gql`query ApolloForm { ${name} @client }`;
 }
 
 export { objectDeepPairs, getDeepStatus, setDeepStatus, makeApolloFormQuery };

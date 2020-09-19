@@ -225,7 +225,7 @@ class FormManager<S extends object> {
 
       return _.cloneDeep(data[this.name]) as ApolloFormState<S>;
    }
-   public useState<P>(getValue?: (state: ApolloFormState<S>) => P): P {
+   public useState<P = ApolloFormState<S>>(getValue?: (state: ApolloFormState<S>) => P): P {
       const [state, setState] = React.useState(getValue ? getValue(this.get()) : this.get());
 
       React.useEffect(() => {

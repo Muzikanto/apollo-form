@@ -34,9 +34,11 @@ yarn add apollo-form
 
 ## Links
 
-View [demo](https://muzikanto.github.io/apollo-form)
+[Demo](https://muzikanto.github.io/apollo-form)
 
-Show [example code](examples/example.stories.tsx)
+[Demo sign in](https://muzikanto.github.io/apollo-form?path=/story/components--sign-in)
+
+Show [code examples](./examples)
 
 Learn [docs for use this package](https://github.com/Muzikanto/apollo-form/wiki)
 

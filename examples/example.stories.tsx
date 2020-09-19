@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApolloForm, Field, FieldValidator } from '../src';
+import { ApolloForm, ApolloFormState, Field, FieldValidator } from '../src';
 import * as Yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -12,12 +12,6 @@ import FormConsumer from '../src/consumers/FormConsumer';
 import StateConsumer from '../src/consumers/StateConsumer';
 import FieldArray from '../src/field/FieldArray';
 import FormLoader from '../src/utils/FormLoader';
-
-function wait(time: number) {
-   return new Promise(resolve => {
-      setTimeout(resolve, time);
-   });
-}
 
 export default {
    title: 'Components',
@@ -155,8 +149,6 @@ export function Example() {
                         if (v.length === 1) {
                            return 'custom error';
                         }
-
-                        return undefined;
                      }}
                   />
                </Grid>
@@ -174,8 +166,6 @@ export function Example() {
                      if (arr.filter(el => el.length === 0).length !== 0) {
                         return 'not empty in arr';
                      }
-
-                     return undefined;
                   }}
                />
             </Grid>
@@ -204,7 +194,7 @@ export function Example() {
             </Grid>
             <Grid item xs={12} container spacing={2}>
                <Grid item xs={2}>
-                  <StateConsumer>
+                  <StateConsumer<ApolloFormState<any>>>
                      {({ state: { isValid } }) => <>{'Is valid: ' + isValid.toString()}</>}
                   </StateConsumer>
                </Grid>
@@ -212,14 +202,14 @@ export function Example() {
                   <FormLoader>{({ loading }) => <>{'Loading ' + loading.toString()}</>}</FormLoader>
                </Grid>
                <Grid item xs={2}>
-                  <StateConsumer selector={s => s.existsChanges}>
+                  <StateConsumer<boolean> selector={s => s.existsChanges}>
                      {({ state: existsChanges }) => (
                         <>{'Exists changes: ' + existsChanges.toString()}</>
                      )}
                   </StateConsumer>
                </Grid>
                <Grid item xs={2}>
-                  <StateConsumer selector={s => s.isSubmitted}>
+                  <StateConsumer<boolean> selector={s => s.isSubmitted}>
                      {({ state: isSubmitted }) => <>{'Is submitted: ' + isSubmitted.toString()}</>}
                   </StateConsumer>
                </Grid>
@@ -253,6 +243,6 @@ export function Example() {
    );
 }
 
-export function anotherPage() {
-   return <div>another page</div>;
+function wait(time: number) {
+   return new Promise(resolve => setTimeout(resolve, time));
 }
