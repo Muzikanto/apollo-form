@@ -1,6 +1,6 @@
 import { DocumentNode } from '@apollo/client';
 import _ from 'lodash';
-import { getDeepStatus, makeApolloFormQuery, objectDeepPairs, setDeepStatus } from './utils';
+import { getDeepStatus, makeApolloFormQuery, objectDeepPairs } from './utils';
 import {
    ApolloFormState,
    FieldValidator,
@@ -9,149 +9,9 @@ import {
    FormTouches,
 } from './types';
 import React from 'react';
+import FormManipulator from './FormManipulator';
 
-class Changer<S extends object> {
-   protected validateHandler: FormManagerParams<S>['validate'];
-   protected validationSchema: FormManagerParams<S>['validationSchema'];
-   protected customValidators: { [key: string]: FieldValidator<any> };
-   protected initialState: S;
-   protected initialErrors: FormErrors<S>;
-   protected initialTouches: FormTouches<S>;
-   protected validateOnMount: FormManagerParams<S>['validateOnMount'];
-
-   constructor(
-      props: Omit<FormManagerParams<S>, 'initialErrors' | 'initialTouches'> &
-         Required<Pick<FormManagerParams<S>, 'initialErrors' | 'initialTouches'>> & {
-            customValidators: { [key: string]: FieldValidator<any> };
-         },
-   ) {
-      this.validateHandler = props.validate;
-      this.validationSchema = props.validationSchema;
-      this.customValidators = props.customValidators;
-      this.initialState = props.initialState;
-      this.initialErrors = props.initialErrors;
-      this.initialTouches = props.initialTouches;
-      this.validateOnMount = props.validateOnMount;
-   }
-
-   public setValue(state: ApolloFormState<S>, key: string, newValue: any): ApolloFormState<S> {
-      const value = _.get(state.values, key);
-
-      if (!_.isEqual(value, newValue)) {
-         _.set(state.values, key, newValue);
-      }
-
-      if (!state.existsChanges) {
-         state.existsChanges = true;
-      }
-
-      return state;
-   }
-   public setError(
-      state: ApolloFormState<S>,
-      key: string,
-      value: string | undefined,
-   ): ApolloFormState<S> {
-      const error = getDeepStatus(state.errors, key);
-
-      if (error !== value) {
-         setDeepStatus(state.errors, key, value);
-      }
-
-      return state;
-   }
-   public setTouched(state: ApolloFormState<S>, key: string, value: boolean): ApolloFormState<S> {
-      const touched = getDeepStatus(state.touches, key);
-
-      if (touched !== value) {
-         setDeepStatus(state.touches, key, value);
-      }
-
-      return state;
-   }
-   public validate(state: ApolloFormState<S>, allTouched: boolean = false): ApolloFormState<S> {
-      state.errors = {};
-
-      // merge errors from validate func
-      if (this.validateHandler) {
-         const customErrors = this.validateHandler(state);
-
-         _.merge(state.errors, customErrors);
-      }
-
-      // custom validators
-      for (const key in this.customValidators) {
-         if (!(key in state.errors)) {
-            const value = _.get(state.values, key);
-            const newError = this.customValidators[key](value);
-
-            if (newError) {
-               this.setError(state, key, newError);
-            }
-         }
-      }
-
-      // yup validate
-      if (this.validationSchema) {
-         try {
-            this.validationSchema.validateSync(state.values, {
-               recursive: true,
-               abortEarly: false,
-            });
-         } catch (e) {
-            for (const err of e.inner) {
-               const path = err.path.replace('[', '.').replace(']', '');
-               this.setError(state, path, err.message);
-            }
-         }
-      }
-
-      const errorsPairs = objectDeepPairs(state.errors);
-
-      const nextIsValid = !Boolean(errorsPairs.find(el => Boolean(el[1])));
-
-      if (allTouched) {
-         for (const pair of errorsPairs) {
-            _.set(state.touches, pair[0], true);
-         }
-      }
-
-      state.isValid = nextIsValid;
-
-      return state;
-   }
-
-   public reset(state: ApolloFormState<S>, getState?: S | ((state: S) => S)) {
-      if (getState) {
-         if (typeof getState === 'function') {
-            Object.assign(state, {
-               ...defaultState,
-               values: (getState as (state: S) => S)(state.values),
-               errors: this.initialErrors,
-               touches: this.initialTouches,
-            });
-         } else {
-            Object.assign(state, {
-               ...defaultState,
-               values: state.values,
-               errors: this.initialErrors,
-               touches: this.initialTouches,
-            });
-         }
-      } else {
-         Object.assign(state, {
-            ...defaultState,
-            values: this.initialState,
-            errors: this.initialErrors,
-            touches: this.initialTouches,
-         });
-      }
-
-      return state;
-   }
-}
-
-const defaultState = {
+const defaultState: Omit<ApolloFormState<{}>, 'values'> = {
    errors: {},
    touches: {},
    isValid: true,
@@ -173,8 +33,8 @@ class FormManager<S extends object> {
    protected initialState: S;
    protected initialErrors: FormErrors<S>;
    protected initialTouches: FormTouches<S>;
-   public query: DocumentNode;
-   public changer: Changer<S>;
+   protected query: DocumentNode;
+   public manipulator: FormManipulator<S>;
 
    constructor(props: FormManagerParams<S>) {
       this.apolloClient = props.apolloClient;
@@ -189,8 +49,9 @@ class FormManager<S extends object> {
       this.initialState = _.cloneDeep(props.initialState);
       this.initialErrors = _.cloneDeep(props.initialErrors) || {};
       this.initialTouches = _.cloneDeep(props.initialTouches) || {};
-      this.changer = new Changer({
+      this.manipulator = new FormManipulator({
          ...props,
+         defaultState,
          initialTouches: this.initialTouches,
          initialErrors: this.initialErrors,
          customValidators: this.customValidators,
@@ -254,21 +115,21 @@ class FormManager<S extends object> {
    }
    public useValue(key: string) {
       const value = this.useState(state => {
-         return _.get(state.values, key);
+         return this.manipulator.getValue(state, key);
       });
 
       return value;
    }
    public useTouched(key: string) {
       const value = this.useState(state => {
-         return getDeepStatus(_.cloneDeep(state.touches), key);
+         return this.manipulator.getTouched(state, key);
       });
 
       return value;
    }
    public useError(key: string) {
       const value = this.useState(state => {
-         return getDeepStatus(_.cloneDeep(state.errors), key);
+         return this.manipulator.getError(state, key);
       });
 
       return value;
@@ -288,17 +149,17 @@ class FormManager<S extends object> {
       return this.set({ ...this.get(), touches });
    }
 
-   public setFieldValue(key: string, newValue: any, validate?: boolean) {
+   public setFieldValue(key: string, newValue: any) {
       const state = this.get();
       const touched = getDeepStatus(state.touches, key);
 
       if (!touched) {
-         this.changer.setTouched(state, key, true);
+         this.manipulator.setTouched(state, key, true);
       }
 
-      this.changer.setValue(state, key, newValue);
+      this.manipulator.setValue(state, key, newValue);
 
-      this.changer.validate(state, false);
+      this.manipulator.validate(state, false);
 
       this.set(state);
 
@@ -311,7 +172,7 @@ class FormManager<S extends object> {
    public setFieldError(key: string, error: string | undefined) {
       const state = this.get();
 
-      this.changer.setError(state, key, error);
+      this.manipulator.setError(state, key, error);
 
       const errorsPairs = objectDeepPairs(state.errors);
       const nextIsValid = Boolean(errorsPairs.find(el => Boolean(el[1])));
@@ -323,7 +184,7 @@ class FormManager<S extends object> {
    public setFieldTouched(key: string, value: boolean) {
       const state = this.get();
 
-      this.changer.setTouched(state, key, value);
+      this.manipulator.setTouched(state, key, value);
 
       return this.set(state);
    }
@@ -360,16 +221,8 @@ class FormManager<S extends object> {
    public validate(allTouched?: boolean) {
       const state = this.get();
 
-      this.changer.validate(state, allTouched);
+      this.manipulator.validate(state, allTouched);
 
-      this.set(state);
-   }
-   public validateAt(key: string) {
-      const state = this.get();
-
-      this.changer.setTouched(state, key, true);
-
-      this.changer.validate(state, false);
       this.set(state);
    }
 
@@ -384,7 +237,7 @@ class FormManager<S extends object> {
 
    public submit() {
       const state = this.get();
-      this.changer.validate(state, true);
+      this.manipulator.validate(state, true);
 
       state.isSubmitted = true;
 
@@ -398,7 +251,7 @@ class FormManager<S extends object> {
                state.loading = false;
 
                if (this.resetOnSubmit) {
-                  this.changer.reset(state);
+                  this.manipulator.reset(state);
                }
 
                this.set(state);
@@ -416,9 +269,9 @@ class FormManager<S extends object> {
    public reset(getState?: S | ((state: S) => S)) {
       const state = this.get();
 
-      this.changer.reset(state, getState);
+      this.manipulator.reset(state, getState);
 
-      this.changer.validate(state, this.validateOnMount);
+      this.manipulator.validate(state, this.validateOnMount);
 
       state.isSubmitted = false;
       state.existsChanges = false;

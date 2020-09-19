@@ -26,7 +26,7 @@ function useField<Value>(props: IUseFieldProps<Value>): FieldParams<Value> {
 
    const setFieldValue = React.useCallback(
       (v: Value) => {
-         apolloForm.setFieldValue(props.name, v, true);
+         apolloForm.setFieldValue(props.name, v);
       },
       [apolloForm],
    );
@@ -39,7 +39,6 @@ function useField<Value>(props: IUseFieldProps<Value>): FieldParams<Value> {
    const setFieldTouched = React.useCallback(
       (v: boolean) => {
          apolloForm.setFieldTouched(props.name, v);
-         // apolloForm.validateAt(props.name);
       },
       [apolloForm],
    );
@@ -51,7 +50,7 @@ function useField<Value>(props: IUseFieldProps<Value>): FieldParams<Value> {
 
          return () => apolloForm.removeFieldValidator(props.name);
       }
-   }, []);
+   }, [apolloForm]);
 
    return {
       value,
