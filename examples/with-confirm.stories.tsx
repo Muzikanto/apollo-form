@@ -86,9 +86,6 @@ export function WithConfirm() {
                   }}
                >
                   <Grid container spacing={2}>
-                     <FormConsumer>
-                        {({ form }) => <button onClick={() => form.reset()}>reset</button>}
-                     </FormConsumer>
                      <Grid item xs={12}>
                         <Typography variant='h5' align='center'>
                            Example confirm
