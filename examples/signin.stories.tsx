@@ -160,7 +160,7 @@ function PreviewState() {
 
    return (
       <Paper style={{ maxWidth: 500, padding: 20 }}>
-         <CodeHighlighter>{JSON.stringify(data, null, 2)}</CodeHighlighter>
+         {data && <CodeHighlighter>{JSON.stringify(data, null, 2)}</CodeHighlighter>}
       </Paper>
    );
 }

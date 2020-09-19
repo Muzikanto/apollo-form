@@ -206,9 +206,13 @@ class FormManager<S extends object> {
       this.apolloClient.writeQuery({ query: this.query, data: { [this.name]: state } });
    }
    public get(): ApolloFormState<S> {
-      let data = this.apolloClient.readQuery<ApolloFormState<S>>({
-         query: this.query,
-      }) as any;
+      let data;
+
+      try {
+         data = this.apolloClient.readQuery<ApolloFormState<S>>({
+            query: this.query,
+         }) as any;
+      } catch (e) {}
 
       if (!data) {
          this.set({
