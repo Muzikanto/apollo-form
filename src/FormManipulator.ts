@@ -122,7 +122,7 @@ class FormManipulator<S extends object> {
 
       if (allTouched) {
          for (const pair of errorsPairs) {
-            _.set(state.touches, pair[0], true);
+            this.setTouched(state, pair[0], true);
          }
       }
 
