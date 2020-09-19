@@ -1,6 +1,7 @@
 import React from 'react';
 import useApolloFormCtx from '../hooks/useApolloFormCtx';
 import _ from 'lodash';
+import FormManager from '../FormManager';
 
 export interface SubmitComponentProps {
    disabled: boolean;
@@ -8,6 +9,7 @@ export interface SubmitComponentProps {
    isValid: boolean;
    existsChanges: boolean;
    isSubmitted: boolean;
+   form: FormManager<any>;
 }
 
 export type SubmitProps = {
@@ -16,10 +18,6 @@ export type SubmitProps = {
 
 function Submit(props: SubmitProps) {
    const Component = props.children;
-
-   if (!Component) {
-      throw new Error('Require component or children func');
-   }
 
    const apolloForm = useApolloFormCtx<any>();
    const state = apolloForm.useState();
@@ -36,6 +34,7 @@ function Submit(props: SubmitProps) {
          loading={loading}
          existsChanges={existsChanges}
          isSubmitted={isSubmitted}
+         form={apolloForm}
       />
    );
 }

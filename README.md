@@ -10,7 +10,7 @@
 
 -  [Introduction](#introduction)
 -  [Installation](#installation)
--  [Examples](#Examples)
+-  [Examples](#examples)
 -  [API](#api)
 -  [License](#license)
 
@@ -40,36 +40,13 @@ yarn add apollo-form
 
 [Demo todo list](https://muzikanto.github.io/apollo-form?path=/story/components--todo-list)
 
+[Demo with confirm](https://muzikanto.github.io/apollo-form?path=/story/components--with-confirm)
+
 Show [code examples](./examples)
 
 Learn [docs for use this package](https://github.com/Muzikanto/apollo-form/wiki)
 
-# Api
-
-### create field
-
-```typescript jsx
-function FormTextField(props: { name: string; validate?: FieldValidator<string>; label: string }) {
-   return (
-      <Field<string> name={props.name} validate={props.validate}>
-         {({ field }) => {
-            const err = Boolean(field.touched && field.error);
-
-            return (
-               <TextField
-                  value={field.value}
-                  onChange={e => field.setFieldValue(e.target.value)}
-                  onBlur={() => field.setFieldTouched(true)}
-                  helperText={err ? field.error : undefined}
-                  error={Boolean(field.touched && field.error)}
-                  label={props.label}
-               />
-            );
-         }}
-      </Field>
-   );
-}
-```
+## Api
 
 ### create Form
 
@@ -105,6 +82,8 @@ const initialState = {
 function Example() {
    return (
       <ApolloForm
+         // query name, please use valid name
+         // like gql`query ApolloForm { test @client }`
          name='test'
          initialState={initialState}
          enableReinitialize
@@ -126,7 +105,7 @@ function Example() {
                email: 'Reseted',
             });
          }}
-         onChange={(state, form) => console.log('onChange: ', form.get().values)}
+         onChange={(state, form) => console.log('Values: ', state)}
       >
          <FormTextField
             name='email'
@@ -142,6 +121,31 @@ function Example() {
          <FormTextField name='deep.one' />
          <FormTextField name='arr.0' />
       </ApolloForm>
+   );
+}
+```
+
+### create field
+
+```typescript jsx
+function FormTextField(props: { name: string; validate?: FieldValidator<string>; label: string }) {
+   return (
+      <Field<string> name={props.name} validate={props.validate}>
+         {({ field }) => {
+            const err = Boolean(field.touched && field.error);
+
+            return (
+               <TextField
+                  value={field.value}
+                  onChange={e => field.setFieldValue(e.target.value)}
+                  onBlur={() => field.setFieldTouched(true)}
+                  helperText={err ? field.error : undefined}
+                  error={Boolean(field.touched && field.error)}
+                  label={props.label}
+               />
+            );
+         }}
+      </Field>
    );
 }
 ```

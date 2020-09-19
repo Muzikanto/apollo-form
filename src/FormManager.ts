@@ -21,9 +21,11 @@ const defaultState: Omit<ApolloFormState<{}>, 'values'> = {
 } as const;
 
 class FormManager<S extends object> {
+   public readonly name: FormManagerParams<S>['name'];
+   public readonly manipulator: FormManipulator<S>;
+
    protected customValidators: { [key: string]: FieldValidator<any> } = {};
    protected apolloClient: FormManagerParams<S>['apolloClient'];
-   protected name: FormManagerParams<S>['name'];
    protected validateHandler: FormManagerParams<S>['validate'];
    protected validationSchema: FormManagerParams<S>['validationSchema'];
    protected onSubmit: FormManagerParams<S>['onSubmit'];
@@ -34,7 +36,6 @@ class FormManager<S extends object> {
    protected initialErrors: FormErrors<S>;
    protected initialTouches: FormTouches<S>;
    protected query: DocumentNode;
-   public manipulator: FormManipulator<S>;
 
    constructor(props: FormManagerParams<S>) {
       this.apolloClient = props.apolloClient;
@@ -95,7 +96,7 @@ class FormManager<S extends object> {
 
       React.useEffect(() => {
          const unWatch = this.apolloClient.cache.watch({
-            query: this.getQuery(),
+            query: this.query,
             callback: ({ result }) => {
                const s = (result as { [key: string]: ApolloFormState<S> })[this.name];
 
@@ -109,7 +110,7 @@ class FormManager<S extends object> {
          });
 
          return unWatch;
-      }, [getValue, state]);
+      }, [getValue, state, setState, this.apolloClient, this.query, this.name]);
 
       return state as P;
    }
@@ -246,23 +247,29 @@ class FormManager<S extends object> {
 
          this.set(state);
 
-         this.onSubmit(state, this)
+         return this.onSubmit(state, this)
             .then(() => {
-               state.loading = false;
+               const state2 = this.get();
 
                if (this.resetOnSubmit) {
-                  this.manipulator.reset(state);
+                  this.manipulator.reset(state2);
                }
 
-               this.set(state);
+               state2.loading = false;
+
+               this.set(state2);
             })
             .catch(() => {
-               state.loading = false;
+               const state2 = this.get();
 
-               this.set(state);
+               state2.loading = false;
+
+               this.set(state2);
             });
       } else {
          this.set(state);
+
+         return Promise.resolve();
       }
    }
 

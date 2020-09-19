@@ -23,7 +23,7 @@ function ApolloForm<S extends object>({
                e.preventDefault();
                e.stopPropagation();
 
-               manager.submit();
+               manager.submit().then();
             }}
             style={style}
             className={className}

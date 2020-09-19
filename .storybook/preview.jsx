@@ -24,6 +24,8 @@ const client = new ApolloClient({
    credentials: 'same-origin',
 });
 
+window['_APOLLO_'] = client;
+
 addDecorator(story => {
    return <ApolloProvider client={client}>{story()}</ApolloProvider>;
 });

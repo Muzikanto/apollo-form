@@ -46,7 +46,7 @@ function FormTextField(props: { name: string; validate?: FieldValidator<string>;
       <Field<string> name={props.name} validate={props.validate}>
          {({ field }) => {
             const err = Boolean(field.touched && field.error);
-            console.log('render ' + props.name);
+            // console.log('render ' + props.name);
 
             return (
                <TextField
@@ -116,7 +116,7 @@ export function Example() {
 
    return (
       <ApolloForm
-         name='test'
+         name='example'
          initialState={initialState}
          validationSchema={validationSchema}
          validate={({ values }) => {
@@ -136,7 +136,7 @@ export function Example() {
                email: 'Reseted',
             });
          }}
-         onChange={(state, form) => console.log('onChange: ', form.get().values)}
+         onChange={(state, form) => console.log('Values: ', state)}
          enableReinitialize
       >
          <Grid container spacing={2}>
