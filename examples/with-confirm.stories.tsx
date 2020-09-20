@@ -11,8 +11,6 @@ import Dialog from '@material-ui/core/Dialog';
 import Box from '@material-ui/core/Box';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import StateConsumer from '../src/consumers/StateConsumer';
-import FormConsumer from '../src/consumers/FormConsumer';
 
 export default {
    title: 'Components',

@@ -1,17 +1,13 @@
 import * as React from 'react';
-import { ApolloForm, ApolloFormState, Field, FieldValidator } from '../src';
+import { ApolloForm, Field, FieldValidator } from '../src';
 import * as Yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
 import ErrorMessage from '../src/utils/ErrorMessage';
 import Submit from '../src/utils/Submit';
 import FormConsumer from '../src/consumers/FormConsumer';
-import StateConsumer from '../src/consumers/StateConsumer';
 import FieldArray from '../src/field/FieldArray';
-import FormLoader from '../src/utils/FormLoader';
 import { Paper } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { PreviewState } from './utils';

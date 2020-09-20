@@ -14,3 +14,4 @@ storybook-static
 .storybook
 stories
 docs
+coverage.sh
