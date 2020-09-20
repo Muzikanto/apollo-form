@@ -130,7 +130,11 @@ describe('Apollo form', function() {
    it('validate touches', () => {
       manager.validate(true);
 
-      expect(manager.get().touches).toEqual({ text: true, deep: { one: true } });
+      expect(manager.get().touches).toEqual({
+         text: true,
+         deep: { one: true },
+         arr: [true, { 0: true, 1: true, 2: true }],
+      });
    });
    it('existsChanges after first change', () => {
       manager.setFieldValue('text', 'test');
@@ -167,7 +171,7 @@ describe('Apollo form', function() {
 
       expect(manager.get()).toEqual({
          ...initialState,
-         isValid: true,
+         isValid: false,
          errors: { deep: {} },
          values: { text: '123', deep: { one: '234' }, arr: [2] },
       });
@@ -187,7 +191,6 @@ describe('Apollo form', function() {
 
       expect(manager.get()).toEqual({
          ...initialState,
-         isValid: true,
          errors: { deep: {} },
          values: { text: '123', deep: { one: '234' }, arr: [1, 2, 3] },
       });
@@ -292,9 +295,12 @@ describe('Apollo form', function() {
 
       expect(manager.get().errors).toEqual({
          text: 'text is a required field',
-         deep: {
-            one: 'deep.one is a required field',
-         },
+         deep: [
+            undefined,
+            {
+               one: 'deep.one is a required field',
+            },
+         ],
       });
    });
 });

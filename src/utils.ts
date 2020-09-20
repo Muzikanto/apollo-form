@@ -1,27 +1,51 @@
 import _ from 'lodash';
 import makeApolloFormQuery from './query';
 
-function objectDeepPairs(source: object) {
-   const pairs = _.toPairs(source);
+function replaceValues(target: any, source: any, value: any) {
+   for (const key of Object.keys(source)) {
+      if (typeof source[key] === 'object') {
+         if (Array.isArray(source[key])) {
+            if (!target[key]) {
+               target[key] = [];
+            }
 
-   for (let i = 0; i < pairs.length; i++) {
-      const key = pairs[i][0];
-      const value = pairs[i][1];
+            target[key][0] = true;
 
-      if (typeof value === 'object') {
-         if (!_.isDate(value)) {
-            const deepPairs = objectDeepPairs(value);
+            if (!target[key][1]) {
+               target[key][1] = {};
+            }
 
-            pairs.splice(i, 1);
-
-            for (const dp of deepPairs) {
-               pairs.push([key + '.' + dp[0], dp[1]]);
+            for (const k in source[key]) {
+               target[key][1][k] = true;
+            }
+         } else {
+            if (typeof source[key] === 'object' && !_.isDate(value)) {
+               if (!target[key]) {
+                  target[key] = {};
+               }
+               replaceValues(target[key], source[key], value);
+            } else {
+               target[key] = value;
             }
          }
+      } else {
+         target[key] = value;
       }
    }
 
-   return pairs;
+   return source;
+}
+
+function firstError(state: any): undefined | string {
+   for (const k in state) {
+      if (state[k]) {
+         return state[k];
+      } else {
+         return firstError(state);
+      }
+   }
+
+   return undefined;
 }
 
 function getDeepStatus(state: any, path: string, withDefault?: boolean) {
@@ -30,9 +54,15 @@ function getDeepStatus(state: any, path: string, withDefault?: boolean) {
 
    let current = state;
 
-   for (const key of arr.slice(0, -1)) {
-      if (!state[key]) {
-         current[key] = {};
+   for (let i = 0; i < arr.length - 1; i++) {
+      const key = arr[i];
+
+      if (typeof current[key] === 'undefined') {
+         if (i === arr.length - 1) {
+            current[key] = {};
+         } else {
+            current[key] = [undefined, {}];
+         }
       }
 
       if (typeof current[key] === 'object') {
@@ -46,18 +76,18 @@ function getDeepStatus(state: any, path: string, withDefault?: boolean) {
       }
    }
 
-   if (!current) {
-      return '';
+   if (typeof current === 'undefined') {
+      return undefined;
    }
 
-   if (!current[last] && withDefault) {
-      current[last] = '';
+   if (typeof current[last] === 'undefined' && withDefault) {
+      current[last] = undefined;
    }
 
    if (typeof current[last] === 'object') {
       if (!Array.isArray(current[last])) {
-         current[last] = ['', current[last]];
-         return '';
+         current[last] = [undefined, current[last]];
+         return undefined;
       }
 
       return current[last][0];
@@ -74,7 +104,7 @@ function setDeepStatus(state: any, path: string, value: any) {
    for (let i = 0; i < arr.length - 1; i++) {
       const key = arr[i];
 
-      if (!current[key]) {
+      if (typeof current[key] === 'undefined') {
          if (i === arr.length - 1) {
             current[key] = {};
          } else {
@@ -108,4 +138,4 @@ function setDeepStatus(state: any, path: string, value: any) {
    return state;
 }
 
-export { objectDeepPairs, getDeepStatus, setDeepStatus, makeApolloFormQuery };
+export { replaceValues, getDeepStatus, setDeepStatus, makeApolloFormQuery, firstError };

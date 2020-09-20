@@ -1,6 +1,6 @@
 import { DocumentNode } from '@apollo/client';
 import _ from 'lodash';
-import { getDeepStatus, makeApolloFormQuery, objectDeepPairs } from './utils';
+import { firstError, getDeepStatus, makeApolloFormQuery } from './utils';
 import {
    ApolloFormState,
    FieldValidator,
@@ -179,9 +179,7 @@ class FormManager<S extends object> {
 
       this.manipulator.setError(state, key, error);
 
-      const errorsPairs = objectDeepPairs(state.errors);
-      const nextIsValid = Boolean(errorsPairs.find(el => Boolean(el[1])));
-
+      const nextIsValid = !Boolean(firstError(state.errors));
       state.isValid = nextIsValid;
 
       return this.set(state);

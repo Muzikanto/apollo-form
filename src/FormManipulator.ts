@@ -6,7 +6,7 @@ import {
    FormTouches,
 } from './types';
 import _ from 'lodash';
-import { getDeepStatus, objectDeepPairs, setDeepStatus } from './utils';
+import { firstError, getDeepStatus, replaceValues, setDeepStatus } from './utils';
 
 class FormManipulator<S extends object> {
    protected validateHandler: FormManagerParams<S>['validate'];
@@ -118,15 +118,11 @@ class FormManipulator<S extends object> {
          }
       }
 
-      const errorsPairs = objectDeepPairs(state.errors);
-
-      const nextIsValid = !Boolean(errorsPairs.find(el => Boolean(el[1])));
-
       if (allTouched) {
-         for (const pair of errorsPairs) {
-            this.setTouched(state, pair[0], true);
-         }
+         replaceValues(state.touches, state.values, true);
       }
+
+      const nextIsValid = !Boolean(firstError(state.errors));
 
       state.isValid = nextIsValid;
 

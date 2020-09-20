@@ -17,7 +17,7 @@ function ErrorMessage<P extends { error: string | undefined }>(props: ErrorMessa
    const Component = (props.children || (({ error }: any) => error)) as React.ComponentType<P>;
 
    // @ts-ignore
-   return <Component error={(!props.ignoreTouched ? error && touched : error) && error} />;
+   return <Component error={!props.ignoreTouched ? touched && error : error} />;
 }
 
 export default ErrorMessage;

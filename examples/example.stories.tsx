@@ -12,6 +12,9 @@ import FormConsumer from '../src/consumers/FormConsumer';
 import StateConsumer from '../src/consumers/StateConsumer';
 import FieldArray from '../src/field/FieldArray';
 import FormLoader from '../src/utils/FormLoader';
+import { Paper } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import { PreviewState } from './utils';
 
 export default {
    title: 'Components',
@@ -36,7 +39,7 @@ const validationSchema = Yup.object().shape({
             .max(3),
       )
       .min(3)
-      .test('aeqwes', 'error test', arr => {
+      .test('arr', 'Not length equal 2 words', arr => {
          return !(arr.filter((el: string) => el.length === 2).length > 0);
       }),
 });
@@ -65,34 +68,48 @@ function FormTextField(props: { name: string; validate?: FieldValidator<string>;
 
 function FormTextFieldArray(props: { name: string; validate: FieldValidator<string[]> }) {
    return (
-      <FieldArray<string> name={props.name} validate={props.validate}>
-         {({ field }) => {
-            return (
-               <>
-                  {field.value.map((el, i) => {
-                     return (
-                        <Grid item xs={3} key={'arr-field' + i}>
-                           <FormTextField
-                              key={'test' + i}
-                              name={props.name + '.' + i}
-                              label={props.name + '.' + i}
-                           />
-                        </Grid>
-                     );
-                  })}
+      <Paper style={{ padding: 24 }}>
+         <Grid container spacing={2}>
+            <Grid item xs={12}>
+               <Typography>Example deep array fields</Typography>
+            </Grid>
+            <FieldArray<string> name={props.name} validate={props.validate}>
+               {({ field }) => {
+                  return (
+                     <>
+                        {field.value.map((el, i) => {
+                           return (
+                              <Grid item xs={3} key={'arr-field' + i}>
+                                 <FormTextField
+                                    key={'test' + i}
+                                    name={props.name + '.' + i}
+                                    label={props.name + '.' + i}
+                                 />
+                              </Grid>
+                           );
+                        })}
 
-                  <Grid item xs={3}>
-                     <Box display='flex'>
-                        <Button onClick={() => field.push((field.value.length + 1).toString())}>
-                           push
-                        </Button>
-                        <Button onClick={() => field.pop()}>pop</Button>
-                     </Box>
-                  </Grid>
-               </>
-            );
-         }}
-      </FieldArray>
+                        <Grid item xs={3} style={{ display: 'flex', alignItems: 'flex-end' }}>
+                           <Button
+                              variant='contained'
+                              onClick={() => field.push((field.value.length + 1).toString())}
+                           >
+                              push
+                           </Button>
+                           <Button
+                              variant='contained'
+                              onClick={() => field.pop()}
+                              style={{ marginLeft: 16 }}
+                           >
+                              pop
+                           </Button>
+                        </Grid>
+                     </>
+                  );
+               }}
+            </FieldArray>
+         </Grid>
+      </Paper>
    );
 }
 
@@ -100,7 +117,7 @@ export function Example() {
    const [initialState, setState] = React.useState({
       email: '1',
       password: '',
-      deep: { one: '1' },
+      deep: { one: '1', two: { test: '2' } },
       arr: ['', '2', '31'],
    });
 
@@ -140,103 +157,136 @@ export function Example() {
          enableReinitialize
       >
          <Grid container spacing={2}>
-            <Grid container item xs={12} spacing={2}>
-               <Grid item xs={3}>
-                  <FormTextField
-                     name='email'
-                     label='email'
-                     validate={v => {
-                        if (v.length === 1) {
-                           return 'custom error';
-                        }
-                     }}
-                  />
+            <Grid item xs={8}>
+               <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                     <Paper style={{ padding: 24 }}>
+                        <Grid container spacing={2}>
+                           <Grid item xs={12}>
+                              <Typography>Example basic fields</Typography>
+                           </Grid>
+                           <Grid item xs={6}>
+                              <FormTextField
+                                 name='email'
+                                 label='email'
+                                 validate={v => {
+                                    if (v.length === 1) {
+                                       return 'custom error';
+                                    }
+                                 }}
+                              />
+                           </Grid>
+                           <Grid item xs={6}>
+                              <FormTextField name='password' label='password' />
+                           </Grid>
+                        </Grid>
+                     </Paper>
+                  </Grid>
+                  <Grid item xs={12}>
+                     <Paper style={{ padding: 24 }}>
+                        <Grid container spacing={2}>
+                           <Grid item xs={12}>
+                              <Typography>Example deep object fields</Typography>
+                           </Grid>
+                           <Grid item xs={6}>
+                              <FormTextField name='deep.one' label='deep.one' />
+                           </Grid>
+                           <Grid item xs={6}>
+                              <FormTextField name='deep.two.test' label='deep.two.test' />
+                           </Grid>
+                        </Grid>
+                     </Paper>
+                  </Grid>
+                  <Grid item xs={12}>
+                     <FormTextFieldArray
+                        name='arr'
+                        validate={arr => {
+                           if (arr.filter(el => el.length === 0).length !== 0) {
+                              return 'not empty in arr';
+                           }
+                        }}
+                     />
+                  </Grid>
+                  <Grid item xs={12}>
+                     <Paper style={{ padding: 24 }}>
+                        <Grid container spacing={2}>
+                           <Grid item xs={12}>
+                              <Typography>Example actions</Typography>
+                           </Grid>
+                           <Grid item>
+                              <FormConsumer>
+                                 {({ form }) => (
+                                    <Button variant='contained' onClick={() => form.reset()}>
+                                       RESET
+                                    </Button>
+                                 )}
+                              </FormConsumer>
+                           </Grid>
+                           <Grid item>
+                              <FormConsumer>
+                                 {({ form }) => (
+                                    <Button variant='contained' onClick={() => form.validate(true)}>
+                                       VALIDATE
+                                    </Button>
+                                 )}
+                              </FormConsumer>
+                           </Grid>
+                           <Grid item>
+                              <Submit>
+                                 {({ isValid, isSubmitted, loading }) => (
+                                    <Button
+                                       variant='contained'
+                                       type='submit'
+                                       disabled={loading || (isSubmitted ? !isValid : false)}
+                                    >
+                                       Submit
+                                    </Button>
+                                 )}
+                              </Submit>
+                           </Grid>
+                        </Grid>
+                     </Paper>
+                  </Grid>
+                  <Grid item xs={12}>
+                     <Paper style={{ padding: 24 }}>
+                        <Grid container spacing={2}>
+                           <Grid item xs={3}>
+                              <ErrorMessage
+                                 name='password'
+                                 children={({ error }) => (
+                                    <span>
+                                       password error: (<b style={{ color: 'red' }}>{error}</b>)
+                                    </span>
+                                 )}
+                              />
+                           </Grid>
+                           <Grid item xs={3}>
+                              <ErrorMessage
+                                 name='arr'
+                                 children={({ error }) => (
+                                    <span>
+                                       arr error: (<b style={{ color: 'red' }}>{error}</b>)
+                                    </span>
+                                 )}
+                              />
+                           </Grid>
+                           <Grid item xs={3}>
+                              <ErrorMessage
+                                 name='arr.0'
+                                 children={({ error }) => (
+                                    <span>
+                                       arr.0 error: (<b style={{ color: 'red' }}>{error}</b>)
+                                    </span>
+                                 )}
+                              />
+                           </Grid>
+                        </Grid>
+                     </Paper>
+                  </Grid>
                </Grid>
-               <Grid item xs={3}>
-                  <FormTextField name='password' label='password' />
-               </Grid>
-               <Grid item xs={3}>
-                  <FormTextField name='deep.one' label='Deep one' />
-               </Grid>
             </Grid>
-            <Grid container item xs={12} spacing={2}>
-               <FormTextFieldArray
-                  name='arr'
-                  validate={arr => {
-                     if (arr.filter(el => el.length === 0).length !== 0) {
-                        return 'not empty in arr';
-                     }
-                  }}
-               />
-            </Grid>
-
-            <Grid item xs={12}>
-               <Divider />
-            </Grid>
-            <Grid item xs={12}>
-               <FormConsumer>
-                  {({ form }) => <Button onClick={() => form.reset()}>RESET</Button>}
-               </FormConsumer>
-               <FormConsumer>
-                  {({ form }) => <Button onClick={() => form.validate(true)}>VALIDATE</Button>}
-               </FormConsumer>
-               <Submit>
-                  {({ isValid, isSubmitted, loading }) => (
-                     <Button type='submit' disabled={loading || (isSubmitted ? !isValid : false)}>
-                        Submit
-                     </Button>
-                  )}
-               </Submit>
-            </Grid>
-
-            <Grid item xs={12}>
-               <Divider />
-            </Grid>
-            <Grid item xs={12} container spacing={2}>
-               <Grid item xs={2}>
-                  <StateConsumer<ApolloFormState<any>>>
-                     {({ state: { isValid } }) => <>{'Is valid: ' + isValid.toString()}</>}
-                  </StateConsumer>
-               </Grid>
-               <Grid item xs={2}>
-                  <FormLoader>{({ loading }) => <>{'Loading ' + loading.toString()}</>}</FormLoader>
-               </Grid>
-               <Grid item xs={2}>
-                  <StateConsumer<boolean> selector={s => s.existsChanges}>
-                     {({ state: existsChanges }) => (
-                        <>{'Exists changes: ' + existsChanges.toString()}</>
-                     )}
-                  </StateConsumer>
-               </Grid>
-               <Grid item xs={2}>
-                  <StateConsumer<boolean> selector={s => s.isSubmitted}>
-                     {({ state: isSubmitted }) => <>{'Is submitted: ' + isSubmitted.toString()}</>}
-                  </StateConsumer>
-               </Grid>
-            </Grid>
-            <Grid item xs={12}>
-               <Divider />
-            </Grid>
-
-            <Grid item xs={3}>
-               <ErrorMessage
-                  name='password'
-                  children={({ error }) => (
-                     <span>
-                        password-err: (<b style={{ color: 'red' }}>{error}</b>)
-                     </span>
-                  )}
-               />
-            </Grid>
-            <Grid item xs={3}>
-               <ErrorMessage
-                  name='arr'
-                  children={({ error }) => (
-                     <span>
-                        arr-err: (<b style={{ color: 'red' }}>{error}</b>)
-                     </span>
-                  )}
-               />
+            <Grid item xs={4}>
+               <PreviewState name='example' />
             </Grid>
          </Grid>
       </ApolloForm>
