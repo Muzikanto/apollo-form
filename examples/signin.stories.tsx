@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { ApolloForm, Field, makeApolloFormQuery, Submit } from '../src';
+import { ApolloForm, Field, Submit } from '../src';
 import TextField, { OutlinedTextFieldProps } from '@material-ui/core/TextField';
 import * as React from 'react';
 import { IUseFieldProps } from '../src/hooks/useField';
@@ -11,8 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { CodeHighlighter } from './utils';
-import { useQuery } from '@apollo/client';
+import { PreviewState, wait } from './utils';
 
 export default {
    title: 'Components',
@@ -43,15 +42,17 @@ function FormTextField({ name, validate, ...other }: FormTextFieldProps) {
    return (
       <Field<string> name={name} validate={validate}>
          {({ field }) => {
-            const err = Boolean(field.touched && field.error);
+            const err = Boolean(!field.focused && field.touched && field.error);
+            console.log('Render: ', name);
 
             return (
                <TextField
                   value={field.value}
                   onChange={e => field.setFieldValue(e.target.value)}
+                  onFocus={() => field.setFieldFocused()}
                   onBlur={() => field.setFieldTouched(true)}
                   helperText={err ? field.error : undefined}
-                  error={Boolean(field.touched && field.error)}
+                  error={err}
                   variant='outlined'
                   {...other}
                />
@@ -147,24 +148,8 @@ export function SignIn() {
             </Paper>
          </Grid>
          <Grid item xs={12} md={6}>
-            <PreviewState />
+            <PreviewState name='signin' />
          </Grid>
       </Grid>
    );
-}
-
-function PreviewState() {
-   const [query] = React.useState(makeApolloFormQuery('signin'));
-
-   const { data } = useQuery(query);
-
-   return (
-      <Paper style={{ maxWidth: 500, padding: 20 }}>
-         {data && <CodeHighlighter>{JSON.stringify(data, null, 2)}</CodeHighlighter>}
-      </Paper>
-   );
-}
-
-function wait(time: number) {
-   return new Promise(resolve => setTimeout(resolve, time));
 }

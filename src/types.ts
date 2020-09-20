@@ -6,10 +6,10 @@ export type FieldValidator<Value> = (value: Value) => string | null | void;
 
 export type FormErrors<State extends object> = {
    [k in keyof State]?:
-   | (State[k] extends object
-   ? FormErrors<State[k]> | [FormErrors<State[k]>] | [FormErrors<State[k]>, string]
-   : string)
-   | string;
+      | (State[k] extends object
+           ? FormErrors<State[k]> | [FormErrors<State[k]>] | [FormErrors<State[k]>, string]
+           : string)
+      | string;
 };
 
 export type FormTouches<State extends object> = {
@@ -26,6 +26,7 @@ export interface ApolloFormState<S extends object> {
    loading: boolean;
    existsChanges: boolean;
    isSubmitted: boolean;
+   focused: null | string;
 }
 
 export interface FormManagerParams<S extends object> {

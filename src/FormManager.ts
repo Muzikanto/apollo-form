@@ -18,6 +18,7 @@ const defaultState: Omit<ApolloFormState<{}>, 'values'> = {
    loading: false,
    existsChanges: false,
    isSubmitted: false,
+   focused: null,
 } as const;
 
 class FormManager<S extends object> {
@@ -91,7 +92,10 @@ class FormManager<S extends object> {
 
       return _.cloneDeep(data[this.name]) as ApolloFormState<S>;
    }
-   public useState<P = ApolloFormState<S>>(getValue?: (state: ApolloFormState<S>) => P): P {
+   public useState<P = ApolloFormState<S>>(
+      getValue?: (state: ApolloFormState<S>) => P,
+      dependencies: any[] = [],
+   ): P {
       const [state, setState] = React.useState(getValue ? getValue(this.get()) : this.get());
 
       React.useEffect(() => {
@@ -110,7 +114,7 @@ class FormManager<S extends object> {
          });
 
          return unWatch;
-      }, [getValue, state, setState, this.apolloClient, this.query, this.name]);
+      }, [getValue, state, setState, this.apolloClient, this.query, this.name, ...dependencies]);
 
       return state as P;
    }
@@ -186,6 +190,15 @@ class FormManager<S extends object> {
       const state = this.get();
 
       this.manipulator.setTouched(state, key, value);
+
+      state.focused = null;
+
+      return this.set(state);
+   }
+   public setFieldFocused(key: string | null) {
+      const state = this.get();
+
+      state.focused = key;
 
       return this.set(state);
    }

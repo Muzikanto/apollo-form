@@ -83,7 +83,7 @@ function Example() {
    return (
       <ApolloForm
          // query name, please use valid name
-         // like gql`query ApolloForm { test @client }`
+         // generated: gql`query ApolloForm { test @client }`
          name='test'
          initialState={initialState}
          enableReinitialize
@@ -128,20 +128,19 @@ function Example() {
 ### create field
 
 ```typescript jsx
-function FormTextField(props: { name: string; validate?: FieldValidator<string>; label: string }) {
+function FormTextField(props: { name: string; validate?: FieldValidator<string> }) {
    return (
       <Field<string> name={props.name} validate={props.validate}>
          {({ field }) => {
-            const err = Boolean(field.touched && field.error);
+            const showError = Boolean(!field.focused && field.touched && field.error);
 
             return (
                <TextField
                   value={field.value}
                   onChange={e => field.setFieldValue(e.target.value)}
                   onBlur={() => field.setFieldTouched(true)}
-                  helperText={err ? field.error : undefined}
-                  error={Boolean(field.touched && field.error)}
-                  label={props.label}
+                  helperText={showError ? field.error : undefined}
+                  error={showError}
                />
             );
          }}

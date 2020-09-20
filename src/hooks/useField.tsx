@@ -6,10 +6,12 @@ export interface FieldParams<Value> {
    value: Value;
    error?: string;
    touched?: boolean;
+   focused: boolean;
 
    setFieldValue: (value: Value) => void;
    setFieldError: (error: string | undefined) => void;
    setFieldTouched: (touched: boolean) => void;
+   setFieldFocused: () => void;
 }
 
 export interface IUseFieldProps<Value> {
@@ -23,6 +25,7 @@ function useField<Value>(props: IUseFieldProps<Value>): FieldParams<Value> {
    const value = apolloForm.useValue(props.name);
    const error = apolloForm.useError(props.name);
    const touched = apolloForm.useTouched(props.name);
+   const focused = apolloForm.useState(s => s.focused === props.name, [props.name]);
 
    const setFieldValue = React.useCallback(
       (v: Value) => {
@@ -42,6 +45,9 @@ function useField<Value>(props: IUseFieldProps<Value>): FieldParams<Value> {
       },
       [apolloForm],
    );
+   const setFieldFocused = React.useCallback(() => {
+      apolloForm.setFieldFocused(props.name);
+   }, [apolloForm]);
 
    // @ts-ignore
    React.useEffect(() => {
@@ -56,10 +62,12 @@ function useField<Value>(props: IUseFieldProps<Value>): FieldParams<Value> {
       value,
       error,
       touched,
+      focused,
 
       setFieldValue,
       setFieldError,
       setFieldTouched,
+      setFieldFocused,
    } as const;
 }
 
