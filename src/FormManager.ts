@@ -261,7 +261,7 @@ class FormManager<S extends object> {
          this.set(state);
 
          return this.onSubmit(state, this)
-            .then(() => {
+            .then(s => {
                const state2 = this.get();
 
                if (this.resetOnSubmit) {
@@ -271,13 +271,17 @@ class FormManager<S extends object> {
                state2.loading = false;
 
                this.set(state2);
+
+               return s;
             })
-            .catch(() => {
+            .catch((err: Error) => {
                const state2 = this.get();
 
                state2.loading = false;
 
                this.set(state2);
+
+               return err;
             });
       } else {
          this.set(state);

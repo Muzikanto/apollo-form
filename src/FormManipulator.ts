@@ -111,7 +111,9 @@ class FormManipulator<S extends object> {
          } catch (e) {
             for (const err of e.inner) {
                const path = err.path.replace('[', '.').replace(']', '');
-               this.setError(state, path, err.message);
+               if (!this.getError(state, path)) {
+                  this.setError(state, path, err.message);
+               }
             }
          }
       }

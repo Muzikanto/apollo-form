@@ -2,6 +2,7 @@ import { ApolloClient, InMemoryCache } from '@apollo/client';
 import FormManager from '../src/FormManager';
 import _ from 'lodash';
 import { FormManagerParams } from '../src';
+import * as Yup from 'yup';
 
 interface FormState {
    text: string;
@@ -26,15 +27,22 @@ const getFormManager = function(params?: Partial<FormManagerParams<FormState>>) 
       name: 'test',
       apolloClient: getApolloClient(),
       initialState: { text: '', deep: { one: '' }, arr: [1, 2, 3] },
-      onSubmit: params ? params.onSubmit : undefined,
-      validate: function(state) {
-         return {
-            text: 'not empty',
-            deep: {
-               one: 'not empty 2',
-            },
-         };
+      validate: function({ values }) {
+         let errors: any = {};
+
+         if (!values.text) {
+            errors.text = 'not empty';
+         }
+         if (!errors.deep) {
+            errors.deep = {};
+         }
+         if (!values.deep.one) {
+            errors.deep.one = 'not empty 2';
+         }
+
+         return errors;
       },
+      ...params,
    });
 };
 
@@ -159,6 +167,8 @@ describe('Apollo form', function() {
 
       expect(manager.get()).toEqual({
          ...initialState,
+         isValid: true,
+         errors: { deep: {} },
          values: { text: '123', deep: { one: '234' }, arr: [2] },
       });
    });
@@ -177,6 +187,8 @@ describe('Apollo form', function() {
 
       expect(manager.get()).toEqual({
          ...initialState,
+         isValid: true,
+         errors: { deep: {} },
          values: { text: '123', deep: { one: '234' }, arr: [1, 2, 3] },
       });
    });
@@ -204,8 +216,7 @@ describe('Apollo form', function() {
       manager.removeFieldValidator('deep.one');
 
       manager.setFieldValue('deep.one', '123');
-
-      expect(manager.manipulator.getError(manager.get(), 'deep.one')).toBe('not empty 2');
+      expect(manager.manipulator.getError(manager.get(), 'deep.one')).toBe(undefined);
    });
    it('submit not called', () => {
       const manager = getFormManager({
@@ -232,5 +243,58 @@ describe('Apollo form', function() {
       manager.setFieldValue('deep.one', 'test');
 
       manager.submit();
+   });
+   it('submit catch', () => {
+      const manager = getFormManager({
+         onSubmit: async ({ values }) => {
+            throw new Error('test error');
+         },
+      });
+
+      manager.setFieldValue('text', 'test');
+      manager.setFieldValue('deep.one', 'test');
+
+      manager.submit().catch(err => expect(err).toThrowError(err));
+   });
+   it('manipulator', () => {
+      manager.setFieldValue('deep.one', 'test');
+      const v = manager.manipulator.getValue(manager.get(), 'deep.one');
+
+      expect(v).toBe('test');
+   });
+   it('validationSchema valid', () => {
+      const manager = getFormManager({
+         validationSchema: Yup.object().shape({
+            text: Yup.string().required(),
+            deep: Yup.object().shape({
+               one: Yup.string().required(),
+            }),
+         }),
+      });
+
+      manager.setFieldValue('text', 'test');
+      manager.setFieldValue('deep.one', 'test');
+
+      expect(manager.get().errors).toEqual({ deep: {} });
+   });
+   it('validationSchema invalid', () => {
+      const manager = getFormManager({
+         validationSchema: Yup.object().shape({
+            text: Yup.string().required(),
+            deep: Yup.object().shape({
+               one: Yup.string().required(),
+            }),
+         }),
+         validate: undefined,
+      });
+
+      manager.setFieldValue('text', '');
+
+      expect(manager.get().errors).toEqual({
+         text: 'text is a required field',
+         deep: {
+            one: 'deep.one is a required field',
+         },
+      });
    });
 });

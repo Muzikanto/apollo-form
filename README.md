@@ -4,6 +4,7 @@
 [![downloads](https://img.shields.io/npm/dm/apollo-form.svg)](https://www.npmjs.com/package/apollo-form)
 [![dependencies Status](https://david-dm.org/apollo-form/status.svg)](https://david-dm.org/apollo-form)
 [![size](https://img.shields.io/bundlephobia/minzip/apollo-form)](https://bundlephobia.com/result?p=apollo-form)
+[![Coverage Status](https://img.shields.io/codecov/c/github/muzikanto/apollo-form/master.svg)](https://codecov.io/gh/muzikanto/apollo-form/branch/master)
 ![Code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
 
 <!-- TOC -->
