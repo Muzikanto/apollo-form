@@ -19,12 +19,14 @@ function useApolloForm<S extends object>({
    const mountedRef = React.useRef(false);
    const apolloClient = useApolloClient();
    const { current: manager } = React.useRef(
-      new FormManager<S>({ ...props, initialState, apolloClient }),
+      new FormManager<S>({ ...props, initialState, enableReinitialize, apolloClient }),
    );
 
    React.useEffect(() => {
       if (enableReinitialize && mountedRef.current) {
-         manager.reset(initialState);
+         setTimeout(() => {
+            manager.reset(initialState);
+         });
       }
 
       mountedRef.current = true;
@@ -38,7 +40,7 @@ function useApolloForm<S extends object>({
             }
          }
       };
-   }, [resetOnUnmount, enableReinitialize, manager]);
+   }, [resetOnUnmount, enableReinitialize, manager, initialState, mountedRef]);
 
    return manager;
 }
