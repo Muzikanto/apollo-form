@@ -98,22 +98,20 @@ function SubmitButton(props: ButtonProps) {
 }
 
 export function SignIn() {
-   const [state, setState] = React.useState({ ...initialState });
-
    return (
       <Grid container spacing={3}>
          <Grid item xs={12} md={6}>
             <Paper style={{ maxWidth: 500, padding: 20 }}>
                <ApolloForm<SignInFormState>
                   name='signin'
-                  initialState={state}
-                  enableReinitialize
+                  initialState={initialState}
+                  removeOnUnmount
                   validationSchema={validationSchema}
                   onSubmit={async ({ values }, form) => {
                      await wait(1000);
                      console.log('Submit state: ', values);
 
-                     setState({ ...initialState, email: '1' });
+                     form.reset({ ...initialState, email: '1' });
                   }}
                >
                   <Grid container spacing={2}>

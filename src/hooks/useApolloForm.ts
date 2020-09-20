@@ -5,32 +5,32 @@ import { FormManagerParams } from '../types';
 
 export type IuseFormProps<S extends object> = Omit<FormManagerParams<S>, 'apolloClient'> & {
    resetOnUnmount?: boolean;
-   enableReinitialize?: boolean;
    removeOnUnmount?: boolean;
 };
 
 function useApolloForm<S extends object>({
    resetOnUnmount,
    removeOnUnmount,
-   enableReinitialize,
+   // enableReinitialize,
    initialState,
    ...props
 }: IuseFormProps<S>) {
-   const mountedRef = React.useRef(false);
+   // const mountedRef = React.useRef(false);
    const apolloClient = useApolloClient();
    const { current: manager } = React.useRef(
-      new FormManager<S>({ ...props, initialState, enableReinitialize, apolloClient }),
+      new FormManager<S>({ ...props, initialState, apolloClient }),
    );
 
+   // React.useEffect(() => {
+   //    if (enableReinitialize && mountedRef.current) {
+   //       setTimeout(() => {
+   //          manager.reset(initialState);
+   //       });
+   //    }
+   //    mountedRef.current = true;
+   // }, [initialState, mountedRef, enableReinitialize]);
+
    React.useEffect(() => {
-      if (enableReinitialize && mountedRef.current) {
-         setTimeout(() => {
-            manager.reset(initialState);
-         });
-      }
-
-      mountedRef.current = true;
-
       return () => {
          if (removeOnUnmount) {
             apolloClient.cache.evict({ id: 'ROOT_QUERY', fieldName: manager.name });
@@ -40,7 +40,7 @@ function useApolloForm<S extends object>({
             }
          }
       };
-   }, [resetOnUnmount, enableReinitialize, manager, initialState, mountedRef]);
+   }, [resetOnUnmount, manager]);
 
    return manager;
 }

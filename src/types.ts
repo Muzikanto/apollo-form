@@ -43,7 +43,7 @@ export interface FormManagerParams<S extends object> {
    resetOnUnmount?: boolean;
    resetOnSubmit?: boolean;
    validateOnMount?: boolean;
-   enableReinitialize?: boolean;
+   // enableReinitialize?: boolean;
 
    onSubmit?: (state: ApolloFormState<S>, form: FormManager<S>) => Promise<void>;
    onChange?: (state: S, form: FormManager<S>) => void;

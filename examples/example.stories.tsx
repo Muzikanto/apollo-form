@@ -117,16 +117,6 @@ export function Example() {
       arr: ['', '2', '31'],
    });
 
-   // check enableReinitialize
-   // React.useEffect(() => {
-   //    const interval = setInterval(() => {
-   //       setState({ ...initialState, email: initialState.email + '1' });
-   //    }, 2000);
-   //
-   //    return () => clearInterval(interval);
-   // }, [setState, initialState]);
-   // console.log('render');
-
    return (
       <ApolloForm
          name='example'
@@ -150,7 +140,6 @@ export function Example() {
             });
          }}
          onChange={(state, form) => console.log('Values: ', state)}
-         enableReinitialize
       >
          <Grid container spacing={2}>
             <Grid item xs={8}>

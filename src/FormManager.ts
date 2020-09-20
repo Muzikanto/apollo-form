@@ -33,7 +33,7 @@ class FormManager<S extends object> {
    protected onChange: FormManagerParams<S>['onChange'];
    protected resetOnSubmit: FormManagerParams<S>['resetOnSubmit'];
    protected validateOnMount: FormManagerParams<S>['validateOnMount'];
-   protected enableReinitialize: FormManagerParams<S>['enableReinitialize'];
+   // protected enableReinitialize: FormManagerParams<S>['enableReinitialize'];
    protected initialState: S;
    protected initialErrors: FormErrors<S>;
    protected initialTouches: FormTouches<S>;
@@ -49,7 +49,7 @@ class FormManager<S extends object> {
       this.validationSchema = props.validationSchema;
       this.validateOnMount = props.validateOnMount;
       this.resetOnSubmit = props.resetOnSubmit;
-      this.enableReinitialize = props.enableReinitialize;
+      // this.enableReinitialize = props.enableReinitialize;
       this.initialState = _.cloneDeep(props.initialState);
       this.initialErrors = _.cloneDeep(props.initialErrors) || {};
       this.initialTouches = _.cloneDeep(props.initialTouches) || {};
@@ -301,10 +301,6 @@ class FormManager<S extends object> {
       state.existsChanges = false;
 
       this.set(state);
-   }
-
-   public renewInitialState(values: S) {
-      this.initialState = values;
    }
 
    public getQuery() {
