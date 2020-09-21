@@ -1,11 +1,16 @@
-## Apollo-form
+<h1 align="center">Apollo-form</h1>
+
+<div align="center">
 
 [![npm version](https://badge.fury.io/js/apollo-form.svg)](https://badge.fury.io/js/apollo-form)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/muzikanto/apollo-form/blob/master/LICENSE)
 [![downloads](https://img.shields.io/npm/dm/apollo-form.svg)](https://www.npmjs.com/package/apollo-form)
 [![dependencies Status](https://david-dm.org/apollo-form/status.svg)](https://david-dm.org/apollo-form)
 [![size](https://img.shields.io/bundlephobia/minzip/apollo-form)](https://bundlephobia.com/result?p=apollo-form)
 [![Coverage Status](https://img.shields.io/codecov/c/github/muzikanto/apollo-form/master.svg)](https://codecov.io/gh/muzikanto/apollo-form/branch/master)
 ![Code style](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)
+
+</div>
 
 <!-- TOC -->
 
@@ -87,7 +92,6 @@ function Example() {
          // generated: gql`query ApolloForm { test @client }`
          name='test'
          initialState={initialState}
-         enableReinitialize
          validationSchema={validationSchema}
          validate={({ values }) => {
             if (values.email === '12') {
