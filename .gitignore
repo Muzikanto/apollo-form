@@ -8,3 +8,4 @@ hocs
 hooks
 utils
 coverage.sh
+.DS_Store
