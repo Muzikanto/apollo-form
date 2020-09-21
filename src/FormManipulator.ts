@@ -122,7 +122,7 @@ class FormManipulator<S extends object> {
          replaceValues(state.touches, state.values, true);
       }
 
-      const nextIsValid = !Boolean(firstError(state.errors));
+      const nextIsValid = !firstError(state.errors);
 
       state.isValid = nextIsValid;
 

@@ -171,7 +171,7 @@ describe('Apollo form', function() {
 
       expect(manager.get()).toEqual({
          ...initialState,
-         isValid: false,
+         isValid: true,
          errors: { deep: {} },
          values: { text: '123', deep: { one: '234' }, arr: [2] },
       });
@@ -191,6 +191,7 @@ describe('Apollo form', function() {
 
       expect(manager.get()).toEqual({
          ...initialState,
+         isValid: true,
          errors: { deep: {} },
          values: { text: '123', deep: { one: '234' }, arr: [1, 2, 3] },
       });
@@ -246,8 +247,9 @@ describe('Apollo form', function() {
       manager.setFieldValue('deep.one', 'test');
 
       manager.submit();
+      expect(manager.get().isSubmitted).toBe(true);
    });
-   it('submit catch', () => {
+   it('submit catch', async () => {
       const manager = getFormManager({
          onSubmit: async ({ values }) => {
             throw new Error('test error');
@@ -257,13 +259,49 @@ describe('Apollo form', function() {
       manager.setFieldValue('text', 'test');
       manager.setFieldValue('deep.one', 'test');
 
-      manager.submit().catch(err => expect(err).toThrowError(err));
+      await manager.submit();
+
+      expect(manager.get().isSubmitted).toBe(true);
+      expect(manager.get().loading).toBe(false);
    });
    it('manipulator', () => {
       manager.setFieldValue('deep.one', 'test');
       const v = manager.manipulator.getValue(manager.get(), 'deep.one');
 
       expect(v).toBe('test');
+   });
+   it('break equals', () => {
+      let checkRenders = 0;
+
+      manager.watch(null, () => {
+         checkRenders = checkRenders + 1;
+      });
+
+      manager.setFieldError('deep.one', 'err');
+      manager.manipulator.getError(manager.get(), 'deep.one');
+      manager.setFieldError('deep.one', 'err');
+
+      expect(checkRenders).toBe(1);
+   });
+   it('watch', () => {
+      let values: string[] = [];
+      let renders = 0;
+
+      manager.watch(
+         s => s.values.deep.one,
+         v => {
+            values.push(v);
+            renders = renders + 1;
+         },
+      );
+
+      manager.setFieldValue('deep.one', 'one');
+      manager.setFieldValue('deep.one', 'two');
+      manager.setFieldValue('deep.one', 'three');
+      manager.setFieldValue('text', 'test');
+
+      expect(values).toEqual(['one', 'two', 'three']);
+      expect(renders).toBe(3);
    });
    it('validationSchema valid', () => {
       const manager = getFormManager({
@@ -302,5 +340,36 @@ describe('Apollo form', function() {
             },
          ],
       });
+   });
+   it('setValues', () => {
+      manager.setValues({ text: '5', deep: { one: '5' }, arr: [3, 2, 1] });
+
+      expect(manager.get().values).toEqual({ text: '5', deep: { one: '5' }, arr: [3, 2, 1] });
+   });
+   it('setErrors', () => {
+      manager.setErrors({ text: 'err', deep: { one: 'err' } });
+
+      expect(manager.get().errors).toEqual({ text: 'err', deep: { one: 'err' } });
+   });
+   it('setTouches', () => {
+      manager.setTouches({ text: true, deep: { one: true } });
+
+      expect(manager.get().touches).toEqual({ text: true, deep: { one: true } });
+   });
+   it('onChange', () => {
+      let changed = 0;
+
+      const manager = getFormManager({
+         onChange: () => {
+            changed = changed + 1;
+         },
+      });
+
+      manager.setFieldValue('text', 1);
+      manager.setFieldValue('deep.one', 2);
+      manager.setFieldError('deep.one', 'err');
+      manager.setFieldTouched('deep.one', true);
+
+      expect(changed).toEqual(2);
    });
 });

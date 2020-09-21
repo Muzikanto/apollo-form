@@ -95,30 +95,40 @@ class FormManager<S extends object> {
       return _.cloneDeep(data[this.name]) as ApolloFormState<S>;
    }
    public useState<P = ApolloFormState<S>>(
-      getValue?: (state: ApolloFormState<S>) => P,
+      selector: (state: ApolloFormState<S>) => P | null,
       dependencies: any[] = [],
    ): P {
-      const [state, setState] = React.useState(getValue ? getValue(this.get()) : this.get());
+      const [state, setState] = React.useState(selector ? selector(this.get()) : this.get());
 
       React.useEffect(() => {
-         const unWatch = this.apolloClient.cache.watch({
-            query: this.query,
-            callback: ({ result }) => {
-               const s = (result as { [key: string]: ApolloFormState<S> })[this.name];
-
-               const v = getValue ? getValue(s) : s;
-
-               if (!_.isEqual(state, v)) {
-                  setState(v);
-               }
-            },
-            optimistic: false,
-         });
-
-         return unWatch;
-      }, [getValue, state, setState, this.apolloClient, this.query, this.name, ...dependencies]);
+         return this.watch(selector, s => setState(s));
+      }, [selector, state, setState, this.apolloClient, this.query, this.name, ...dependencies]);
 
       return state as P;
+   }
+   public watch<P = ApolloFormState<S>>(
+      selector: ((state: ApolloFormState<S>) => P) | null,
+      handler: (value: P) => void,
+   ): () => void {
+      let previous = selector ? selector(this.get()) : this.get();
+
+      const unWatch = this.apolloClient.cache.watch({
+         query: this.query,
+         callback: ({ result }) => {
+            const s = (result as { [key: string]: ApolloFormState<S> })[this.name];
+
+            const v: P = (selector ? selector(s) : s) as P;
+
+            if (!_.isEqual(previous, v)) {
+               previous = v;
+
+               handler(v);
+            }
+         },
+         optimistic: false,
+      });
+
+      return unWatch;
    }
    public useValue(key: string) {
       const value = this.useState(state => {

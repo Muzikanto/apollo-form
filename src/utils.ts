@@ -3,7 +3,7 @@ import makeApolloFormQuery from './query';
 
 function replaceValues(target: any, source: any, value: any) {
    for (const key of Object.keys(source)) {
-      if (typeof source[key] === 'object') {
+      if (typeof source[key] === 'object' && !_.isDate(value)) {
          if (Array.isArray(source[key])) {
             if (!target[key]) {
                target[key] = [];
@@ -19,14 +19,10 @@ function replaceValues(target: any, source: any, value: any) {
                target[key][1][k] = true;
             }
          } else {
-            if (typeof source[key] === 'object' && !_.isDate(value)) {
-               if (!target[key]) {
-                  target[key] = {};
-               }
-               replaceValues(target[key], source[key], value);
-            } else {
-               target[key] = value;
+            if (!target[key]) {
+               target[key] = {};
             }
+            replaceValues(target[key], source[key], value);
          }
       } else {
          target[key] = value;
@@ -38,10 +34,10 @@ function replaceValues(target: any, source: any, value: any) {
 
 function firstError(state: any): undefined | string {
    for (const k in state) {
-      if (state[k]) {
-         return state[k];
+      if (typeof state[k] === 'object' && !_.isDate(state[k])) {
+         return firstError(state[k]);
       } else {
-         return firstError(state);
+         return state[k];
       }
    }
 
