@@ -1,6 +1,5 @@
 import React from 'react';
 import useApolloFormCtx from '../hooks/useApolloFormCtx';
-import _ from 'lodash';
 import FormManager from '../FormManager';
 
 export interface SubmitComponentProps {

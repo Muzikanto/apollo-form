@@ -1,9 +1,9 @@
-import _ from 'lodash';
+import { isDate } from 'lodash';
 import makeApolloFormQuery from './query';
 
 function replaceValues(target: any, source: any, value: any) {
    for (const key of Object.keys(source)) {
-      if (typeof source[key] === 'object' && !_.isDate(value)) {
+      if (typeof source[key] === 'object' && !isDate(value)) {
          if (Array.isArray(source[key])) {
             if (!target[key]) {
                target[key] = [];
@@ -34,7 +34,7 @@ function replaceValues(target: any, source: any, value: any) {
 
 function firstError(state: any): undefined | string {
    for (const k in state) {
-      if (typeof state[k] === 'object' && !_.isDate(state[k])) {
+      if (typeof state[k] === 'object' && !isDate(state[k])) {
          return firstError(state[k]);
       } else {
          return state[k];

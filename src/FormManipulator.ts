@@ -5,7 +5,7 @@ import {
    FormManagerParams,
    FormTouches,
 } from './types';
-import _ from 'lodash';
+import { merge, cloneDeep, get, set, isEqual } from 'lodash';
 import { firstError, getDeepStatus, replaceValues, setDeepStatus } from './utils';
 
 class FormManipulator<S extends object> {
@@ -36,10 +36,10 @@ class FormManipulator<S extends object> {
    }
 
    public setValue(state: ApolloFormState<S>, key: string, newValue: any): ApolloFormState<S> {
-      const value = _.get(state.values, key);
+      const value = get(state.values, key);
 
-      if (!_.isEqual(value, newValue)) {
-         _.set(state.values, key, newValue);
+      if (!isEqual(value, newValue)) {
+         set(state.values, key, newValue);
       }
 
       if (!state.existsChanges) {
@@ -71,13 +71,13 @@ class FormManipulator<S extends object> {
       return state;
    }
    public getValue(state: ApolloFormState<S>, key: string) {
-      return _.get(state.values, key);
+      return get(state.values, key);
    }
    public getError(state: ApolloFormState<S>, key: string) {
-      return getDeepStatus(_.cloneDeep(state.errors), key);
+      return getDeepStatus(cloneDeep(state.errors), key);
    }
    public getTouched(state: ApolloFormState<S>, key: string) {
-      return getDeepStatus(_.cloneDeep(state.touches), key);
+      return getDeepStatus(cloneDeep(state.touches), key);
    }
    public validate(state: ApolloFormState<S>, allTouched: boolean = false): ApolloFormState<S> {
       state.errors = {};
@@ -86,13 +86,13 @@ class FormManipulator<S extends object> {
       if (this.validateHandler) {
          const customErrors = this.validateHandler(state);
 
-         _.merge(state.errors, customErrors);
+         merge(state.errors, customErrors);
       }
 
       // custom validators
       for (const key in this.customValidators) {
          if (!(key in state.errors)) {
-            const value = _.get(state.values, key);
+            const value = get(state.values, key);
             const newError = this.customValidators[key](value);
 
             if (newError) {

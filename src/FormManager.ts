@@ -1,5 +1,5 @@
 import { DocumentNode } from '@apollo/client';
-import _ from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import { firstError, getDeepStatus, makeApolloFormQuery } from './utils';
 import {
    ApolloFormState,
@@ -50,9 +50,9 @@ class FormManager<S extends object> {
       this.validateOnMount = props.validateOnMount;
       this.resetOnSubmit = props.resetOnSubmit;
       // this.enableReinitialize = props.enableReinitialize;
-      this.initialState = _.cloneDeep(props.initialState);
-      this.initialErrors = _.cloneDeep(props.initialErrors) || {};
-      this.initialTouches = _.cloneDeep(props.initialTouches) || {};
+      this.initialState = cloneDeep(props.initialState);
+      this.initialErrors = cloneDeep(props.initialErrors) || {};
+      this.initialTouches = cloneDeep(props.initialTouches) || {};
       this.manipulator = new FormManipulator({
          ...props,
          defaultState,
@@ -92,7 +92,7 @@ class FormManager<S extends object> {
          }) as any;
       }
 
-      return _.cloneDeep(data[this.name]) as ApolloFormState<S>;
+      return cloneDeep(data[this.name]) as ApolloFormState<S>;
    }
    public useState<P = ApolloFormState<S>>(
       selector: (state: ApolloFormState<S>) => P = ((s: ApolloFormState<S>) => s) as any,
@@ -119,7 +119,7 @@ class FormManager<S extends object> {
 
             const v: P = (selector ? selector(s) : s) as P;
 
-            if (!_.isEqual(previous, v)) {
+            if (!isEqual(previous, v)) {
                previous = v;
 
                handler(v);
