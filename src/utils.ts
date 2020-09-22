@@ -1,4 +1,4 @@
-import { isDate } from 'lodash';
+import isDate from 'lodash/isDate';
 import makeApolloFormQuery from './query';
 
 function replaceValues(target: any, source: any, value: any) {

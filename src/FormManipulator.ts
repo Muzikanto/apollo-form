@@ -5,7 +5,11 @@ import {
    FormManagerParams,
    FormTouches,
 } from './types';
-import { merge, cloneDeep, get, set, isEqual } from 'lodash';
+import merge from 'lodash/merge';
+import cloneDeep from 'lodash/cloneDeep';
+import get from 'lodash/get';
+import set from 'lodash/set';
+import isEqual from 'lodash/isEqual';
 import { firstError, getDeepStatus, replaceValues, setDeepStatus } from './utils';
 
 class FormManipulator<S extends object> {

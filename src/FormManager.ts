@@ -1,5 +1,6 @@
 import { DocumentNode } from '@apollo/client';
-import { cloneDeep, isEqual } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import isEqual from 'lodash/isEqual';
 import { firstError, getDeepStatus, makeApolloFormQuery } from './utils';
 import {
    ApolloFormState,
