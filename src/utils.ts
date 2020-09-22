@@ -1,5 +1,8 @@
-import isDate from 'lodash/isDate';
 import makeApolloFormQuery from './query';
+
+function isDate(v: any) {
+   return Object.prototype.toString.call(v) === '[object Date]';
+}
 
 function replaceValues(target: any, source: any, value: any) {
    for (const key of Object.keys(source)) {
