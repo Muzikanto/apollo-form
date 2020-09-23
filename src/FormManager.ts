@@ -103,7 +103,7 @@ class FormManager<S extends object> {
 
       React.useEffect(() => {
          return this.watch(selector, s => setState(s));
-      }, [selector, state, setState, this.apolloClient, this.query, this.name, ...dependencies]);
+      }, [state, setState, this.apolloClient, this.query, this.name, ...dependencies]);
 
       return state as P;
    }
