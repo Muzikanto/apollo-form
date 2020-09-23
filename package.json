@@ -1,6 +1,6 @@
 {
    "name": "apollo-form",
-   "version": "1.3.4",
+   "version": "1.3.5",
    "description": "Form state manager",
    "license": "MIT",
    "maintainers": [
@@ -15,6 +15,7 @@
       "react",
       "apollo",
       "form",
+      "typescript",
       "state-manager",
       "optimize renders"
    ],
