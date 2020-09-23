@@ -19,12 +19,12 @@ function Submit(props: SubmitProps) {
    const Component = props.children;
 
    const apolloForm = useApolloFormCtx<any>();
-   const state = apolloForm.useState();
-
-   const isValid = state.isValid;
-   const loading = state.loading;
-   const existsChanges = state.existsChanges;
-   const isSubmitted = state.isSubmitted;
+   const { isValid, existsChanges, loading, isSubmitted } = apolloForm.useState(s => ({
+      isValid: s.isValid,
+      loading: s.loading,
+      existsChanges: s.existsChanges,
+      isSubmitted: s.isSubmitted,
+   }));
 
    return (
       <Component

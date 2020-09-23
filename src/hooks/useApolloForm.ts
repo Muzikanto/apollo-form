@@ -2,6 +2,7 @@ import FormManager from '../FormManager';
 import React from 'react';
 import { useApolloClient } from '@apollo/client';
 import { FormManagerParams } from '../types';
+import isEqual from 'lodash/isEqual';
 
 export type IuseFormProps<S extends object> = Omit<FormManagerParams<S>, 'apolloClient'> & {
    resetOnUnmount?: boolean;
@@ -11,24 +12,26 @@ export type IuseFormProps<S extends object> = Omit<FormManagerParams<S>, 'apollo
 function useApolloForm<S extends object>({
    resetOnUnmount,
    removeOnUnmount,
-   // enableReinitialize,
+   enableReinitialize,
    initialState,
    ...props
 }: IuseFormProps<S>) {
-   // const mountedRef = React.useRef(false);
+   const mountedRef = React.useRef(false);
    const apolloClient = useApolloClient();
    const { current: manager } = React.useRef(
       new FormManager<S>({ ...props, initialState, apolloClient }),
    );
 
-   // React.useEffect(() => {
-   //    if (enableReinitialize && mountedRef.current) {
-   //       setTimeout(() => {
-   //          manager.reset(initialState);
-   //       });
-   //    }
-   //    mountedRef.current = true;
-   // }, [initialState, mountedRef, enableReinitialize]);
+   React.useEffect(() => {
+      if (enableReinitialize && mountedRef.current) {
+         setTimeout(() => {
+            if (!isEqual(manager.getInitialState(), initialState)) {
+               manager.reset(initialState);
+            }
+         });
+      }
+      mountedRef.current = true;
+   }, [initialState, mountedRef, enableReinitialize]);
 
    React.useEffect(() => {
       return () => {

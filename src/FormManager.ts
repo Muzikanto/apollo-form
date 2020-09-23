@@ -103,7 +103,7 @@ class FormManager<S extends object> {
 
       React.useEffect(() => {
          return this.watch(selector, s => setState(s));
-      }, [state, setState, this.apolloClient, this.query, this.name, ...dependencies]);
+      }, [setState, this.apolloClient, this.query, this.name, ...dependencies]);
 
       return state as P;
    }
@@ -316,6 +316,10 @@ class FormManager<S extends object> {
 
    public getQuery() {
       return makeApolloFormQuery(this.name);
+   }
+
+   public getInitialState(): S {
+      return this.initialState;
    }
 }
 

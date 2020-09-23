@@ -7,7 +7,7 @@ import withFieldArray from './hocs/withFieldArray';
 import withForm from './hocs/withForm';
 import useApolloForm from './hooks/useApolloForm';
 import useApolloFormCtx from './hooks/useApolloFormCtx';
-import useField, { IUseFieldProps } from './hooks/useField';
+import useField from './hooks/useField';
 import useFieldArray from './hooks/useFieldArray';
 import ErrorMessage from './utils/ErrorMessage';
 import FormLoader from './utils/FormLoader';
@@ -48,5 +48,4 @@ export {
    FormErrors,
    ApolloFormState,
    FormTouches,
-   IUseFieldProps,
 };

@@ -4,14 +4,17 @@ import FormContext from './FormContext';
 
 export type ApolloFormProps<S extends object> = IuseFormProps<S> & {
    children: React.ReactNode;
+
+   id?: string;
    style?: React.CSSProperties;
    className?: string;
 };
 
 function ApolloForm<S extends object>({
    children,
-   className,
+   id,
    style,
+   className,
    ...params
 }: ApolloFormProps<S>) {
    const manager = useForm<S>(params);
@@ -19,6 +22,7 @@ function ApolloForm<S extends object>({
    return (
       <FormContext.Provider value={manager}>
          <form
+            id={id}
             onSubmit={e => {
                e.preventDefault();
                e.stopPropagation();

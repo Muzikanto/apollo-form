@@ -1,6 +1,6 @@
 import React from 'react';
 import useApolloFormCtx from './useApolloFormCtx';
-import { FieldValidator } from '../types';
+import { FieldProps } from '../types';
 
 export interface FieldParams<Value> {
    value: Value;
@@ -14,10 +14,7 @@ export interface FieldParams<Value> {
    setFieldFocused: () => void;
 }
 
-export interface IUseFieldProps<Value> {
-   name: string;
-   validate?: FieldValidator<Value>;
-}
+export type IUseFieldProps<Value> = FieldProps<Value>;
 
 function useField<Value>(props: IUseFieldProps<Value>): FieldParams<Value> {
    const apolloForm = useApolloFormCtx();
