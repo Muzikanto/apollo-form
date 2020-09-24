@@ -36,14 +36,18 @@ function useApolloForm<S extends object>({
    React.useEffect(() => {
       return () => {
          if (removeOnUnmount) {
-            apolloClient.cache.evict({ id: 'ROOT_QUERY', fieldName: manager.name });
+            setTimeout(() => {
+               apolloClient.cache.evict({ id: 'ROOT_QUERY', fieldName: manager.name });
+            }, 100);
          } else {
             if (resetOnUnmount) {
-               manager.reset();
+               setTimeout(() => {
+                  manager.reset();
+               }, 100);
             }
          }
       };
-   }, [resetOnUnmount, manager]);
+   }, [resetOnUnmount, removeOnUnmount, manager]);
 
    return manager;
 }
