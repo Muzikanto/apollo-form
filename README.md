@@ -4,7 +4,7 @@
 
 [![npm version](https://badge.fury.io/js/apollo-form.svg)](https://badge.fury.io/js/apollo-form)
 [![downloads](https://img.shields.io/npm/dm/apollo-form.svg)](https://www.npmjs.com/package/apollo-form)
-[![size](https://img.shields.io/bundlephobia/minzip/apollo-form@1.3.4)](https://bundlephobia.com/result?p=apollo-form@1.3.4)
+[![size](https://img.shields.io/bundlephobia/minzip/apollo-form)](https://bundlephobia.com/result?p=apollo-form)
 [![Coverage Status](https://img.shields.io/codecov/c/github/muzikanto/apollo-form/master.svg)](https://codecov.io/gh/muzikanto/apollo-form/branch/master)
 [![dependencies Status](https://david-dm.org/apollo-form/status.svg)](https://david-dm.org/apollo-form)
 [![type](https://badgen.net/npm/types/apollo-form)](https://badgen.net/npm/types/apollo-form)
