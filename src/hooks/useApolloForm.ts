@@ -25,8 +25,10 @@ function useApolloForm<S extends object>({
    React.useEffect(() => {
       if (enableReinitialize && mountedRef.current) {
          setTimeout(() => {
-            if (!isEqual(manager.getInitialState(), initialState)) {
-               manager.reset(initialState);
+            if (manager.exists()) {
+               if (!isEqual(manager.getInitialState(), initialState)) {
+                  manager.reset(initialState);
+               }
             }
          });
       }
@@ -42,7 +44,9 @@ function useApolloForm<S extends object>({
          } else {
             if (resetOnUnmount) {
                setTimeout(() => {
-                  manager.reset();
+                  if (manager.exists()) {
+                     manager.reset();
+                  }
                }, 100);
             }
          }

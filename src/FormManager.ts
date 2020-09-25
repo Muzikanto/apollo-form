@@ -95,6 +95,17 @@ class FormManager<S extends object> {
 
       return cloneDeep(data[this.name]) as ApolloFormState<S>;
    }
+   public exists(): boolean {
+      try {
+         const data = this.apolloClient.readQuery<ApolloFormState<S>>({
+            query: this.query,
+         });
+
+         return Boolean(data);
+      } catch (e) {
+         return false;
+      }
+   }
    public useState<P = ApolloFormState<S>>(
       selector: (state: ApolloFormState<S>) => P = ((s: ApolloFormState<S>) => s) as any,
       dependencies: any[] = [],
