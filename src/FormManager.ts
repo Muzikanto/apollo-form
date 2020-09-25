@@ -113,6 +113,28 @@ class FormManager<S extends object> {
    ): () => void {
       let previous = selector ? selector(this.get()) : this.get();
 
+      // const watcher = this.apolloClient
+      //    .watchQuery<{ [key: string]: ApolloFormState<S> }>({
+      //       query: this.query,
+      //       // id,
+      //    })
+      //    .subscribe(({ data }) => {
+      //       console.log(1)
+      //       const s = data[this.name];
+      //
+      //       const v: P = (selector ? selector(s) : s) as P;
+      //
+      //       if (!isEqual(previous, v)) {
+      //          previous = v;
+      //
+      //          handler(v);
+      //       }
+      //    });
+      //
+      // return () => {
+      //    watcher.unsubscribe();
+      // };
+
       const unWatch = this.apolloClient.cache.watch({
          query: this.query,
          callback: ({ result }) => {
