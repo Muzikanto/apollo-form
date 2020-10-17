@@ -214,7 +214,7 @@ function FormSubmit() {
 ### show error message
 
 ```typescript jsx
-function FormError(props: { name: string; ignoreTouched?: boolean }) {
+function FirstError(props: { name: string; ignoreTouched?: boolean }) {
    return (
       <ErrorMessage
          ignoreTouched={props.ignoreTouched}

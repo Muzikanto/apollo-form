@@ -12,6 +12,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { PreviewState, wait } from './utils';
+import FirstError from '../src/FirstError';
 
 export default {
    title: 'Components',
@@ -119,6 +120,9 @@ export function SignIn() {
                         <Typography variant='h5' align='center'>
                            Sign in form
                         </Typography>
+                     </Grid>
+                     <Grid item xs={12}>
+                        <FirstError showIfSubmitted />
                      </Grid>
                      <Grid item xs={12}>
                         <FormTextField
