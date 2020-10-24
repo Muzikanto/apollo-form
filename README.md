@@ -138,6 +138,14 @@ function Example() {
 
 ```typescript jsx
 function FormTextField(props: { name: string; validate?: FieldValidator<string> }) {
+   const field = useField(props);
+
+   return <TextField {...getFieldProps(field)} />;
+}
+
+// or
+
+function FormTextField(props: { name: string; validate?: FieldValidator<string> }) {
    return (
       <Field<string> name={props.name} validate={props.validate}>
          {({ field }) => {
@@ -147,6 +155,7 @@ function FormTextField(props: { name: string; validate?: FieldValidator<string> 
                <TextField
                   value={field.value}
                   onChange={e => field.setFieldValue(e.target.value)}
+                  onFocus={() => field.setFieldFocused()}
                   onBlur={() => field.setFieldTouched(true)}
                   helperText={showError ? field.error : undefined}
                   error={showError}

@@ -17,6 +17,7 @@ import FormManager from './FormManager';
 import ApolloForm from './ApolloForm';
 import FormContext from './FormContext';
 import makeApolloFormQuery from './query';
+import getFieldProps from './field/getFieldProps';
 import {
    FormTouches,
    ApolloFormState,
@@ -43,6 +44,7 @@ export {
    FormConsumer,
    useApolloForm,
    withForm,
+   getFieldProps,
    FormContext,
    makeApolloFormQuery,
    FormManagerParams,
