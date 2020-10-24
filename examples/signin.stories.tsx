@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { PreviewState, wait } from './utils';
 import FirstError from '../src/FirstError';
+import getFieldProps from '../src/field/getFieldProps';
 
 export default {
    title: 'Components',
@@ -43,21 +44,9 @@ function FormTextField({ name, validate, ...other }: FormTextFieldProps) {
    return (
       <Field<string> name={name} validate={validate}>
          {({ field }) => {
-            const err = Boolean(!field.focused && field.touched && field.error);
             console.log('Render: ', name);
 
-            return (
-               <TextField
-                  value={field.value}
-                  onChange={e => field.setFieldValue(e.target.value)}
-                  onFocus={() => field.setFieldFocused()}
-                  onBlur={() => field.setFieldTouched(true)}
-                  helperText={err ? field.error : undefined}
-                  error={err}
-                  variant='outlined'
-                  {...other}
-               />
-            );
+            return <TextField {...getFieldProps(field)} variant='outlined' {...other} />;
          }}
       </Field>
    );

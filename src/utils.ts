@@ -5,7 +5,7 @@ function replaceValues(target: any, source: any, value: any) {
    for (const key of Object.keys(source)) {
       if (typeof source[key] === 'object' && source[key] !== null && !isDate(value)) {
          if (Array.isArray(source[key])) {
-            if (!target[key]) {
+            if (typeof target[key] !== 'object') {
                target[key] = [];
             }
 

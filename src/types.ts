@@ -26,6 +26,7 @@ export interface ApolloFormState<S extends object> {
    loading: boolean;
    existsChanges: boolean;
    isSubmitted: boolean;
+   submitCount: number;
    focused: null | string;
 }
 

@@ -2,10 +2,10 @@
 node_modules/
 coverage
 storybook-static
-consumers
-field
-hocs
-hooks
-utils
+./consumers
+./field
+./hocs
+./hooks
+./utils
 coverage.sh
 .DS_Store

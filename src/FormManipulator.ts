@@ -141,6 +141,7 @@ class FormManipulator<S extends object> {
                values: (getState as (state: S) => S)(state.values),
                errors: this.initialErrors,
                touches: this.initialTouches,
+               submitCount: state.submitCount,
             });
          } else {
             Object.assign(state, {
@@ -148,6 +149,7 @@ class FormManipulator<S extends object> {
                values: getState,
                errors: this.initialErrors,
                touches: this.initialTouches,
+               submitCount: state.submitCount,
             });
          }
       } else {
@@ -156,6 +158,7 @@ class FormManipulator<S extends object> {
             values: this.initialState,
             errors: this.initialErrors,
             touches: this.initialTouches,
+            submitCount: state.submitCount,
          });
       }
 

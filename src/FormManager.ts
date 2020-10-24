@@ -20,6 +20,7 @@ const defaultState: Omit<ApolloFormState<{}>, 'values'> = {
    existsChanges: false,
    isSubmitted: false,
    focused: null,
+   submitCount: 0,
 } as const;
 
 class FormManager<S extends object> {
@@ -301,6 +302,7 @@ class FormManager<S extends object> {
 
       if (this.onSubmit && state.isValid) {
          state.loading = true;
+         state.submitCount++;
 
          this.set(state);
 
