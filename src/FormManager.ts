@@ -1,7 +1,6 @@
 import { DocumentNode } from '@apollo/client';
 import cloneDeep from 'lodash/cloneDeep';
-import isEqual from 'lodash/isEqual';
-import { firstError, getDeepStatus, makeApolloFormQuery } from './utils';
+import { firstError, getDeepStatus } from './utils';
 import {
    ApolloFormState,
    FieldValidator,
@@ -11,6 +10,7 @@ import {
 } from './types';
 import React from 'react';
 import FormManipulator from './FormManipulator';
+import ApolloManager from './managers/ApolloManager';
 
 const defaultState: Omit<ApolloFormState<{}>, 'values'> = {
    errors: {},
@@ -24,26 +24,26 @@ const defaultState: Omit<ApolloFormState<{}>, 'values'> = {
 } as const;
 
 class FormManager<S extends object> {
-   public readonly name: FormManagerParams<S>['name'];
+   public readonly name: string;
    public readonly manipulator: FormManipulator<S>;
 
    protected customValidators: { [key: string]: FieldValidator<any> } = {};
-   protected apolloClient: FormManagerParams<S>['apolloClient'];
    protected validateHandler: FormManagerParams<S>['validate'];
    protected validationSchema: FormManagerParams<S>['validationSchema'];
    protected onSubmit: FormManagerParams<S>['onSubmit'];
    protected onChange: FormManagerParams<S>['onChange'];
    protected resetOnSubmit: FormManagerParams<S>['resetOnSubmit'];
    protected validateOnMount: FormManagerParams<S>['validateOnMount'];
-   // protected enableReinitialize: FormManagerParams<S>['enableReinitialize'];
    protected initialState: S;
    protected initialErrors: FormErrors<S>;
    protected initialTouches: FormTouches<S>;
    protected query: DocumentNode;
+   protected manager: ApolloManager<S>;
 
    constructor(props: FormManagerParams<S>) {
-      this.apolloClient = props.apolloClient;
       this.name = props.name;
+      this.manager = new ApolloManager(props.name, props.apolloClient);
+
       this.validateHandler = props.validate;
       this.query = this.getQuery();
       this.onChange = props.onChange;
@@ -51,10 +51,10 @@ class FormManager<S extends object> {
       this.validationSchema = props.validationSchema;
       this.validateOnMount = props.validateOnMount;
       this.resetOnSubmit = props.resetOnSubmit;
-      // this.enableReinitialize = props.enableReinitialize;
       this.initialState = cloneDeep(props.initialState);
       this.initialErrors = cloneDeep(props.initialErrors) || {};
       this.initialTouches = cloneDeep(props.initialTouches) || {};
+
       this.manipulator = new FormManipulator({
          ...props,
          defaultState,
@@ -64,43 +64,29 @@ class FormManager<S extends object> {
       });
 
       // for set default
-      this.get();
-
-      this.validate(this.validateOnMount);
-   }
-
-   public set(state: ApolloFormState<S>) {
-      this.apolloClient.writeQuery({ query: this.query, data: { [this.name]: state } });
-   }
-   public get(): ApolloFormState<S> {
-      let data;
-
-      try {
-         data = this.apolloClient.readQuery<ApolloFormState<S>>({
-            query: this.query,
-         }) as any;
-      } catch (e) {}
-
-      if (!data) {
+      if (!this.manager.get()) {
          this.set({
             ...defaultState,
             values: this.initialState,
             errors: this.initialErrors,
             touches: this.initialTouches,
          });
-
-         data = this.apolloClient.readQuery<ApolloFormState<S>>({
-            query: this.query,
-         }) as any;
       }
 
-      return cloneDeep(data[this.name]) as ApolloFormState<S>;
+      this.validate(this.validateOnMount);
+   }
+
+   public set(state: ApolloFormState<S>) {
+      return this.manager.set(state);
+   }
+   public get(): ApolloFormState<S> {
+      let data = this.manager.get() as any;
+
+      return cloneDeep(data[this.manager.name]) as ApolloFormState<S>;
    }
    public exists(): boolean {
       try {
-         const data = this.apolloClient.readQuery<ApolloFormState<S>>({
-            query: this.query,
-         });
+         const data = this.manager.get();
 
          return Boolean(data);
       } catch (e) {
@@ -115,7 +101,7 @@ class FormManager<S extends object> {
 
       React.useEffect(() => {
          return this.watch(selector, s => setState(s));
-      }, [setState, this.apolloClient, this.query, this.name, ...dependencies]);
+      }, [setState, this.query, ...dependencies]);
 
       return state as P;
    }
@@ -123,47 +109,7 @@ class FormManager<S extends object> {
       selector: ((state: ApolloFormState<S>) => P) | null,
       handler: (value: P) => void,
    ): () => void {
-      let previous = selector ? selector(this.get()) : this.get();
-
-      // const watcher = this.apolloClient
-      //    .watchQuery<{ [key: string]: ApolloFormState<S> }>({
-      //       query: this.query,
-      //       // id,
-      //    })
-      //    .subscribe(({ data }) => {
-      //       console.log(1)
-      //       const s = data[this.name];
-      //
-      //       const v: P = (selector ? selector(s) : s) as P;
-      //
-      //       if (!isEqual(previous, v)) {
-      //          previous = v;
-      //
-      //          handler(v);
-      //       }
-      //    });
-      //
-      // return () => {
-      //    watcher.unsubscribe();
-      // };
-
-      const unWatch = this.apolloClient.cache.watch({
-         query: this.query,
-         callback: ({ result }) => {
-            const s = (result as { [key: string]: ApolloFormState<S> })[this.name];
-
-            const v: P = (selector ? selector(s) : s) as P;
-
-            if (!isEqual(previous, v)) {
-               previous = v;
-
-               handler(v);
-            }
-         },
-         optimistic: false,
-      });
-
-      return unWatch;
+      return this.manager.watch(selector, handler);
    }
    public useValue(key: string) {
       const value = this.useState(state => {
@@ -350,7 +296,7 @@ class FormManager<S extends object> {
    }
 
    public getQuery() {
-      return makeApolloFormQuery(this.name);
+      return this.manager.getQuery();
    }
 
    public getInitialState(): S {
