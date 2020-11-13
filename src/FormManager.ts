@@ -82,6 +82,17 @@ class FormManager<S extends object> {
    public get(): ApolloFormState<S> {
       let data = this.manager.get() as any;
 
+      if (!data) {
+         this.manager.set({
+            ...defaultState,
+            values: this.initialState,
+            errors: this.initialErrors,
+            touches: this.initialTouches,
+         });
+
+         data = this.manager.get();
+      }
+
       return cloneDeep(data[this.manager.name]) as ApolloFormState<S>;
    }
    public exists(): boolean {
