@@ -12,7 +12,7 @@ import useFieldArray from './hooks/useFieldArray';
 import ErrorMessage from './utils/ErrorMessage';
 import FormLoader from './utils/FormLoader';
 import Submit from './utils/Submit';
-import FirstError from './FirstError';
+import FirstError from './utils/FirstError';
 import FormManager from './FormManager';
 import ApolloForm from './ApolloForm';
 import FormContext from './FormContext';

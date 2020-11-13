@@ -302,6 +302,15 @@ class FormManager<S extends object> {
 
       state.isSubmitted = false;
       state.existsChanges = false;
+      state.responseMessage = undefined;
+
+      this.set(state);
+   }
+
+   public responseMessage(message: string) {
+      const state = this.get();
+
+      state.responseMessage = message;
 
       this.set(state);
    }

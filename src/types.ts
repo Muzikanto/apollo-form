@@ -28,6 +28,7 @@ export interface ApolloFormState<S extends object> {
    isSubmitted: boolean;
    submitCount: number;
    focused: null | string;
+   responseMessage?: string;
 }
 
 export interface FormManagerParams<S extends object> {

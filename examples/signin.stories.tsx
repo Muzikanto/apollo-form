@@ -12,8 +12,9 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { PreviewState, wait } from './utils';
-import FirstError from '../src/FirstError';
+import FirstError from '../src/utils/FirstError';
 import getFieldProps from '../src/field/getFieldProps';
+import Alert from '@material-ui/lab/Alert';
 
 export default {
    title: 'Components',
@@ -101,7 +102,8 @@ export function SignIn() {
                      await wait(1000);
                      console.log('Submit state: ', values);
 
-                     form.reset({ ...initialState, email: '1' });
+                     form.reset({ ...initialState, email: 'reseted' });
+                     form.responseMessage('Invalid password');
                   }}
                >
                   <Grid container spacing={2}>
@@ -111,7 +113,13 @@ export function SignIn() {
                         </Typography>
                      </Grid>
                      <Grid item xs={12}>
-                        <FirstError showIfSubmitted />
+                        <FirstError showIfSubmitted>
+                           {({ error }) => (
+                              <Alert variant='filled' severity='error'>
+                                 {error}
+                              </Alert>
+                           )}
+                        </FirstError>
                      </Grid>
                      <Grid item xs={12}>
                         <FormTextField
