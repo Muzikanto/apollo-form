@@ -15,3 +15,4 @@ storybook-static
 stories
 docs
 coverage.sh
+examples/test.stories.tsx

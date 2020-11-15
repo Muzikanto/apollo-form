@@ -9,3 +9,4 @@ storybook-static
 ./utils
 coverage.sh
 .DS_Store
+examples/test.stories.tsx

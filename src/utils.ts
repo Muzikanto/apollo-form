@@ -34,10 +34,20 @@ function replaceValues(target: any, source: any, value: any) {
 
 function firstError(state: any): undefined | string {
    for (const k in state) {
-      if (typeof state[k] === 'object' && !isDate(state[k])) {
-         return firstError(state[k]);
+      let item = state[k];
+
+      if (Array.isArray(state[k])) {
+         item = state[k][1];
+      }
+
+      if (typeof item === 'object' && !isDate(item)) {
+         const err = firstError(item);
+
+         if (err) {
+            return err;
+         }
       } else {
-         return state[k];
+         return item;
       }
    }
 

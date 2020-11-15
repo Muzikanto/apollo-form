@@ -3,6 +3,7 @@ import FormManager from '../src/FormManager';
 import _ from 'lodash';
 import { FormManagerParams } from '../src';
 import * as Yup from 'yup';
+import { firstError } from '../src/utils';
 
 interface FormState {
    text: string;
@@ -371,5 +372,13 @@ describe('Apollo form', function() {
       manager.setFieldTouched('deep.one', true);
 
       expect(changed).toEqual(2);
+   });
+
+   it('onChange', () => {
+      expect(
+         firstError({
+            intervals: [null, { 0: [null, { from: 'from', to: 'to' }] }],
+         }),
+      ).toBe('from');
    });
 });
