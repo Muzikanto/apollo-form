@@ -10,7 +10,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import set from 'lodash/set';
 import isEqual from 'lodash/isEqual';
-import { firstError, getDeepStatus, replaceErrors, replaceValues, setDeepStatus } from './utils';
+import { firstError, getDeepStatus, replaceErrors, setDeepStatus } from './utils';
 
 class FormManipulator<S extends object> {
    protected validateHandler: FormManagerParams<S>['validate'];
@@ -126,8 +126,7 @@ class FormManipulator<S extends object> {
       }
 
       if (allTouched) {
-         replaceValues(state.touches, state.values, true);
-         replaceErrors(state.touches, state.errors, true);
+         state.touches = replaceErrors(state.touches, state.errors, true);
       }
 
       const nextIsValid = !firstError(state.errors);

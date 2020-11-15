@@ -10,6 +10,7 @@ import useApolloFormCtx from './hooks/useApolloFormCtx';
 import useField from './hooks/useField';
 import useFieldArray from './hooks/useFieldArray';
 import ErrorMessage from './utils/ErrorMessage';
+import ResponseMessage from './utils/ResponseMessage';
 import FormLoader from './utils/FormLoader';
 import Submit from './utils/Submit';
 import FirstError from './utils/FirstError';
@@ -37,6 +38,7 @@ export {
    withField,
    withFieldArray,
    ErrorMessage,
+   ResponseMessage,
    Submit,
    StateConsumer,
    FormLoader,

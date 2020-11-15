@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { ApolloForm, Field, Submit } from '../src';
+import { ApolloForm, Field, ResponseMessage, Submit } from '../src';
 import TextField, { OutlinedTextFieldProps } from '@material-ui/core/TextField';
 import * as React from 'react';
 import { IUseFieldProps } from '../src/hooks/useField';
@@ -12,7 +12,6 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { PreviewState, wait } from './utils';
-import FirstError from '../src/utils/FirstError';
 import getFieldProps from '../src/field/getFieldProps';
 import Alert from '@material-ui/lab/Alert';
 
@@ -113,13 +112,13 @@ export function SignIn() {
                         </Typography>
                      </Grid>
                      <Grid item xs={12}>
-                        <FirstError showIfSubmitted>
+                        <ResponseMessage>
                            {({ error }) => (
                               <Alert variant='filled' severity='error'>
                                  {error}
                               </Alert>
                            )}
-                        </FirstError>
+                        </ResponseMessage>
                      </Grid>
                      <Grid item xs={12}>
                         <FormTextField

@@ -6,7 +6,8 @@ function replaceErrors(target: any, source: any, value: any) {
       if (typeof source[key] === 'object' && source[key] !== null && !isDate(value)) {
          if (Array.isArray(source[key])) {
             if (source[key][1] !== null && source[key][1] !== undefined) {
-               target[key] = [true, replaceErrors(target[key] || {}, source[key][1], true)];
+               let t = Array.isArray(target[key]) ? target[key][1] : target[key];
+               target[key] = [true, replaceErrors(t || {}, source[key][1], true)];
             }
          } else {
             if (source[key]) {
@@ -19,37 +20,6 @@ function replaceErrors(target: any, source: any, value: any) {
    }
 
    return target;
-}
-
-function replaceValues(target: any, source: any, value: any) {
-   for (const key of Object.keys(source)) {
-      if (typeof source[key] === 'object' && source[key] !== null && !isDate(value)) {
-         if (Array.isArray(source[key])) {
-            if (typeof target[key] !== 'object') {
-               target[key] = [];
-            }
-
-            target[key][0] = true;
-
-            if (!target[key][1]) {
-               target[key][1] = {};
-            }
-
-            for (const k in source[key]) {
-               target[key][1][k] = true;
-            }
-         } else {
-            if (!target[key]) {
-               target[key] = {};
-            }
-            replaceValues(target[key], source[key], value);
-         }
-      } else {
-         target[key] = value;
-      }
-   }
-
-   return source;
 }
 
 function firstError(state: any): undefined | string {
@@ -164,11 +134,4 @@ function setDeepStatus(state: any, path: string, value: any) {
    return state;
 }
 
-export {
-   replaceValues,
-   replaceErrors,
-   getDeepStatus,
-   setDeepStatus,
-   makeApolloFormQuery,
-   firstError,
-};
+export { replaceErrors, getDeepStatus, setDeepStatus, makeApolloFormQuery, firstError };

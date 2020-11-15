@@ -125,16 +125,17 @@ describe('Apollo form', function() {
    });
    it('validate errors', () => {
       manager.validate();
+      manager.validate();
 
       expect(manager.get().errors).toEqual({ text: 'not empty', deep: { one: 'not empty 2' } });
    });
    it('validate touches', () => {
       manager.validate(true);
+      manager.validate(true);
 
       expect(manager.get().touches).toEqual({
          text: true,
          deep: { one: true },
-         arr: [true, { 0: true, 1: true, 2: true }],
       });
    });
    it('existsChanges after first change', () => {
