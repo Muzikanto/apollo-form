@@ -10,7 +10,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import set from 'lodash/set';
 import isEqual from 'lodash/isEqual';
-import { firstError, getDeepStatus, replaceValues, setDeepStatus } from './utils';
+import { firstError, getDeepStatus, replaceErrors, replaceValues, setDeepStatus } from './utils';
 
 class FormManipulator<S extends object> {
    protected validateHandler: FormManagerParams<S>['validate'];
@@ -81,7 +81,9 @@ class FormManipulator<S extends object> {
       return getDeepStatus(cloneDeep(state.errors), key);
    }
    public getTouched(state: ApolloFormState<S>, key: string) {
-      return getDeepStatus(cloneDeep(state.touches), key);
+      const touched = getDeepStatus(cloneDeep(state.touches), key);
+
+      return touched;
    }
    public validate(state: ApolloFormState<S>, allTouched: boolean = false): ApolloFormState<S> {
       state.errors = {};
@@ -115,6 +117,7 @@ class FormManipulator<S extends object> {
          } catch (e) {
             for (const err of e.inner) {
                const path = err.path.replace('[', '.').replace(']', '');
+
                if (!this.getError(state, path)) {
                   this.setError(state, path, err.message);
                }
@@ -123,7 +126,7 @@ class FormManipulator<S extends object> {
       }
 
       if (allTouched) {
-         replaceValues(state.touches, state.values, true);
+         replaceErrors(state.touches, state.errors, true);
       }
 
       const nextIsValid = !firstError(state.errors);

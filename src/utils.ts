@@ -1,6 +1,26 @@
 import isDate from 'lodash/isDate';
 import makeApolloFormQuery from './query';
 
+function replaceErrors(target: any, source: any, value: any) {
+   for (const key of Object.keys(source)) {
+      if (typeof source[key] === 'object' && source[key] !== null && !isDate(value)) {
+         if (Array.isArray(source[key])) {
+            if (source[key][1] !== null && source[key][1] !== undefined) {
+               target[key] = [true, replaceErrors(target[key] || {}, source[key][1], true)];
+            }
+         } else {
+            if (source[key]) {
+               target[key] = replaceErrors(target[key] || {}, source[key], true);
+            }
+         }
+      } else {
+         target[key] = value;
+      }
+   }
+
+   return target;
+}
+
 function replaceValues(target: any, source: any, value: any) {
    for (const key of Object.keys(source)) {
       if (typeof source[key] === 'object' && source[key] !== null && !isDate(value)) {
@@ -144,4 +164,11 @@ function setDeepStatus(state: any, path: string, value: any) {
    return state;
 }
 
-export { replaceValues, getDeepStatus, setDeepStatus, makeApolloFormQuery, firstError };
+export {
+   replaceValues,
+   replaceErrors,
+   getDeepStatus,
+   setDeepStatus,
+   makeApolloFormQuery,
+   firstError,
+};
