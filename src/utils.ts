@@ -44,7 +44,7 @@ function firstError(state: any): undefined | string {
    return undefined;
 }
 
-function getDeepStatus(state: any, path: string, withDefault?: boolean) {
+function getDeepStatus(state: { [key: string]: any }, path: string) {
    const arr = path.split('.');
    const last = arr[arr.length - 1];
 
@@ -73,11 +73,7 @@ function getDeepStatus(state: any, path: string, withDefault?: boolean) {
    }
 
    if (typeof current === 'undefined') {
-      return undefined;
-   }
-
-   if (typeof current[last] === 'undefined' && withDefault) {
-      current[last] = undefined;
+      return current;
    }
 
    if (typeof current[last] === 'object') {
