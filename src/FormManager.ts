@@ -74,6 +74,10 @@ class FormManager<S extends object> {
       }
 
       this.validate(this.validateOnMount);
+
+      setTimeout(() => {
+         this.validate(this.validateOnMount);
+      });
    }
 
    public set(state: ApolloFormState<S>) {
