@@ -49,8 +49,8 @@ class FormManager<S extends object> {
       this.onChange = props.onChange;
       this.onSubmit = props.onSubmit;
       this.validationSchema = props.validationSchema;
-      this.validateOnMount = props.validateOnMount;
-      this.resetOnSubmit = props.resetOnSubmit;
+      this.validateOnMount = props.validateOnMount || false;
+      this.resetOnSubmit = props.resetOnSubmit || false;
       this.initialState = cloneDeep(props.initialState);
       this.initialErrors = cloneDeep(props.initialErrors) || {};
       this.initialTouches = cloneDeep(props.initialTouches) || {};
@@ -77,6 +77,10 @@ class FormManager<S extends object> {
 
       setTimeout(() => {
          this.validate(this.validateOnMount);
+
+         if (props.onInit) {
+            props.onInit(this);
+         }
       });
    }
 
@@ -112,11 +116,18 @@ class FormManager<S extends object> {
       selector: (state: ApolloFormState<S>) => P = ((s: ApolloFormState<S>) => s) as any,
       dependencies: any[] = [],
    ): P {
-      const [state, setState] = React.useState(selector ? selector(this.get()) : this.get());
+      let fullState = this.get();
+      const [state, setState] = React.useState(selector ? selector(fullState) : fullState);
 
       React.useEffect(() => {
          return this.watch(selector, s => setState(s));
       }, [setState, this.query, ...dependencies]);
+
+      if (!fullState) {
+         fullState = this.get();
+
+         return (selector ? selector(fullState) : fullState) as P;
+      }
 
       return state as P;
    }

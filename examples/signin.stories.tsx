@@ -14,6 +14,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { PreviewState, wait } from './utils';
 import getFieldProps from '../src/field/getFieldProps';
 import Alert from '@material-ui/lab/Alert';
+import FormManager from '../src/FormManager';
 
 export default {
    title: 'Components',
@@ -88,6 +89,8 @@ function SubmitButton(props: ButtonProps) {
 }
 
 export function SignIn() {
+   const [form, setForm] = React.useState<FormManager<SignInFormState> | null>(null);
+   console.log(form);
    return (
       <Grid container spacing={3}>
          <Grid item xs={12} md={6}>
@@ -103,6 +106,9 @@ export function SignIn() {
 
                      form.reset({ ...initialState, email: 'reseted' });
                      form.responseMessage('Invalid password');
+                  }}
+                  onInit={form => {
+                     setForm(form);
                   }}
                >
                   <Grid container spacing={2}>
@@ -146,7 +152,7 @@ export function SignIn() {
             </Paper>
          </Grid>
          <Grid item xs={12} md={6}>
-            <PreviewState name='signin' />
+            {form && <PreviewState name={form.name} />}
          </Grid>
       </Grid>
    );

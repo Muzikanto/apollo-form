@@ -18,8 +18,9 @@ function useApolloForm<S extends object>({
 }: IuseFormProps<S>) {
    const mountedRef = React.useRef(false);
    const apolloClient = useApolloClient();
-   const { current: manager } = React.useRef(
-      new FormManager<S>({ ...props, initialState, apolloClient }),
+   const manager = React.useMemo(
+      () => new FormManager<S>({ ...props, initialState, apolloClient }),
+      [],
    );
 
    React.useEffect(() => {

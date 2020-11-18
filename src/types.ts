@@ -47,6 +47,7 @@ export interface FormManagerParams<S extends object> {
    validateOnMount?: boolean;
    enableReinitialize?: boolean;
 
+   onInit?: (form: FormManager<S>) => void;
    onSubmit?: (state: ApolloFormState<S>, form: FormManager<S>) => Promise<void>;
    onChange?: (state: S, form: FormManager<S>) => void;
 }
