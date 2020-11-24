@@ -54,6 +54,10 @@ function useApolloForm<S extends object>({
       };
    }, [resetOnUnmount, removeOnUnmount, manager]);
 
+   React.useEffect(() => {
+      manager.renewOnChange(props.onChange);
+   }, [props.onChange]);
+
    return manager;
 }
 

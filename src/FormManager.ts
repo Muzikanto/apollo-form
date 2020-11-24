@@ -337,6 +337,10 @@ class FormManager<S extends object> {
    public getInitialState(): S {
       return this.initialState;
    }
+
+   public renewOnChange(handler: FormManagerParams<S>['onChange']) {
+      this.onChange = handler;
+   }
 }
 
 export default FormManager;
