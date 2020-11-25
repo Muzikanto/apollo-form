@@ -37,12 +37,18 @@ class ApolloManager<S extends object> extends BaseManager<S> {
       handler: (value: P) => void,
    ): () => void {
       // @ts-ignore
-      let previous = selector ? selector(this.get()[this.name]) : this.get()[this.name];
+      const state = this.get()[this.name];
+
+      let previous = selector ? selector(state) : state;
 
       const unWatch = this.apolloClient.cache.watch({
          query: this.query,
          callback: ({ result }) => {
             const s = (result as { [key: string]: ApolloFormState<S> })[this.name];
+
+            if (!s) {
+               return;
+            }
 
             const v: P = (selector ? selector(s) : s) as P;
 

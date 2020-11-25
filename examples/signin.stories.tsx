@@ -15,6 +15,7 @@ import { PreviewState, wait } from './utils';
 import getFieldProps from '../src/field/getFieldProps';
 import Alert from '@material-ui/lab/Alert';
 import FormManager from '../src/FormManager';
+import { useApolloClient } from '@apollo/client';
 
 export default {
    title: 'Components',
@@ -88,9 +89,12 @@ function SubmitButton(props: ButtonProps) {
    );
 }
 
-export function SignIn() {
+function Form() {
+   const apollo = useApolloClient();
+
    const [form, setForm] = React.useState<FormManager<SignInFormState> | null>(null);
    console.log(form);
+
    return (
       <Grid container spacing={3}>
          <Grid item xs={12} md={6}>
@@ -106,6 +110,8 @@ export function SignIn() {
 
                      form.reset({ ...initialState, email: 'reseted' });
                      form.responseMessage('Invalid password');
+
+                     apollo.resetStore().then();
                   }}
                   onInit={form => {
                      setForm(form);
@@ -156,4 +162,8 @@ export function SignIn() {
          </Grid>
       </Grid>
    );
+}
+
+export function SignIn() {
+   return <Form />;
 }

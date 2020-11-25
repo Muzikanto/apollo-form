@@ -16,7 +16,7 @@ addParameters({
 
 addDecorator(withKnobs);
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
    ssrMode: false,
    connectToDevTools: true,
    cache: new InMemoryCache().restore({}),

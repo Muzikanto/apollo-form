@@ -116,18 +116,12 @@ class FormManager<S extends object> {
       selector: (state: ApolloFormState<S>) => P = ((s: ApolloFormState<S>) => s) as any,
       dependencies: any[] = [],
    ): P {
-      let fullState = this.get();
+      const fullState = this.get();
       const [state, setState] = React.useState(selector ? selector(fullState) : fullState);
 
       React.useEffect(() => {
          return this.watch(selector, s => setState(s));
-      }, [setState, this.query, ...dependencies]);
-
-      if (!fullState) {
-         fullState = this.get();
-
-         return (selector ? selector(fullState) : fullState) as P;
-      }
+      }, [selector, setState, this.query, ...dependencies]);
 
       return state as P;
    }
