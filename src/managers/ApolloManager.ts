@@ -36,10 +36,12 @@ class ApolloManager<S extends object> extends BaseManager<S> {
       selector: ((state: ApolloFormState<S>) => P) | null,
       handler: (value: P) => void,
    ): () => void {
-      // @ts-ignore
-      const state = this.get()[this.name];
+      const rawState = this.get();
 
-      let previous = selector ? selector(state) : state;
+      // @ts-ignore
+      const state = rawState ? rawState[this.name] : null;
+
+      let previous = selector && state ? selector(state) : state;
 
       const unWatch = this.apolloClient.cache.watch({
          query: this.query,

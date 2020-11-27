@@ -93,7 +93,6 @@ function Form() {
    const apollo = useApolloClient();
 
    const [form, setForm] = React.useState<FormManager<SignInFormState> | null>(null);
-   console.log(form);
 
    return (
       <Grid container spacing={3}>
@@ -102,7 +101,7 @@ function Form() {
                <ApolloForm<SignInFormState>
                   name='signin'
                   initialState={initialState}
-                  removeOnUnmount
+                  removeOnUnmount={false}
                   validationSchema={validationSchema}
                   onSubmit={async ({ values }, form) => {
                      await wait(1000);
