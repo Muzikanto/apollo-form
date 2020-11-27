@@ -154,10 +154,11 @@ class FormManager<S extends object> {
    }
 
    public setValues(values: S) {
-      this.set({ ...this.get(), values });
+      const prev = this.get();
+      this.set({ ...prev, values });
 
       if (this.onChange) {
-         this.onChange(values, this);
+         this.onChange(values, this, prev.values);
       }
    }
    public setErrors(errors: FormErrors<S>) {

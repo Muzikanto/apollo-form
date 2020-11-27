@@ -49,7 +49,7 @@ export interface FormManagerParams<S extends object> {
 
    onInit?: (form: FormManager<S>) => void;
    onSubmit?: (state: ApolloFormState<S>, form: FormManager<S>) => Promise<void>;
-   onChange?: (state: S, form: FormManager<S>) => void;
+   onChange?: (next: S, form: FormManager<S>, prev: S) => void;
 }
 
 export interface FieldProps<Value> {
