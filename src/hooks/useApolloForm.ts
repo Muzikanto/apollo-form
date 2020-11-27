@@ -25,15 +25,21 @@ function useApolloForm<S extends object>({
 
    React.useEffect(() => {
       if (enableReinitialize && mountedRef.current) {
-         setTimeout(() => {
+         const timeout = setTimeout(() => {
             if (manager.exists()) {
                if (!isEqual(manager.getInitialState(), initialState)) {
                   manager.reset(initialState);
                }
             }
          });
+
+         return () => {
+            clearTimeout(timeout);
+         };
       }
       mountedRef.current = true;
+
+      return () => {};
    }, [initialState, mountedRef, enableReinitialize]);
 
    React.useEffect(() => {
@@ -57,6 +63,10 @@ function useApolloForm<S extends object>({
    React.useEffect(() => {
       manager.renewOnChange(props.onChange);
    }, [props.onChange]);
+
+   React.useEffect(() => {
+      manager.renewOnSubmit(props.onSubmit);
+   }, [props.onSubmit]);
 
    return manager;
 }

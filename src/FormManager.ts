@@ -335,6 +335,10 @@ class FormManager<S extends object> {
    public renewOnChange(handler: FormManagerParams<S>['onChange']) {
       this.onChange = handler;
    }
+
+   public renewOnSubmit(handler: FormManagerParams<S>['onSubmit']) {
+      this.onSubmit = handler;
+   }
 }
 
 export default FormManager;
