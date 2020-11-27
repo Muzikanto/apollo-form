@@ -170,6 +170,7 @@ class FormManager<S extends object> {
 
    public setFieldValue(key: string, newValue: any) {
       const state = this.get();
+      const prevValues = cloneDeep(state.values);
       const touched = getDeepStatus(state.touches, key);
 
       if (!touched) {
@@ -183,7 +184,7 @@ class FormManager<S extends object> {
       this.set(state);
 
       if (this.onChange) {
-         this.onChange(state.values, this);
+         this.onChange(state.values, this, prevValues);
       }
 
       return state;
