@@ -30,6 +30,7 @@
 -  form validation
 -  create form fields
 -  create form array fields
+-  file picker
 
 ## Installation
 
@@ -200,6 +201,47 @@ function FormTextFieldArray(props: { name: string; validate: FieldValidator<stri
             );
          }}
       </FieldArray>
+   );
+}
+```
+
+### create file field
+
+```typescript jsx
+function ImageField(props: Omit<ImageFieldProps, 'children'>) {
+   return (
+      <FileField accept={['image/jpeg', 'image/png']} maxSize={1024 * 500} {...props}>
+         {({ field, onClick }) => {
+            const [img, setImg] = React.useState<string | null>(null);
+
+            React.useEffect(() => {
+               if (field.value) {
+                  fileToBase64(field.value).then(r => setImg(r));
+               }
+            }, [field.value]);
+
+            return (
+               <>
+                  {field.value ? (
+                     <>
+                        {img && (
+                           <>
+                              <img style={{ width: '100%' }} src={img} alt={field.value.name} />
+                              <Button onClick={onClick} variant='contained'>
+                                 Upload new image
+                              </Button>
+                           </>
+                        )}
+                     </>
+                  ) : (
+                     <Button variant='contained' onClick={onClick}>
+                        Upload image
+                     </Button>
+                  )}
+               </>
+            );
+         }}
+      </FileField>
    );
 }
 ```
