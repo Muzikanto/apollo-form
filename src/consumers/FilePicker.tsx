@@ -27,7 +27,10 @@ export interface FilePickerRenderProps<Multiple extends boolean | undefined = un
 
 export interface FilePickerProps<Multiple extends boolean | undefined = undefined> {
    value?: Multiple extends true ? File[] : File;
-   onChange?: (value: Multiple extends true ? File[] : File) => void;
+   onChange?: (
+      e: React.ChangeEvent | React.DragEvent,
+      value: Multiple extends true ? File[] : File,
+   ) => void;
 
    multiple?: Multiple;
    reset?: boolean;
@@ -57,7 +60,7 @@ function FilePicker<Multiple extends boolean | undefined = undefined>(
       [fileInputRef],
    );
    const onChange = React.useCallback(
-      (list: File[]) => {
+      (e: React.ChangeEvent | React.DragEvent, list: File[]) => {
          if (props.accept && props.accept.indexOf(list[0].type) === -1) {
             if (props.onError) {
                props.onError(wrongErr);
@@ -81,11 +84,11 @@ function FilePicker<Multiple extends boolean | undefined = undefined>(
             arr.push.apply(arr, list);
 
             if (props.onChange) {
-               props.onChange(arr as any);
+               props.onChange(e, arr as any);
             }
          } else {
             if (props.onChange) {
-               props.onChange(list[0] as any);
+               props.onChange(e, list[0] as any);
             }
          }
       },
@@ -117,7 +120,7 @@ function FilePicker<Multiple extends boolean | undefined = undefined>(
       setDragged(false);
 
       if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-         onChange(parseFileList(e.dataTransfer.files));
+         onChange(e, parseFileList(e.dataTransfer.files));
          e.dataTransfer.clearData();
       }
    }, []);
@@ -143,7 +146,7 @@ function FilePicker<Multiple extends boolean | undefined = undefined>(
                const targetFiles = e.target.files;
 
                if (targetFiles) {
-                  onChange(parseFileList(targetFiles));
+                  onChange(e, parseFileList(targetFiles));
                }
 
                e.target.value = '';

@@ -17,7 +17,7 @@ export type FileFieldRenderProps<Multiple extends boolean = false> = FilePickerR
 
 export type FileFieldProps<Multiple extends boolean = false> = Omit<
    FilePickerProps<Multiple>,
-   'children'
+   'children' | 'value' | 'onChange'
 > & {
    name: string;
    validate?: FieldValidator<Multiple extends true ? File[] : File>;
@@ -36,7 +36,9 @@ function FileField<Multiple extends boolean = false>(props: FileFieldProps<Multi
       <FilePicker
          {...props}
          value={field.value}
-         onChange={v => field.setFieldValue(v)}
+         onChange={(e, value) => {
+            field.setFieldValue(value);
+         }}
          onError={err => {
             field.setFieldError(props.prepareError ? props.prepareError(err) : err);
          }}
