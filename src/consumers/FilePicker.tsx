@@ -16,7 +16,7 @@ function parseFileList(fileList: FileList): File[] {
 
 export type FilePickerError = 'File size is to large' | 'Wrong file format';
 
-export interface FilePickerRenderProps<Multiple extends boolean = false> {
+export interface FilePickerRenderProps<Multiple extends boolean | undefined = undefined> {
    onClick: (e: React.MouseEvent) => void;
    onDragEnter: (e: React.DragEvent) => void;
    onDragLeave: (e: React.DragEvent) => void;
@@ -25,7 +25,7 @@ export interface FilePickerRenderProps<Multiple extends boolean = false> {
    dragged: boolean;
 }
 
-export interface FilePickerProps<Multiple extends boolean = false> {
+export interface FilePickerProps<Multiple extends boolean | undefined = undefined> {
    value?: Multiple extends true ? File[] : File;
    onChange?: (value: Multiple extends true ? File[] : File) => void;
 
@@ -42,7 +42,9 @@ export interface FilePickerProps<Multiple extends boolean = false> {
 const wrongErr: FilePickerError = 'Wrong file format';
 const toLargeErr: FilePickerError = 'File size is to large';
 
-function FilePicker<Multiple extends boolean>(props: FilePickerProps<Multiple>) {
+function FilePicker<Multiple extends boolean | undefined = undefined>(
+   props: FilePickerProps<Multiple>,
+) {
    const fileInputRef = React.createRef<HTMLInputElement>();
    const [dragged, setDragged] = React.useState(false);
 
