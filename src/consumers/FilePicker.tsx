@@ -26,9 +26,7 @@ export interface FilePickerRenderProps<Multiple extends boolean = false> {
 }
 
 export interface FilePickerProps<Multiple extends boolean = false> {
-   name: string;
-
-   value: Multiple extends true ? File[] : File;
+   value?: Multiple extends true ? File[] : File;
    onChange?: (value: Multiple extends true ? File[] : File) => void;
 
    multiple?: Multiple;
@@ -44,7 +42,7 @@ export interface FilePickerProps<Multiple extends boolean = false> {
 const wrongErr: FilePickerError = 'Wrong file format';
 const toLargeErr: FilePickerError = 'File size is to large';
 
-function FilePicker<Multiple extends boolean = false>(props: FilePickerProps<Multiple>) {
+function FilePicker<Multiple extends boolean>(props: FilePickerProps<Multiple>) {
    const fileInputRef = React.createRef<HTMLInputElement>();
    const [dragged, setDragged] = React.useState(false);
 

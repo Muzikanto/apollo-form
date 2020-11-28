@@ -5,7 +5,9 @@ import FilePicker, {
    FilePickerError,
    FilePickerProps,
    FilePickerRenderProps,
-} from '../components/FilePicker';
+} from '../consumers/FilePicker';
+
+export type FileFieldError = FilePickerError;
 
 export type FileFieldRenderProps<Multiple extends boolean = false> = FilePickerRenderProps<
    Multiple
@@ -20,9 +22,8 @@ export type FileFieldProps<Multiple extends boolean = false> = Omit<
    name: string;
    validate?: FieldValidator<Multiple extends true ? File[] : File>;
 
-   prepareError?: (err: FilePickerError) => string;
-
    children: (props: FileFieldRenderProps<Multiple>) => JSX.Element;
+   prepareError?: (err: FilePickerError) => string;
 };
 
 function FileField<Multiple extends boolean = false>(props: FileFieldProps<Multiple>) {

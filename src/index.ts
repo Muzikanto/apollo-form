@@ -26,6 +26,12 @@ import {
    FormManagerParams,
    FieldValidator,
 } from './types';
+import FilePicker, {
+   FilePickerProps,
+   FilePickerError,
+   FilePickerRenderProps,
+} from './consumers/FilePicker';
+import FileField, { FileFieldProps, FileFieldRenderProps, FileFieldError } from './field/FileField';
 
 export {
    ApolloForm,
@@ -54,4 +60,12 @@ export {
    FormErrors,
    ApolloFormState,
    FormTouches,
+   FilePicker,
+   FilePickerError,
+   FilePickerProps,
+   FilePickerRenderProps,
+   FileField,
+   FileFieldProps,
+   FileFieldRenderProps,
+   FileFieldError,
 };
