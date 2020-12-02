@@ -101,7 +101,7 @@ function Form() {
                <ApolloForm<SignInFormState>
                   name='signin'
                   initialState={initialState}
-                  removeOnUnmount={false}
+                  removeOnUnmount
                   validationSchema={validationSchema}
                   onSubmit={async ({ values }, form) => {
                      await wait(1000);
