@@ -23,10 +23,18 @@ function useApolloForm<S extends object>({
       [],
    );
 
+   if (enableReinitialize && typeof window === 'undefined') {
+      if (!isEqual(manager.get().values, initialState)) {
+         manager.reset(initialState);
+      }
+   }
+
    React.useEffect(() => {
       if (enableReinitialize && mountedRef.current) {
-         if (manager.exists()) {
-            if (!isEqual(manager.getInitialState(), initialState)) {
+         const state = manager.get();
+
+         if (state) {
+            if (!isEqual(state.values, initialState)) {
                manager.reset(initialState);
             }
          }
