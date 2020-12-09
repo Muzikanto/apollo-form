@@ -1,5 +1,5 @@
 import useFieldArray, { FieldArrayParams, IUseFieldArrayProps } from '../hooks/useFieldArray';
-import FormManager from '../FormManager';
+import FormManager from '../managers/FormManager';
 import useApolloFormCtx from '../hooks/useApolloFormCtx';
 
 export interface FieldArrayProps<Value, S extends object = {}> extends IUseFieldArrayProps<Value> {

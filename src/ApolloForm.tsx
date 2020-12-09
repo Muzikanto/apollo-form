@@ -1,6 +1,6 @@
 import React from 'react';
 import useForm, { IuseFormProps } from './hooks/useApolloForm';
-import FormContext from './FormContext';
+import FormContext from './utils/FormContext';
 
 export type ApolloFormProps<S extends object> = IuseFormProps<S> & {
    children: React.ReactNode;

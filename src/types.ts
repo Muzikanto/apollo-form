@@ -1,15 +1,13 @@
 import { ApolloClient } from '@apollo/client';
 import { ObjectSchema } from 'yup';
-import FormManager from './FormManager';
+import FormManager from './managers/FormManager';
 
 export type FieldValidator<Value> = (value: Value) => string | null | void;
 
 export type FormErrors<State extends object> = {
-   [k in keyof State]?:
-      | (State[k] extends object
-           ? FormErrors<State[k]> | [FormErrors<State[k]>] | [FormErrors<State[k]>, string]
-           : string)
-      | string;
+   [k in keyof State]?: State[k] extends object
+      ? [string | undefined, FormErrors<State[k]> | string]
+      : State[k];
 };
 
 export type FormTouches<State extends object> = {
@@ -42,14 +40,13 @@ export interface FormManagerParams<S extends object> {
    validationSchema?: ObjectSchema<any>;
    validate?: (state: ApolloFormState<S>) => FormErrors<S> | undefined;
 
-   resetOnUnmount?: boolean;
    resetOnSubmit?: boolean;
    validateOnMount?: boolean;
    enableReinitialize?: boolean;
 
    onInit?: (form: FormManager<S>) => void;
    onSubmit?: (state: ApolloFormState<S>, form: FormManager<S>) => Promise<void>;
-   onChange?: (next: S, form: FormManager<S>, prev: S) => void;
+   onChange?: (next: S, prev: S, form: FormManager<S>) => void;
 }
 
 export interface FieldProps<Value> {

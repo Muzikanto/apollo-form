@@ -1,4 +1,4 @@
-import FormManager from '../FormManager';
+import FormManager from '../managers/FormManager';
 import React from 'react';
 import { useApolloClient } from '@apollo/client';
 import { FormManagerParams } from '../types';
@@ -6,12 +6,12 @@ import isEqual from 'lodash/isEqual';
 
 export type IuseFormProps<S extends object> = Omit<FormManagerParams<S>, 'apolloClient'> & {
    resetOnUnmount?: boolean;
-   removeOnUnmount?: boolean;
+   saveOnUnmount?: boolean;
 };
 
 function useApolloForm<S extends object>({
    resetOnUnmount,
-   removeOnUnmount,
+   saveOnUnmount,
    enableReinitialize,
    initialState,
    ...props
@@ -44,7 +44,7 @@ function useApolloForm<S extends object>({
 
    React.useEffect(() => {
       return () => {
-         if (removeOnUnmount) {
+         if (!saveOnUnmount) {
             apolloClient.cache.evict({ id: 'ROOT_QUERY', fieldName: manager.name });
          } else {
             if (resetOnUnmount) {
@@ -54,7 +54,7 @@ function useApolloForm<S extends object>({
             }
          }
       };
-   }, [resetOnUnmount, removeOnUnmount, manager]);
+   }, [resetOnUnmount, saveOnUnmount, manager]);
 
    React.useEffect(() => {
       manager.renewOnChange(props.onChange);

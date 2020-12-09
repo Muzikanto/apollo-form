@@ -116,6 +116,7 @@ export function TodoList() {
             <Paper style={{ maxWidth: 500, padding: 20 }}>
                <ApolloForm<SignInFormState>
                   name='todolist'
+                  saveOnUnmount
                   initialState={initialState}
                   validationSchema={validationSchema}
                   onSubmit={async ({ values }, form) => {

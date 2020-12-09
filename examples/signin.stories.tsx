@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { ApolloForm, Field, ResponseMessage, Submit } from '../src';
+import { ApolloForm, Field, FormErrors, ResponseMessage, Submit } from '../src';
 import TextField, { OutlinedTextFieldProps } from '@material-ui/core/TextField';
 import * as React from 'react';
 import { IUseFieldProps } from '../src/hooks/useField';
@@ -14,7 +14,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { PreviewState, wait } from './utils';
 import getFieldProps from '../src/field/getFieldProps';
 import Alert from '@material-ui/lab/Alert';
-import FormManager from '../src/FormManager';
+import FormManager from '../src/managers/FormManager';
 import { useApolloClient } from '@apollo/client';
 
 export default {
@@ -78,19 +78,16 @@ function FormPassword(props: FormTextFieldProps) {
 function SubmitButton(props: ButtonProps) {
    return (
       <Submit>
-         {({ isValid, isSubmitted, loading }) =>
-            loading ? (
-               <CircularProgress />
-            ) : (
-               <Button disabled={isSubmitted ? !isValid : false} {...props} />
-            )
+         {({ disabled, loading }) =>
+            loading ? <CircularProgress /> : <Button disabled={disabled} {...props} />
          }
       </Submit>
    );
 }
 
 function Form() {
-   const apollo = useApolloClient();
+   const [state, setState] = React.useState(initialState);
+   // const apollo = useApolloClient();
 
    const [form, setForm] = React.useState<FormManager<SignInFormState> | null>(null);
 
@@ -100,14 +97,15 @@ function Form() {
             <Paper style={{ maxWidth: 500, padding: 20 }}>
                <ApolloForm<SignInFormState>
                   name='signin'
+                  enableReinitialize
                   initialState={initialState}
-                  removeOnUnmount
                   validationSchema={validationSchema}
                   onSubmit={async ({ values }, form) => {
                      await wait(1000);
                      console.log('Submit state: ', values);
 
                      form.reset({ ...initialState, email: 'reseted' });
+                     // setState({...state, email: 'reseted'})
                      form.responseMessage('Invalid password');
 
                      apollo.resetStore().then();

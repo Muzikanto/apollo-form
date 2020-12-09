@@ -1,6 +1,6 @@
 import React from 'react';
 import useApolloFormCtx from '../hooks/useApolloFormCtx';
-import FormManager from '../FormManager';
+import FormManager from '../managers/FormManager';
 
 export interface SubmitComponentProps {
    disabled: boolean;
@@ -28,7 +28,7 @@ function Submit(props: SubmitProps) {
 
    return (
       <Component
-         disabled={!isValid || loading || !existsChanges}
+         disabled={(!isValid && isSubmitted) || loading || !existsChanges}
          isValid={isValid}
          loading={loading}
          existsChanges={existsChanges}

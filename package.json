@@ -1,6 +1,6 @@
 {
    "name": "apollo-form",
-   "version": "1.12.2",
+   "version": "2.0.0",
    "description": "Form state manager",
    "license": "MIT",
    "maintainers": [

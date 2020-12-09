@@ -15,21 +15,23 @@ function FirstError<P extends { error: string }>(props: FirstErrorProps<P>) {
    const errors = apolloForm.useState(s => s.errors);
 
    const existsChanges = apolloForm.useState(s => s.existsChanges);
-   const response = apolloForm.useState(s => s.responseMessage);
+   const responseMessage = apolloForm.useState(s => s.responseMessage);
 
    const Component = (props.children ||
       (({ error }: { error: string }) => <span>{error}</span>)) as React.ComponentType<{
       error: string;
    }>;
 
-   const error =
-      response && !existsChanges
-         ? response
-         : (props.showIfSubmitted
-            ? submitted
-            : true)
-         ? firstError(errors)
-         : undefined;
+   let error: string | undefined = undefined;
+
+   if (responseMessage && !existsChanges) {
+      error = responseMessage;
+   }
+
+   const firstErrorMessage = firstError(errors);
+   if (((props.showIfSubmitted && submitted) || true) && firstErrorMessage) {
+      error = firstErrorMessage;
+   }
 
    if (!error) {
       return <></>;

@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { PreviewState, wait } from './utils';
 import Alert from '@material-ui/lab/Alert';
-import FormManager from '../src/FormManager';
+import FormManager from '../src/managers/FormManager';
 import FileField, { FileFieldProps } from '../src/field/FileField';
 import FirstError from '../src/utils/FirstError';
 
@@ -99,6 +99,7 @@ function Form() {
             <Paper style={{ maxWidth: 500, padding: 20 }}>
                <ApolloForm<GalleryFormState>
                   name='gallery'
+                  saveOnUnmount
                   initialState={initialState}
                   onSubmit={async ({ values }, form) => {
                      await wait(1000);

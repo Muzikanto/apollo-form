@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApolloForm, Field, FieldValidator } from '../src';
+import { ApolloForm, Field, FieldValidator, FormErrors } from '../src';
 import * as Yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -109,8 +109,15 @@ function FormTextFieldArray(props: { name: string; validate: FieldValidator<stri
    );
 }
 
+type FormState = {
+   email: string;
+   password: string;
+   deep: { one: string; two: { test: string } };
+   arr: string[];
+};
+
 export function Example() {
-   const [initialState, setState] = React.useState({
+   const [initialState, setState] = React.useState<FormState>({
       email: '1',
       password: '',
       deep: { one: '1', two: { test: '2' } },
@@ -118,18 +125,23 @@ export function Example() {
    });
 
    return (
-      <ApolloForm
+      <ApolloForm<FormState>
          name='example'
+         saveOnUnmount
          initialState={initialState}
          validationSchema={validationSchema}
          validate={({ values }) => {
+            const errors: FormErrors<FormState> = {};
+
             if (values.email === '12') {
-               return {
-                  email: 'Not 12',
-               };
+               errors.email = 'Not 12';
+            }
+            if (false) {
+               // example deep errors
+               errors.deep = ['deep error', { one: 'deep oen error', two: [undefined, 'error'] }];
             }
 
-            return undefined;
+            return errors;
          }}
          onSubmit={async ({ values }, form) => {
             await wait(1000);
@@ -218,12 +230,8 @@ export function Example() {
                            </Grid>
                            <Grid item>
                               <Submit>
-                                 {({ isValid, isSubmitted, loading }) => (
-                                    <Button
-                                       variant='contained'
-                                       type='submit'
-                                       disabled={loading || (isSubmitted ? !isValid : false)}
-                                    >
+                                 {({ disabled }) => (
+                                    <Button variant='contained' type='submit' disabled={disabled}>
                                        Submit
                                     </Button>
                                  )}

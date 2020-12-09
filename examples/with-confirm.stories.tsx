@@ -77,6 +77,7 @@ export function WithConfirm() {
             <Paper style={{ maxWidth: 500, padding: 20 }}>
                <ApolloForm<WithConfirmFormState>
                   name='withConfirm'
+                  saveOnUnmount
                   initialState={initialState}
                   onSubmit={async ({ values }, form) => {
                      await wait(1000);

@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import FormManager from '../src/FormManager';
+import FormManager from '../src/managers/FormManager';
 import _ from 'lodash';
 import { FormManagerParams } from '../src';
 import * as Yup from 'yup';
@@ -349,9 +349,9 @@ describe('Apollo form', function() {
       expect(manager.get().values).toEqual({ text: '5', deep: { one: '5' }, arr: [3, 2, 1] });
    });
    it('setErrors', () => {
-      manager.setErrors({ text: 'err', deep: { one: 'err' } });
+      manager.setErrors({ text: 'err', deep: [undefined, { one: 'err' }] });
 
-      expect(manager.get().errors).toEqual({ text: 'err', deep: { one: 'err' } });
+      expect(manager.get().errors).toEqual({ text: 'err', deep: [undefined, { one: 'err' }] });
    });
    it('setTouches', () => {
       manager.setTouches({ text: true, deep: { one: true } });
