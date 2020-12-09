@@ -94,8 +94,9 @@ function Example() {
          // generated: gql`query ApolloForm { test @client }`
          name='test'
          // reset form values with current `initialState`
-         // please use carefully
          enableReinitialize
+         // load state from apollo cache
+         saveOnUnmount
          initialState={initialState}
          validationSchema={validationSchema}
          validate={({ values }) => {
@@ -115,7 +116,7 @@ function Example() {
                email: 'Reseted',
             });
          }}
-         onChange={(state, form) => console.log('Values: ', state)}
+         onChange={(state, prev, form) => console.log('Values: ', state)}
       >
          <FormTextField
             name='email'
