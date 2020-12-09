@@ -24,7 +24,7 @@ function useApolloForm<S extends object>({
    );
 
    if (enableReinitialize && typeof window === 'undefined') {
-      if (!isEqual(manager.get().values, initialState)) {
+      if (!isEqual(manager.getInitialState(), initialState)) {
          manager.reset(initialState);
       }
    }
@@ -34,7 +34,7 @@ function useApolloForm<S extends object>({
          const state = manager.get();
 
          if (state) {
-            if (!isEqual(state.values, initialState)) {
+            if (!isEqual(manager.getInitialState(), initialState)) {
                manager.reset(initialState);
             }
          }
