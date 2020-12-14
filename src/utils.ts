@@ -6,10 +6,18 @@ function replaceErrors(target: any, source: any, value: any) {
       if (typeof source[key] === 'object' && source[key] !== null && !isDate(value)) {
          if (Array.isArray(source[key])) {
             if (source[key][1] !== null && source[key][1] !== undefined) {
+               if (typeof target[key] !== 'object' || target[key] === null) {
+                  target[key] = {};
+               }
+
                let t = Array.isArray(target[key]) ? target[key][1] : target[key];
                target[key] = [true, replaceErrors(t || {}, source[key][1], true)];
             }
          } else {
+            if (typeof target[key] !== 'object' || target[key] === null) {
+               target[key] = {};
+            }
+
             if (source[key]) {
                target[key] = replaceErrors(target[key] || {}, source[key], true);
             }
