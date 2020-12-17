@@ -327,6 +327,8 @@ class FormManager<S extends object> {
       state.existsChanges = false;
       state.responseMessage = undefined;
 
+      this.initialState = state.values;
+
       this.set(state);
    }
 
