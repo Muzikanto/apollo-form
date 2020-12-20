@@ -1,6 +1,6 @@
 {
    "name": "apollo-form",
-   "version": "2.0.6",
+   "version": "2.0.7",
    "description": "Form state manager",
    "license": "MIT",
    "maintainers": [
@@ -17,7 +17,8 @@
       "form",
       "typescript",
       "state-manager",
-      "optimize renders"
+      "optimize renders",
+      "file picker"
    ],
    "repository": {
       "url": "https://github.com/Muzikanto/apollo-form"

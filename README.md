@@ -58,6 +58,23 @@ Learn [docs for use this package](https://github.com/Muzikanto/apollo-form/wiki)
 
 ### create Form
 
+| Name               | Type         | Required | Description                                                                 |
+| ------------------ | ------------ | -------- | --------------------------------------------------------------------------- |
+| name               | string       | yes      | graphql client value name, like this `query ApolloForm { ${name} @client }` |
+| initialState       | object       | yes      | Initial form state                                                          |
+| initialErrors      | FormErrors   | no       | Initial errors                                                              |
+| initialTouches     | FormTouches  | no       | Initial touched fields                                                      |
+| validationSchema   | ObjectSchema | no       | Yup validation schema                                                       |
+| validate           | Function     | no       | Custom form validation, function returned errors state                      |
+| resetOnSubmit      | boolean      | no       | Reset form with `initialState` after submit                                 |
+| validateOnMount    | boolean      | no       | Validate form on mount                                                      |
+| enableReinitialize | boolean      | no       | Reset form with new `initialState`                                          |
+| onInit             | Function     | no       | Function for save form reference                                            |
+| onSubmit           | Function     | no       | Async function for handle form submit                                       |
+| onChange           | Function     | no       | Handle state changes (called only if values changed)                        |
+| saveOnUnmount      | boolean      | no       | Save form state in apollo global state                                      |
+| resetOnUnmount     | boolean      | no       | Reset form with `initialState` after unmount form                           |
+
 ```typescript jsx
 interface State {
    text: string;
@@ -90,7 +107,6 @@ const initialState = {
 function Example() {
    return (
       <ApolloForm
-         // query name, please use valid name
          // generated: gql`query ApolloForm { test @client }`
          name='test'
          // reset form values with current `initialState`
