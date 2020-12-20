@@ -1,3 +1,4 @@
+import React from 'react';
 import useField, { FieldParams, IUseFieldProps } from '../hooks/useField';
 import useApolloFormCtx from '../hooks/useApolloFormCtx';
 import FormManager from '../managers/FormManager';
@@ -12,7 +13,7 @@ function Field<Value, S extends object = {}>(props: FieldProps<Value, S>) {
    const form = useApolloFormCtx<S>();
    const field = useField(fieldProps);
 
-   return children({ field, form });
+   return <>{children({ field, form })}</>;
 }
 
 export default Field;

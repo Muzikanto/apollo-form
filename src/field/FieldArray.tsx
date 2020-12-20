@@ -1,3 +1,4 @@
+import React from 'react';
 import useFieldArray, { FieldArrayParams, IUseFieldArrayProps } from '../hooks/useFieldArray';
 import FormManager from '../managers/FormManager';
 import useApolloFormCtx from '../hooks/useApolloFormCtx';
@@ -12,7 +13,7 @@ function FieldArray<Value, S extends object = {}>(props: FieldArrayProps<Value, 
    const form = useApolloFormCtx<S>();
    const field = useFieldArray<Value>(fieldArrProps);
 
-   return children({ field, form });
+   return <>{children({ field, form })}</>;
 }
 
 export default FieldArray;
