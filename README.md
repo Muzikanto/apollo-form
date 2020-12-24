@@ -25,12 +25,7 @@
 
 ## Introduction
 
--  partial render form
--  easy create form
--  form validation
--  create form fields
--  create form array fields
--  file picker
+Advanced form state, partial rendering fields, form validation, file picker.
 
 ## Installation
 
