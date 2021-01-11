@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { ApolloForm, Field, FormErrors, ResponseMessage, Submit } from '../src';
+import { ApolloForm, Field, ResponseMessage, Submit } from '../src';
 import TextField, { OutlinedTextFieldProps } from '@material-ui/core/TextField';
 import * as React from 'react';
 import { IUseFieldProps } from '../src/hooks/useField';
@@ -15,7 +15,6 @@ import { PreviewState, wait } from './utils';
 import getFieldProps from '../src/field/getFieldProps';
 import Alert from '@material-ui/lab/Alert';
 import FormManager from '../src/managers/FormManager';
-import { useApolloClient } from '@apollo/client';
 
 export default {
    title: 'Components',
@@ -89,6 +88,7 @@ function Form() {
    const [state, setState] = React.useState(initialState);
    // const apollo = useApolloClient();
 
+   const ref = React.useRef<FormManager<SignInFormState>>(null);
    const [form, setForm] = React.useState<FormManager<SignInFormState> | null>(null);
 
    return (
@@ -96,6 +96,7 @@ function Form() {
          <Grid item xs={12} md={6}>
             <Paper style={{ maxWidth: 500, padding: 20 }}>
                <ApolloForm<SignInFormState>
+                  ref={ref}
                   name='signin'
                   enableReinitialize
                   initialState={initialState}
