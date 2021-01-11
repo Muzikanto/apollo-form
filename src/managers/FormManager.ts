@@ -102,7 +102,7 @@ class FormManager<S extends object> {
          data = this.manager.get();
       }
 
-      return cloneDeep(data[this.manager.name]) as ApolloFormState<S>;
+      return cloneDeep(data) as ApolloFormState<S>;
    }
    public exists(): boolean {
       try {
@@ -164,7 +164,7 @@ class FormManager<S extends object> {
       this.set({ ...prev, values });
 
       if (this.onChange) {
-         this.onChange(values, prev.values, this);
+         this.onChange(values, prev.values, this, { type: 'all' });
       }
    }
    public setErrors(errors: FormErrors<S>) {
@@ -196,7 +196,7 @@ class FormManager<S extends object> {
       this.set(state);
 
       if (this.onChange) {
-         this.onChange(state.values, prevValues, this);
+         this.onChange(state.values, prevValues, this, { type: 'field', value: key });
       }
 
       return state;

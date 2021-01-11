@@ -29,7 +29,7 @@ class ApolloManager<S extends object> extends BaseManager<S> {
          }) as any;
       } catch (e) {}
 
-      return data;
+      return (data || {})[this.name];
    }
 
    public watch<P = ApolloFormState<S>>(
@@ -39,7 +39,7 @@ class ApolloManager<S extends object> extends BaseManager<S> {
       const rawState = this.get();
 
       // @ts-ignore
-      const state = rawState ? rawState[this.name] : null;
+      const state = rawState ? rawState : null;
 
       let previous = selector && state ? selector(state) : state;
 

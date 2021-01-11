@@ -127,7 +127,7 @@ function Example() {
                email: 'Reseted',
             });
          }}
-         onChange={(state, prev, form) => console.log('Values: ', state)}
+         onChange={(state, prev, form, event) => console.log('Values: ', state)}
       >
          <FormTextField
             name='email'

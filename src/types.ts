@@ -29,6 +29,8 @@ export interface ApolloFormState<S extends object> {
    responseMessage?: string;
 }
 
+export type FormChangeEvent = { type: 'all' } | { type: 'all' | 'field'; value: string };
+
 export interface FormManagerParams<S extends object> {
    name: string;
    apolloClient: ApolloClient<object>;
@@ -46,7 +48,7 @@ export interface FormManagerParams<S extends object> {
 
    onInit?: (form: FormManager<S>) => void;
    onSubmit?: (state: ApolloFormState<S>, form: FormManager<S>) => Promise<void>;
-   onChange?: (next: S, prev: S, form: FormManager<S>) => void;
+   onChange?: (next: S, prev: S, form: FormManager<S>, event: FormChangeEvent) => void;
 }
 
 export interface FieldProps<Value> {
