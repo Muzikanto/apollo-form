@@ -109,7 +109,7 @@ function Form() {
                      // setState({...state, email: 'reseted'})
                      form.responseMessage('Invalid password');
 
-                     apollo.resetStore().then();
+                     // apollo.resetStore().then();
                   }}
                   onInit={form => {
                      setForm(form);

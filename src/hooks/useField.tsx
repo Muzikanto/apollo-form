@@ -18,42 +18,56 @@ export type IUseFieldProps<Value> = FieldProps<Value>;
 
 function useField<Value>(props: IUseFieldProps<Value>): FieldParams<Value> {
    const apolloForm = useApolloFormCtx();
+   const randName = React.useMemo(
+      () => 'unnamed-field-' + Math.ceil(Math.random() * 999999999),
+      [],
+   );
 
-   const value = apolloForm.useValue(props.name);
-   const error = apolloForm.useError(props.name);
-   const touched = apolloForm.useTouched(props.name);
-   const focused = apolloForm.useState(s => s.focused === props.name, [props.name]);
+   const name = props.name || randName;
+
+   const value = apolloForm.useValue(name);
+   const error = apolloForm.useError(name);
+   const touched = apolloForm.useTouched(name);
+   const focused = apolloForm.useState(s => s.focused === name, [name]);
 
    const setFieldValue = React.useCallback(
       (v: Value) => {
-         apolloForm.setFieldValue(props.name, v);
+         apolloForm.setFieldValue(name, v);
       },
       [apolloForm],
    );
    const setFieldError = React.useCallback(
       (v: string | undefined) => {
-         apolloForm.setFieldError(props.name, v);
+         apolloForm.setFieldError(name, v);
       },
       [apolloForm],
    );
    const setFieldTouched = React.useCallback(
       (v: boolean) => {
-         apolloForm.setFieldTouched(props.name, v);
+         apolloForm.setFieldTouched(name, v);
       },
       [apolloForm],
    );
    const setFieldFocused = React.useCallback(() => {
-      apolloForm.setFieldFocused(props.name);
+      apolloForm.setFieldFocused(name);
    }, [apolloForm]);
 
    // @ts-ignore
    React.useEffect(() => {
       if (props.validate) {
-         apolloForm.addFieldValidator(props.name, props.validate);
+         apolloForm.addFieldValidator(name, props.validate);
 
-         return () => apolloForm.removeFieldValidator(props.name);
+         return () => apolloForm.removeFieldValidator(name);
       }
    }, [apolloForm]);
+
+   React.useEffect(() => {
+      if (!props.name) {
+         console.error(
+            'Apollo-Form: The `name` of field is not provided. You should provide `name` to control form field.',
+         );
+      }
+   }, [props.name]);
 
    return {
       value,
