@@ -25,7 +25,7 @@
 
 ## Introduction
 
-Advanced form state, partial rendering fields, form validation, file picker.
+Advanced form state, optimized fields rendering, form validation, file picker and more.
 
 ## Installation
 
@@ -69,6 +69,8 @@ Learn [docs for use this package](https://github.com/Muzikanto/apollo-form/wiki)
 | onChange           | Function     | no       | Handle state changes (called only if values changed)                        |
 | saveOnUnmount      | boolean      | no       | Save form state in apollo global state                                      |
 | resetOnUnmount     | boolean      | no       | Reset form with `initialState` after unmount form                           |
+
+Example code
 
 ```typescript jsx
 interface State {
@@ -120,16 +122,20 @@ function Example() {
             return undefined;
          }}
          onSubmit={async ({ values }, form) => {
-            await wait(1000);
-            console.log('submit', values);
-            form.reset({
-               ...values,
-               email: 'Reseted',
-            });
+            try {
+               await wait(1000);
+               console.log('submit', values);
+               form.reset({
+                  ...values,
+                  email: 'Reseted',
+               });
+            } catch (e) {
+               form.responseError(e.message);
+            }
          }}
          onChange={(state, prev, form, event) => console.log('Values: ', state)}
       >
-         <FormTextField
+         <Field
             name='email'
             validate={v => {
                if (v.length === 1) {
@@ -138,10 +144,33 @@ function Example() {
 
                return undefined;
             }}
-         />
-         <FormTextField name='password' />
-         <FormTextField name='deep.one' />
-         <FormTextField name='arr.0' />
+         >
+            {({ field }) => <input {...getFieldProps(field)} />}
+         </Field>
+         <Field name='password'>{({ field }) => <input {...getFieldProps(field)} />}</Field>
+         <Field name='deep.one'>{({ field }) => <input {...getFieldProps(field)} />}</Field>
+         <Field name='arr.0'>{({ field }) => <input {...getFieldProps(field)} />}</Field>
+
+         <Submit>
+            {({ disabled }) => (
+               <button type='submit' disabled={disabled}>
+                  Submit
+               </button>
+            )}
+         </Submit>
+         <Reset>
+            {({ disabled }) => (
+               <button type='reset' disabled={disabled}>
+                  Reset
+               </button>
+            )}
+         </Reset>
+         <FormLoader>
+            {({ loading }) => (
+               <span style={{ display: loading ? 'block' : 'none' }}>Loading...</span>
+            )}
+         </FormLoader>
+         <ResponseMessage>{({ error }) => <span>{error}</span>}</ResponseMessage>
       </ApolloForm>
    );
 }

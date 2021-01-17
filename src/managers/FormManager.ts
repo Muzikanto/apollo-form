@@ -13,6 +13,7 @@ import React from 'react';
 import FormManipulator from './FormManipulator';
 import ApolloManager from './ApolloManager';
 
+const emptyDepencencies: any[] = [];
 const defaultState: Omit<ApolloFormState<{}>, 'values'> = {
    errors: {},
    touches: {},
@@ -113,16 +114,17 @@ class FormManager<S extends object> {
          return false;
       }
    }
+
    public useState<P = ApolloFormState<S>>(
       selector: (state: ApolloFormState<S>) => P = ((s: ApolloFormState<S>) => s) as any,
-      dependencies: any[] = [],
+      dependencies: any[] = emptyDepencencies,
    ): P {
       const fullState = this.get();
       const [state, setState] = React.useState(selector ? selector(fullState) : fullState);
 
       React.useEffect(() => {
          return this.watch(selector, s => setState(s));
-      }, [selector, setState, this.query, ...dependencies]);
+      }, [selector, ...dependencies]);
 
       return state as P;
    }
@@ -133,23 +135,36 @@ class FormManager<S extends object> {
       return this.manager.watch(selector, handler);
    }
    public useValue(key: string) {
-      const value = this.useState(state => {
-         return this.manipulator.getValue(state, key);
-      });
+      const watcher = React.useCallback(
+         state => {
+            return this.manipulator.getValue(state, key);
+         },
+         [key],
+      );
+      const value = this.useState(watcher);
 
       return value;
    }
    public useTouched(key: string) {
-      const value = this.useState(state => {
-         return this.manipulator.getTouched(state, key);
-      });
+      const watcher = React.useCallback(
+         state => {
+            return this.manipulator.getTouched(state, key);
+         },
+         [key],
+      );
+      const value = this.useState(watcher);
 
       return value;
    }
    public useError(key: string) {
-      const value = this.useState(state => {
-         return this.manipulator.getError(state, key);
-      });
+      const watcher = React.useCallback(
+         state => {
+            return this.manipulator.getError(state, key);
+         },
+         [key],
+      );
+
+      const value = this.useState(watcher);
 
       return value;
    }

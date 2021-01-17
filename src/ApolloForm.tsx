@@ -45,6 +45,12 @@ function ApolloForm<S extends object>(
 
                manager.submit().then();
             }}
+            onReset={e => {
+               e.preventDefault();
+               e.stopPropagation();
+
+               manager.reset();
+            }}
             style={style}
             className={className}
          >

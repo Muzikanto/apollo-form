@@ -46,13 +46,13 @@ class ApolloManager<S extends object> extends BaseManager<S> {
       const unWatch = this.apolloClient.cache.watch({
          query: this.query,
          callback: ({ result }) => {
-            const s = (result as { [key: string]: ApolloFormState<S> })[this.name];
+            const fullState = (result as { [key: string]: ApolloFormState<S> })[this.name];
 
-            if (!s) {
+            if (!fullState) {
                return;
             }
 
-            const v: P = (selector ? selector(s) : s) as P;
+            const v: P = (selector ? selector(fullState) : fullState) as P;
 
             if (!isEqual(previous, v)) {
                previous = v;

@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { ApolloForm, Field, ResponseMessage, Submit } from '../src';
 import TextField, { OutlinedTextFieldProps } from '@material-ui/core/TextField';
 import * as React from 'react';
-import { IUseFieldProps } from '../src/hooks/useField';
+import useField, { IUseFieldProps } from '../src/hooks/useField';
 import { ButtonProps, Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -15,6 +15,7 @@ import { PreviewState, wait } from './utils';
 import getFieldProps from '../src/field/getFieldProps';
 import Alert from '@material-ui/lab/Alert';
 import FormManager from '../src/managers/FormManager';
+import Reset from '../src/utils/Reset';
 
 export default {
    title: 'Components',
@@ -42,15 +43,11 @@ const initialState: SignInFormState = {
 type FormTextFieldProps = Omit<OutlinedTextFieldProps, 'variant'> & IUseFieldProps<string>;
 
 function FormTextField({ name, validate, ...other }: FormTextFieldProps) {
-   return (
-      <Field<string> name={name} validate={validate}>
-         {({ field }) => {
-            console.log('Render: ', name);
+   const field = useField<string>({ name, validate });
 
-            return <TextField {...getFieldProps(field)} variant='outlined' {...other} />;
-         }}
-      </Field>
-   );
+   console.log('Render: ', name);
+
+   return <TextField {...getFieldProps(field)} variant='outlined' {...other} />;
 }
 
 function FormPassword(props: FormTextFieldProps) {
@@ -102,14 +99,15 @@ function Form() {
                   initialState={initialState}
                   validationSchema={validationSchema}
                   onSubmit={async ({ values }, form) => {
-                     await wait(1000);
-                     console.log('Submit state: ', values);
+                     try {
+                        await wait(1000);
+                        console.log('Submit state: ', values);
 
-                     form.reset({ ...initialState, email: 'reseted' });
-                     // setState({...state, email: 'reseted'})
-                     form.responseMessage('Invalid password');
-
-                     // apollo.resetStore().then();
+                        form.reset({ ...initialState, email: 'reseted' });
+                        // apollo.resetStore().then();
+                     } catch (e) {
+                        form.responseMessage('Invalid password');
+                     }
                   }}
                   onInit={form => {
                      setForm(form);
@@ -150,6 +148,18 @@ function Form() {
                         <SubmitButton type='submit' variant='contained' color='primary'>
                            Sign in
                         </SubmitButton>
+                        <Reset>
+                           {({ disabled }) => (
+                              <Button
+                                 variant='contained'
+                                 style={{ marginLeft: 16 }}
+                                 type='reset'
+                                 disabled={disabled}
+                              >
+                                 Reset
+                              </Button>
+                           )}
+                        </Reset>
                      </Grid>
                   </Grid>
                </ApolloForm>

@@ -13,6 +13,7 @@ import ErrorMessage from './utils/ErrorMessage';
 import ResponseMessage from './utils/ResponseMessage';
 import FormLoader from './utils/FormLoader';
 import Submit from './utils/Submit';
+import Reset from './utils/Reset';
 import FirstError from './utils/FirstError';
 import FormManager from './managers/FormManager';
 import ApolloForm from './ApolloForm';
@@ -46,6 +47,7 @@ export {
    ErrorMessage,
    ResponseMessage,
    Submit,
+   Reset,
    StateConsumer,
    FormLoader,
    FirstError,
