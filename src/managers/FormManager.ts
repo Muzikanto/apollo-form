@@ -174,6 +174,8 @@ class FormManager<S extends object> {
 
       if (!isEqual(this.initialState, prev.values)) {
          prev.existsChanges = true;
+      } else {
+         prev.existsChanges = false;
       }
 
       this.set({ ...prev, values });
