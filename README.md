@@ -17,8 +17,18 @@
 
 -  [Introduction](#introduction)
 -  [Installation](#installation)
+-  [Demo](#demo)
 -  [Examples](#examples)
+   -  [Full form](#full-form)
+   -  [Create field](#create-field)
+   -  [Create array field](#create-array-field)
+   -  [Create file field](#create-file-field)
+   -  [Submit btn](#create-submit-button)
+   -  [Reset btn](#create-reset-button)
+   -  [Loader](#show-loader)
+   -  [Error message](#show-error-message)
 -  [API](#api)
+   -  [Form api](#form-api)
 -  [License](#license)
 
 <!-- /TOC -->
@@ -35,9 +45,9 @@ npm i apollo-form
 yarn add apollo-form
 ```
 
-## Examples
+## Demo
 
-[Demo](https://muzikanto.github.io/apollo-form)
+Show [code](./examples) of stories
 
 [Demo sign in](https://muzikanto.github.io/apollo-form?path=/story/components--sign-in)
 
@@ -45,116 +55,87 @@ yarn add apollo-form
 
 [Demo with confirm](https://muzikanto.github.io/apollo-form?path=/story/components--with-confirm)
 
-Show [code examples](./examples)
+## Examples
 
-Learn [docs for use this package](https://github.com/Muzikanto/apollo-form/wiki)
-
-## Api
-
-### create Form
-
-| Name               | Type         | Required | Description                                                                 |
-| ------------------ | ------------ | -------- | --------------------------------------------------------------------------- |
-| name               | string       | yes      | graphql client value name, like this `query ApolloForm { ${name} @client }` |
-| initialState       | object       | yes      | Initial form state                                                          |
-| initialErrors      | FormErrors   | no       | Initial errors                                                              |
-| initialTouches     | FormTouches  | no       | Initial touched fields                                                      |
-| validationSchema   | ObjectSchema | no       | Yup validation schema                                                       |
-| validate           | Function     | no       | Custom form validation, function returned errors state                      |
-| resetOnSubmit      | boolean      | no       | Reset form with `initialState` after submit                                 |
-| validateOnMount    | boolean      | no       | Validate form on mount                                                      |
-| enableReinitialize | boolean      | no       | Reset form with new `initialState`                                          |
-| onInit             | Function     | no       | Function for save form reference                                            |
-| onSubmit           | Function     | no       | Async function for handle form submit                                       |
-| onChange           | Function     | no       | Handle state changes (called only if values changed)                        |
-| saveOnUnmount      | boolean      | no       | Save form state in apollo global state                                      |
-| resetOnUnmount     | boolean      | no       | Reset form with `initialState` after unmount form                           |
-
-Example code
+### Full form
 
 ```typescript jsx
-interface State {
-   text: string;
-   field: string;
-   deep: {
-      one: string;
-      two: string;
-   };
-   arr: string[];
+interface CreatePlanFormValues {
+   title: string;
+   price: number;
+   features: Array<{ title: string }>;
 }
 
 const validationSchema = Yup.object().shape({
-   email: Yup.string()
+   title: Yup.string().required(),
+   price: Yup.number()
       .required()
-      .max(5),
-   deep: Yup.object().shape({
-      one: Yup.string()
-         .required()
-         .max(2),
-   }),
+      .min(0),
+   features: Yup.array().of(
+      Yup.object().shape({
+         title: Yup.string().required(),
+      }),
+   ),
 });
 
 const initialState = {
-   email: '1',
-   password: '',
-   deep: { one: '1' },
-   arr: ['', '2', '31'],
+   title: '',
+   price: 0,
+   features: [],
 };
 
-function Example() {
+function CreatePlanForm() {
    return (
-      <ApolloForm
-         // generated: gql`query ApolloForm { test @client }`
-         name='test'
-         // reset form values with current `initialState`
+      <ApolloForm<CreatePlanFormValues>
+         name='CreatePlanForm'
          enableReinitialize
-         // load state from apollo cache
-         saveOnUnmount
          initialState={initialState}
          validationSchema={validationSchema}
-         validate={({ values }) => {
-            if (values.email === '12') {
-               return {
-                  email: 'Not 12',
-               };
-            }
-
-            return undefined;
-         }}
          onSubmit={async ({ values }, form) => {
             try {
-               await wait(1000);
-               console.log('submit', values);
-               form.reset({
-                  ...values,
-                  email: 'Reseted',
-               });
+               fetch('/create-plan', values);
             } catch (e) {
                form.responseError(e.message);
             }
          }}
-         onChange={(state, prev, form, event) => console.log('Values: ', state)}
       >
-         <Field
-            name='email'
-            validate={v => {
-               if (v.length === 1) {
-                  return 'custom error';
-               }
-
-               return undefined;
-            }}
-         >
-            {({ field }) => <input {...getFieldProps(field)} />}
+         <Field name='title'>{({ field }) => <input {...getFieldProps(field)} />}</Field>
+         <Field name='price'>
+            {({ field }) => <input type='number' {...getFieldProps(field)} />}
          </Field>
-         <Field name='password'>{({ field }) => <input {...getFieldProps(field)} />}</Field>
-         <Field name='deep.one'>{({ field }) => <input {...getFieldProps(field)} />}</Field>
-         <Field name='arr.0'>{({ field }) => <input {...getFieldProps(field)} />}</Field>
+
+         <FieldArray<{ title: string }> name='features'>
+            {({ field }) => {
+               return (
+                  <>
+                     {field.value.map((el, i) => {
+                        return (
+                           <div key={'plan-feature-' + i}>
+                              <input key={'test' + i} name={'features' + '.' + i} />
+                           </div>
+                        );
+                     })}
+
+                     <div>
+                        <button onClick={() => field.push({ title: '' })}>Push feature</button>
+                        <Button onClick={() => field.pop()}>Pop feature</Button>
+                     </div>
+                  </>
+               );
+            }}
+         </FieldArray>
+
+         <ResponseMessage>{({ error }) => <span>{error}</span>}</ResponseMessage>
+         <FormLoader>
+            {({ loading }) => (
+               <span style={{ display: loading ? 'block' : 'none' }}>Loading...</span>
+            )}
+         </FormLoader>
 
          <Submit>
             {({ disabled }) => (
                <button type='submit' disabled={disabled}>
-                  Submit
+                  Create plan
                </button>
             )}
          </Submit>
@@ -165,12 +146,6 @@ function Example() {
                </button>
             )}
          </Reset>
-         <FormLoader>
-            {({ loading }) => (
-               <span style={{ display: loading ? 'block' : 'none' }}>Loading...</span>
-            )}
-         </FormLoader>
-         <ResponseMessage>{({ error }) => <span>{error}</span>}</ResponseMessage>
       </ApolloForm>
    );
 }
@@ -303,6 +278,22 @@ function FormSubmit() {
 }
 ```
 
+### create reset button
+
+```typescript jsx
+function FormSubmit() {
+   return (
+      <Reset>
+         {({ disabled }) => (
+            <Button type='reset' disabled={disabled}>
+               Submit
+            </Button>
+         )}
+      </Reset>
+   );
+}
+```
+
 ### show error message
 
 ```typescript jsx
@@ -351,6 +342,27 @@ function Form() {
    );
 }
 ```
+
+## Api
+
+### Form api
+
+| Name               | Type         | Required | Description                                                                 |
+| ------------------ | ------------ | -------- | --------------------------------------------------------------------------- |
+| name               | string       | yes      | graphql client value name, like this `query ApolloForm { ${name} @client }` |
+| initialState       | object       | yes      | Initial form state                                                          |
+| initialErrors      | FormErrors   | no       | Initial errors                                                              |
+| initialTouches     | FormTouches  | no       | Initial touched fields                                                      |
+| validationSchema   | ObjectSchema | no       | Yup validation schema                                                       |
+| validate           | Function     | no       | Custom form validation, function returned errors state                      |
+| resetOnSubmit      | boolean      | no       | Reset form with `initialState` after submit                                 |
+| validateOnMount    | boolean      | no       | Validate form on mount                                                      |
+| enableReinitialize | boolean      | no       | Reset form with new `initialState`                                          |
+| onInit             | Function     | no       | Function for save form reference                                            |
+| onSubmit           | Function     | no       | Async function for handle form submit                                       |
+| onChange           | Function     | no       | Handle state changes (called only if values changed)                        |
+| saveOnUnmount      | boolean      | no       | Save form state in apollo global state                                      |
+| resetOnUnmount     | boolean      | no       | Reset form with `initialState` after unmount form                           |
 
 ## License
 
