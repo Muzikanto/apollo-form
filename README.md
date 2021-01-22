@@ -29,6 +29,7 @@
    -  [Error message](#show-error-message)
 -  [API](#api)
    -  [Form api](#form-api)
+   -  [Field](#field-api)
 -  [License](#license)
 
 <!-- /TOC -->
@@ -93,7 +94,9 @@ function CreatePlanForm() {
          validationSchema={validationSchema}
          onSubmit={async ({ values }, form) => {
             try {
-               fetch('/create-plan', values);
+               await createPlanMutation({ variables: values });
+
+               form.reset();
             } catch (e) {
                form.responseError(e.message);
             }
@@ -363,6 +366,14 @@ function Form() {
 | onChange           | Function     | no       | Handle state changes (called only if values changed)                        |
 | saveOnUnmount      | boolean      | no       | Save form state in apollo global state                                      |
 | resetOnUnmount     | boolean      | no       | Reset form with `initialState` after unmount form                           |
+
+### Field api
+
+| Name     | Type     | Required | Description                                                                                     |
+| -------- | -------- | -------- | ----------------------------------------------------------------------------------------------- |
+| name     | string   | yes      | key of state object                                                                             |
+| validate | Function | no       | Function for validate value, return err(string) or undefined                                    |
+| children | Function | yes      | Function for render, return object of "value", "error", "touched", "focused" and change actions |
 
 ## License
 
