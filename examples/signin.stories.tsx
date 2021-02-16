@@ -109,6 +109,13 @@ function Form() {
                         form.responseMessage('Invalid password');
                      }
                   }}
+                  formatState={({ next, prev, event }) => ({
+                     ...next,
+                     email2: event.key === 'email' ? next.email : prev.email,
+                  })}
+                  onChange={(state, prev, form, event) => {
+                     console.log(event);
+                  }}
                   onInit={form => {
                      setForm(form);
                   }}

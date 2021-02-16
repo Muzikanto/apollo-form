@@ -35,6 +35,7 @@ class FormManager<S extends object> {
    protected onSubmit: FormManagerParams<S>['onSubmit'];
    protected onChange: FormManagerParams<S>['onChange'];
    protected resetOnSubmit: FormManagerParams<S>['resetOnSubmit'];
+   protected formatState: FormManagerParams<S>['formatState'];
    protected validateOnMount: FormManagerParams<S>['validateOnMount'];
    protected initialState: S;
    protected initialErrors: FormErrors<S>;
@@ -53,6 +54,7 @@ class FormManager<S extends object> {
       this.validationSchema = props.validationSchema;
       this.validateOnMount = props.validateOnMount || false;
       this.resetOnSubmit = props.resetOnSubmit || false;
+      this.formatState = props.formatState;
       this.initialState = cloneDeep(props.initialState);
       this.initialErrors = cloneDeep(props.initialErrors) || {};
       this.initialTouches = cloneDeep(props.initialTouches) || {};
@@ -171,17 +173,23 @@ class FormManager<S extends object> {
 
    public setValues(values: S) {
       const prev = { ...this.get() };
+      const next = { ...prev, values };
+      const event = { type: 'all' as const, value: next.values };
 
-      if (!isEqual(this.initialState, prev.values)) {
-         prev.existsChanges = true;
-      } else {
-         prev.existsChanges = false;
+      if (this.formatState) {
+         next.values = this.formatState({ next: next.values, prev: prev.values, event });
       }
 
-      this.set({ ...prev, values });
+      if (!isEqual(this.initialState, prev.values)) {
+         next.existsChanges = true;
+      } else {
+         next.existsChanges = false;
+      }
+
+      this.set(next);
 
       if (this.onChange) {
-         this.onChange(values, prev.values, this, { type: 'all' });
+         this.onChange(next.values, prev.values, this, event);
       }
    }
    public setErrors(errors: FormErrors<S>) {
@@ -192,15 +200,20 @@ class FormManager<S extends object> {
    }
 
    public setFieldValue(key: string, newValue: any) {
-      const state = this.get();
+      let state = this.get();
       const prevValues = cloneDeep(state.values);
       const touched = getDeepStatus(state.touches, key);
+      const event = { type: 'field' as const, key, value: newValue };
 
       if (!touched) {
          this.manipulator.setTouched(state, key, true);
       }
 
       this.manipulator.setValue(state, key, newValue);
+
+      if (this.formatState) {
+         state.values = this.formatState({ next: state.values, prev: prevValues, event });
+      }
 
       this.manipulator.validate(state, false);
 
@@ -213,7 +226,7 @@ class FormManager<S extends object> {
       this.set(state);
 
       if (this.onChange) {
-         this.onChange(state.values, prevValues, this, { type: 'field', value: key });
+         this.onChange(state.values, prevValues, this, event);
       }
 
       return state;
