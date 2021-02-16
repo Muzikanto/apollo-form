@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { ApolloForm, Field, ResponseMessage, Submit } from '../src';
+import { ApolloForm, ResponseMessage, Submit } from '../src';
 import TextField, { OutlinedTextFieldProps } from '@material-ui/core/TextField';
 import * as React from 'react';
 import useField, { IUseFieldProps } from '../src/hooks/useField';

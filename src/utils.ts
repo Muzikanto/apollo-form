@@ -138,4 +138,23 @@ function setDeepStatus(state: any, path: string, value: any) {
    return state;
 }
 
+export function blobToBase64(blob: File | Blob): Promise<string> {
+   return new Promise((resolve: (base64: string) => void, reject: (err: Error) => void) => {
+      const reader = new FileReader();
+
+      reader.onloadend = function() {
+         const base64data = reader.result;
+
+         if (typeof base64data === 'string') {
+            resolve(base64data);
+         } else {
+            reject(new Error('Error parse'));
+         }
+      };
+
+      reader.readAsDataURL(blob);
+      reader.onerror = () => reject(new Error('Error parse'));
+   });
+}
+
 export { replaceErrors, getDeepStatus, setDeepStatus, makeApolloFormQuery, firstError };

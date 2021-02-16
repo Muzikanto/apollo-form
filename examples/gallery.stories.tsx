@@ -10,6 +10,8 @@ import Alert from '@material-ui/lab/Alert';
 import FormManager from '../src/managers/FormManager';
 import FileField, { FileFieldProps } from '../src/field/FileField';
 import FirstError from '../src/utils/FirstError';
+import ImageField from '../src/field/ImageField';
+import FilePicker from '../src/consumers/FilePicker';
 
 export default {
    title: 'Components',
@@ -22,59 +24,6 @@ type GalleryFormState = {
 const initialState: GalleryFormState = {
    image: undefined,
 };
-
-type ImageFieldProps = FileFieldProps;
-
-const fileToBase64 = (file: File): Promise<string | null> =>
-   new Promise((resolve: (str: string) => void, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-         if (typeof reader.result === 'string') {
-            resolve(reader.result);
-         } else {
-            reject(new Error('Invalid file'));
-         }
-      };
-      reader.onerror = error => reject(error);
-   });
-
-function ImageField(props: Omit<ImageFieldProps, 'children'>) {
-   return (
-      <FileField accept={['image/jpeg', 'image/png']} maxSize={1024 * 500} {...props}>
-         {({ field, onClick }) => {
-            const [img, setImg] = React.useState<string | null>(null);
-
-            React.useEffect(() => {
-               if (field.value) {
-                  fileToBase64(field.value).then(r => setImg(r));
-               }
-            }, [field.value]);
-
-            return (
-               <>
-                  {field.value ? (
-                     <>
-                        {img && (
-                           <>
-                              <img style={{ width: '100%' }} src={img} alt={field.value.name} />
-                              <Button onClick={onClick} variant='contained'>
-                                 Upload new image
-                              </Button>
-                           </>
-                        )}
-                     </>
-                  ) : (
-                     <Button variant='contained' onClick={onClick}>
-                        Upload image
-                     </Button>
-                  )}
-               </>
-            );
-         }}
-      </FileField>
-   );
-}
 
 function SubmitButton(props: ButtonProps) {
    return (
@@ -128,7 +77,32 @@ function Form() {
                         </FirstError>
                      </Grid>
                      <Grid item xs={12}>
-                        <ImageField name='image' />
+                        <ImageField name='image' compressFunc={async f => f} maxSize={1024 * 1}>
+                           {({ field, image, onClick }) => (
+                              <>
+                                 {field.value ? (
+                                    <>
+                                       {image && (
+                                          <>
+                                             <img
+                                                style={{ width: '100%' }}
+                                                src={image}
+                                                alt={field.value.name}
+                                             />
+                                             <Button onClick={onClick} variant='contained'>
+                                                Upload new image
+                                             </Button>
+                                          </>
+                                       )}
+                                    </>
+                                 ) : (
+                                    <Button variant='contained' onClick={onClick}>
+                                       Upload image
+                                    </Button>
+                                 )}
+                              </>
+                           )}
+                        </ImageField>
                      </Grid>
                      <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
                         <SubmitButton type='submit' variant='contained' color='primary'>

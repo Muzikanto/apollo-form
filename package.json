@@ -1,6 +1,6 @@
 {
    "name": "apollo-form",
-   "version": "2.3.0",
+   "version": "2.4.0",
    "description": "Form state manager",
    "license": "MIT",
    "maintainers": [
@@ -60,6 +60,7 @@
       "graphql": "^15.3.0"
    },
    "dependencies": {
+      "browser-image-compression": "^1.0.14",
       "lodash": "^4.17.20"
    },
    "devDependencies": {
