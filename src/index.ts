@@ -33,6 +33,11 @@ import FilePicker, {
    FilePickerRenderProps,
 } from './consumers/FilePicker';
 import FileField, { FileFieldProps, FileFieldRenderProps, FileFieldError } from './field/FileField';
+import ImageField, {
+   ImageFieldError,
+   ImageFieldProps,
+   ImageFieldRenderProps,
+} from './field/ImageField';
 
 export {
    ApolloForm,
@@ -70,4 +75,8 @@ export {
    FileFieldProps,
    FileFieldRenderProps,
    FileFieldError,
+   ImageField,
+   ImageFieldProps,
+   ImageFieldError,
+   ImageFieldRenderProps,
 };
