@@ -90,8 +90,10 @@ function Form() {
 
    React.useEffect(() => {
       if (form) {
-         form.watch(s => s.values, (next, prev) => console.log(next, prev));
+         return form.watch(s => s.values, (next, prev) => console.log(next, prev));
       }
+
+      return () => {};
    }, [form]);
 
    return (
