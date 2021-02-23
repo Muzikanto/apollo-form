@@ -34,7 +34,7 @@ class ApolloManager<S extends object> extends BaseManager<S> {
 
    public watch<P = ApolloFormState<S>>(
       selector: ((state: ApolloFormState<S>) => P) | null,
-      handler: (value: P) => void,
+      handler: (value: P, prev: P) => void,
    ): () => void {
       const rawState = this.get();
 
@@ -57,7 +57,7 @@ class ApolloManager<S extends object> extends BaseManager<S> {
             if (!isEqual(previous, v)) {
                previous = v;
 
-               handler(v);
+               handler(v, previous);
             }
          },
          optimistic: false,

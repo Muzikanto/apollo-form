@@ -132,7 +132,7 @@ class FormManager<S extends object> {
    }
    public watch<P = ApolloFormState<S>>(
       selector: ((state: ApolloFormState<S>) => P) | null,
-      handler: (value: P) => void,
+      handler: (next: P, prev: P) => void,
    ): () => void {
       return this.manager.watch(selector, handler);
    }
