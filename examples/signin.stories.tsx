@@ -88,6 +88,12 @@ function Form() {
    const ref = React.useRef<FormManager<SignInFormState>>(null);
    const [form, setForm] = React.useState<FormManager<SignInFormState> | null>(null);
 
+   React.useEffect(() => {
+      if (form) {
+         form.watch(s => s.values, (next, prev) => console.log(next, prev));
+      }
+   }, [form]);
+
    return (
       <Grid container spacing={3}>
          <Grid item xs={12} md={6}>

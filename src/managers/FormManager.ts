@@ -134,7 +134,9 @@ class FormManager<S extends object> {
       selector: ((state: ApolloFormState<S>) => P) | null,
       handler: (next: P, prev: P) => void,
    ): () => void {
-      return this.manager.watch(selector, handler);
+      return this.manager.watch(selector, handler, (selector
+         ? selector(this.get())
+         : this.get()) as any);
    }
    public useValue(key: string) {
       const watcher = React.useCallback(

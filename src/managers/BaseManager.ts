@@ -6,6 +6,7 @@ abstract class BaseManager<S extends object> {
    abstract watch<P = ApolloFormState<S>>(
       selector: ((state: ApolloFormState<S>) => P) | null,
       handler: (value: P) => void,
+      defaultState: P,
    ): () => void;
 }
 

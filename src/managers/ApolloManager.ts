@@ -35,13 +35,14 @@ class ApolloManager<S extends object> extends BaseManager<S> {
    public watch<P = ApolloFormState<S>>(
       selector: ((state: ApolloFormState<S>) => P) | null,
       handler: (value: P, prev: P) => void,
+      defaultState: P,
    ): () => void {
       const rawState = this.get();
 
       // @ts-ignore
-      const state = rawState ? rawState : null;
+      const state = rawState ? rawState : defaultState;
 
-      let previous = selector && state ? selector(state) : state;
+      let previous = selector && state ? selector(state as any) : state;
 
       const unWatch = this.apolloClient.cache.watch({
          query: this.query,
@@ -55,7 +56,7 @@ class ApolloManager<S extends object> extends BaseManager<S> {
             const v: P = (selector ? selector(fullState) : fullState) as P;
 
             if (!isEqual(previous, v)) {
-               const prev = previous;
+               const prev = previous as P;
                previous = v;
 
                handler(v, prev);
