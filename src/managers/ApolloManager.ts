@@ -55,9 +55,10 @@ class ApolloManager<S extends object> extends BaseManager<S> {
             const v: P = (selector ? selector(fullState) : fullState) as P;
 
             if (!isEqual(previous, v)) {
+               const prev = previous;
                previous = v;
 
-               handler(v, previous);
+               handler(v, prev);
             }
          },
          optimistic: false,
