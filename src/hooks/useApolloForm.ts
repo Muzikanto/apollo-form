@@ -64,7 +64,9 @@ function useApolloForm<S extends object>({
       manager.renewOnSubmit(props.onSubmit);
    }, [props.onSubmit]);
    React.useEffect(() => {
-      return manager.stopTimeouts;
+      return () => {
+         manager.stopTimeouts();
+      };
    }, [manager]);
 
    return manager;
