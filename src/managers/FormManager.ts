@@ -393,6 +393,7 @@ class FormManager<S extends object> {
 
    public stopTimeouts() {
       this.timeouts.forEach(clearTimeout);
+      this.timeouts = [];
    }
 }
 
