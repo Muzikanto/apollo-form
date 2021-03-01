@@ -42,6 +42,7 @@ class FormManager<S extends object> {
    protected initialTouches: FormTouches<S>;
    protected query: DocumentNode;
    protected manager: ApolloManager<S>;
+   protected timeouts: number[] = [];
 
    constructor(props: FormManagerParams<S>) {
       this.name = props.name;
@@ -79,13 +80,15 @@ class FormManager<S extends object> {
 
       this.validate(this.validateOnMount);
 
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
          this.validate(this.validateOnMount);
 
          if (props.onInit) {
             props.onInit(this);
          }
       });
+
+      this.timeouts.push(timeout);
    }
 
    public set(state: ApolloFormState<S>) {
@@ -386,6 +389,10 @@ class FormManager<S extends object> {
 
    public renewOnSubmit(handler: FormManagerParams<S>['onSubmit']) {
       this.onSubmit = handler;
+   }
+
+   public stopTimeouts() {
+      this.timeouts.forEach(clearTimeout);
    }
 }
 
