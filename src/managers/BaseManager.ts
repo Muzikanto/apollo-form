@@ -1,10 +1,10 @@
-import { ApolloFormState } from '../types';
+import { FormState } from '../types';
 
 abstract class BaseManager<S extends object> {
-   abstract get(): ApolloFormState<S>;
-   abstract set(state: ApolloFormState<S>): void;
-   abstract watch<P = ApolloFormState<S>>(
-      selector: ((state: ApolloFormState<S>) => P) | null,
+   abstract get(): FormState<S>;
+   abstract set(state: FormState<S>): void;
+   abstract watch<P = FormState<S>>(
+      selector: ((state: FormState<S>) => P) | null,
       handler: (prev: P, next: P) => void,
       defaultState: P,
    ): () => void;

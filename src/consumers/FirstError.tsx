@@ -1,5 +1,5 @@
 import React from 'react';
-import useApolloFormCtx from '../hooks/useApolloFormCtx';
+import useFormCtx from '../hooks/useFormCtx';
 import { firstError } from '../utils';
 
 export interface FirstErrorProps<P extends { error: string }> {
@@ -9,7 +9,7 @@ export interface FirstErrorProps<P extends { error: string }> {
 }
 
 function FirstError<P extends { error: string }>(props: FirstErrorProps<P>) {
-   const apolloForm = useApolloFormCtx();
+   const apolloForm = useFormCtx();
 
    const submitted = apolloForm.useState(s => s.isSubmitted);
    const errors = apolloForm.useState(s => s.errors);

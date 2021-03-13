@@ -1,9 +1,9 @@
 import React, { MutableRefObject } from 'react';
-import useApolloForm, { UseFormProps } from './hooks/useApolloForm';
+import useForm, { UseFormProps } from './hooks/useForm';
 import FormContext from './form/FormContext';
 import FormManager from './form/FormManager';
 
-export type ApolloFormProps<S extends object> = UseFormProps<S> & {
+export type FormProps<S extends object> = UseFormProps<S> & {
    children: React.ReactNode;
 
    id?: string;
@@ -12,13 +12,13 @@ export type ApolloFormProps<S extends object> = UseFormProps<S> & {
 };
 
 function Form<S extends object>(
-   { children, id, style, className, onInit, ...params }: ApolloFormProps<S>,
+   { children, id, style, className, onInit, ...params }: FormProps<S>,
    ref:
       | ((instance: FormManager<S> | null) => void)
       | MutableRefObject<FormManager<S> | null>
       | null,
 ) {
-   const manager = useApolloForm<S>({
+   const manager = useForm<S>({
       onInit: form => {
          if (onInit) {
             onInit(form);
@@ -61,7 +61,7 @@ function Form<S extends object>(
 }
 
 export default React.forwardRef(Form) as <S extends object>(
-   props: ApolloFormProps<S> & {
+   props: FormProps<S> & {
       ref?:
          | ((instance: FormManager<S> | null) => void)
          | MutableRefObject<FormManager<S> | null>

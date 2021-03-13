@@ -1,5 +1,5 @@
 import React from 'react';
-import useApolloFormCtx from '../hooks/useApolloFormCtx';
+import useFormCtx from '../hooks/useFormCtx';
 
 export interface ErrorMessageProps<P extends { error: string | undefined }> {
    name: string;
@@ -9,7 +9,7 @@ export interface ErrorMessageProps<P extends { error: string | undefined }> {
 }
 
 function ErrorMessage<P extends { error: string | undefined }>(props: ErrorMessageProps<P>) {
-   const apolloForm = useApolloFormCtx();
+   const apolloForm = useFormCtx();
 
    const error = apolloForm.useError(props.name);
    const touched = apolloForm.useTouched(props.name);

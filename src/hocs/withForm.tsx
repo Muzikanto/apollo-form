@@ -1,11 +1,11 @@
 import React from 'react';
-import useApolloForm from '../hooks/useApolloForm';
+import useForm from '../hooks/useForm';
 import { FormManagerParams } from '../types';
 
 export type WithFormProps<S extends object> = Omit<FormManagerParams<S>, 'apolloClient'>;
 
 function withForm<State extends object, Props>(params: WithFormProps<State>) {
-   const form = useApolloForm(params);
+   const form = useForm(params);
 
    return (Component: React.ComponentType<Props>): React.FC<Props & WithFormProps<State>> => {
       return (props: Props) => {

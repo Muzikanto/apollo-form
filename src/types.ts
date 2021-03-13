@@ -16,7 +16,7 @@ export type FormTouches<State extends object> = {
       : boolean;
 };
 
-export interface ApolloFormState<S extends object> {
+export interface FormState<S extends object> {
    values: S;
    errors: FormErrors<S>;
    touches: FormTouches<S>;
@@ -40,14 +40,14 @@ export interface FormManagerParams<S extends object> {
    initialTouches?: FormTouches<S>;
 
    validationSchema?: ObjectSchema<any>;
-   validate?: (state: ApolloFormState<S>) => FormErrors<S> | undefined;
+   validate?: (state: FormState<S>) => FormErrors<S> | undefined;
 
    resetOnSubmit?: boolean;
    validateOnMount?: boolean;
    enableReinitialize?: boolean;
 
    onInit?: (form: FormManager<S>) => void;
-   onSubmit?: (state: ApolloFormState<S>, form: FormManager<S>) => Promise<void>;
+   onSubmit?: (state: FormState<S>, form: FormManager<S>) => Promise<void>;
    onChange?: (next: S, prev: S, form: FormManager<S>, event: FormChangeEvent) => void;
    formatState?: (params: { next: S; prev: S; event: FormChangeEvent }) => S;
 }

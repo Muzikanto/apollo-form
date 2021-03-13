@@ -1,5 +1,5 @@
 import React from 'react';
-import useApolloFormCtx from '../hooks/useApolloFormCtx';
+import useFormCtx from '../hooks/useFormCtx';
 import FormManager from '../form/FormManager';
 
 export interface SubmitComponentProps {
@@ -18,7 +18,7 @@ export type SubmitProps = {
 function Submit(props: SubmitProps) {
    const Component = props.children;
 
-   const apolloForm = useApolloFormCtx<any>();
+   const apolloForm = useFormCtx<any>();
    const { isValid, existsChanges, loading, isSubmitted } = apolloForm.useState(s => ({
       isValid: s.isValid,
       loading: s.loading,

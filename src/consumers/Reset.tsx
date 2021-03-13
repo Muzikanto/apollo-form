@@ -1,5 +1,5 @@
 import React from 'react';
-import useApolloFormCtx from '../hooks/useApolloFormCtx';
+import useFormCtx from '../hooks/useFormCtx';
 
 export interface ResetComponentProps {
    disabled: boolean;
@@ -14,7 +14,7 @@ export type ResetProps = {
 function Reset(props: ResetProps) {
    const { children: Component } = props;
 
-   const apolloForm = useApolloFormCtx<any>();
+   const apolloForm = useFormCtx<any>();
    const { existsChanges, loading } = apolloForm.useState(s => ({
       loading: s.loading,
       existsChanges: s.existsChanges,

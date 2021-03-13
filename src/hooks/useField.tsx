@@ -1,5 +1,5 @@
 import React from 'react';
-import useApolloFormCtx from './useApolloFormCtx';
+import useFormCtx from './useFormCtx';
 import { FieldProps } from '../types';
 
 export interface UseFieldParams<Value> {
@@ -17,7 +17,7 @@ export interface UseFieldParams<Value> {
 export type UseFieldProps<Value> = FieldProps<Value>;
 
 function useField<Value>(props: UseFieldProps<Value>): UseFieldParams<Value> {
-   const apolloForm = useApolloFormCtx();
+   const apolloForm = useFormCtx();
    const randName = React.useMemo(
       () => 'unnamed-field-' + Math.ceil(Math.random() * 999999999),
       [],

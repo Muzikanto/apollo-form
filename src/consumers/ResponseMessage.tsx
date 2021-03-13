@@ -1,12 +1,12 @@
 import React from 'react';
-import useApolloFormCtx from '../hooks/useApolloFormCtx';
+import useFormCtx from '../hooks/useFormCtx';
 
 export interface ResponseMessageProps<P extends { error: string }> {
    children?: React.ComponentType<P>;
 }
 
 function ResponseMessage<P extends { error: string }>(props: ResponseMessageProps<P>) {
-   const apolloForm = useApolloFormCtx();
+   const apolloForm = useFormCtx();
 
    const responseMessage = apolloForm.useState(s => s.responseMessage);
    const existsChanges = apolloForm.useState(s => s.existsChanges);

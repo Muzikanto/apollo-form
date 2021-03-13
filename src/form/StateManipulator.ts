@@ -1,10 +1,4 @@
-import {
-   ApolloFormState,
-   FieldValidator,
-   FormErrors,
-   FormManagerParams,
-   FormTouches,
-} from '../types';
+import { FormState, FieldValidator, FormErrors, FormManagerParams, FormTouches } from '../types';
 import merge from 'lodash/merge';
 import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
@@ -20,13 +14,13 @@ class StateManipulator<S extends object> {
    protected initialErrors: FormErrors<S>;
    protected initialTouches: FormTouches<S>;
    protected validateOnMount: FormManagerParams<S>['validateOnMount'];
-   protected defaultState: Omit<ApolloFormState<S>, 'values'>;
+   protected defaultState: Omit<FormState<S>, 'values'>;
 
    constructor(
       props: Omit<FormManagerParams<S>, 'initialErrors' | 'initialTouches'> &
          Required<Pick<FormManagerParams<S>, 'initialErrors' | 'initialTouches'>> & {
             customValidators: { [key: string]: FieldValidator<any> };
-            defaultState: Omit<ApolloFormState<S>, 'values'>;
+            defaultState: Omit<FormState<S>, 'values'>;
          },
    ) {
       this.validateHandler = props.validate;
@@ -39,7 +33,7 @@ class StateManipulator<S extends object> {
       this.defaultState = props.defaultState;
    }
 
-   public setValue(state: ApolloFormState<S>, key: string, newValue: any): ApolloFormState<S> {
+   public setValue(state: FormState<S>, key: string, newValue: any): FormState<S> {
       const value = get(state.values, key);
 
       if (!isEqual(value, newValue)) {
@@ -48,11 +42,7 @@ class StateManipulator<S extends object> {
 
       return state;
    }
-   public setError(
-      state: ApolloFormState<S>,
-      key: string,
-      value: string | undefined,
-   ): ApolloFormState<S> {
+   public setError(state: FormState<S>, key: string, value: string | undefined): FormState<S> {
       const error = getDeepStatus(state.errors, key);
 
       if (error !== value) {
@@ -61,7 +51,7 @@ class StateManipulator<S extends object> {
 
       return state;
    }
-   public setTouched(state: ApolloFormState<S>, key: string, value: boolean): ApolloFormState<S> {
+   public setTouched(state: FormState<S>, key: string, value: boolean): FormState<S> {
       const touched = getDeepStatus(state.touches, key);
 
       if (touched !== value) {
@@ -70,18 +60,18 @@ class StateManipulator<S extends object> {
 
       return state;
    }
-   public getValue(state: ApolloFormState<S>, key: string) {
+   public getValue(state: FormState<S>, key: string) {
       return get(state.values, key);
    }
-   public getError(state: ApolloFormState<S>, key: string) {
+   public getError(state: FormState<S>, key: string) {
       return getDeepStatus(cloneDeep(state.errors), key);
    }
-   public getTouched(state: ApolloFormState<S>, key: string) {
+   public getTouched(state: FormState<S>, key: string) {
       const touched = getDeepStatus(cloneDeep(state.touches), key);
 
       return touched;
    }
-   public validate(state: ApolloFormState<S>, allTouched: boolean = false): ApolloFormState<S> {
+   public validate(state: FormState<S>, allTouched: boolean = false): FormState<S> {
       state.errors = {};
 
       // merge errors from validate func
@@ -132,7 +122,7 @@ class StateManipulator<S extends object> {
       return state;
    }
 
-   public reset(state: ApolloFormState<S>, getState?: S | ((state: S) => S)) {
+   public reset(state: FormState<S>, getState?: S | ((state: S) => S)) {
       if (getState) {
          if (typeof getState === 'function') {
             Object.assign(state, {

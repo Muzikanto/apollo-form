@@ -1,6 +1,6 @@
 import React from 'react';
 import useField, { UseFieldParams, UseFieldProps } from '../hooks/useField';
-import useApolloFormCtx from '../hooks/useApolloFormCtx';
+import useFormCtx from '../hooks/useFormCtx';
 import FormManager from '../form/FormManager';
 
 export interface FieldProps<Value, S extends object = {}> extends UseFieldProps<Value> {
@@ -10,7 +10,7 @@ export interface FieldProps<Value, S extends object = {}> extends UseFieldProps<
 function Field<Value, S extends object = {}>(props: FieldProps<Value, S>) {
    const { children, ...fieldProps } = props;
 
-   const form = useApolloFormCtx<S>();
+   const form = useFormCtx<S>();
    const field = useField(fieldProps);
 
    return <>{children({ field, form })}</>;

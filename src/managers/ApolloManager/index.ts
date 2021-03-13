@@ -1,10 +1,10 @@
-import { ApolloFormState } from '../../types';
+import { FormState } from '../../types';
 import { ApolloClient, DocumentNode } from '@apollo/client';
 import { makeApolloFormQuery } from '../../utils';
 import isEqual from 'lodash/isEqual';
 import BaseManager from '../BaseManager';
 
-class Index<S extends object> extends BaseManager<S> {
+class ApolloManager<S extends object> extends BaseManager<S> {
    protected apolloClient: ApolloClient<object>;
    protected query: DocumentNode;
    public name: string;
@@ -17,14 +17,14 @@ class Index<S extends object> extends BaseManager<S> {
       this.apolloClient = client;
    }
 
-   public set(state: ApolloFormState<S>) {
+   public set(state: FormState<S>) {
       this.apolloClient.writeQuery({ query: this.query, data: { [this.name]: state } });
    }
-   public get(): ApolloFormState<S> {
+   public get(): FormState<S> {
       let data = null;
 
       try {
-         data = this.apolloClient.readQuery<ApolloFormState<S>>({
+         data = this.apolloClient.readQuery<FormState<S>>({
             query: this.query,
          }) as any;
       } catch (e) {}
@@ -32,8 +32,8 @@ class Index<S extends object> extends BaseManager<S> {
       return (data || {})[this.name];
    }
 
-   public watch<P = ApolloFormState<S>>(
-      selector: ((state: ApolloFormState<S>) => P) | null,
+   public watch<P = FormState<S>>(
+      selector: ((state: FormState<S>) => P) | null,
       handler: (value: P, prev: P) => void,
       defaultState: P,
    ): () => void {
@@ -47,7 +47,7 @@ class Index<S extends object> extends BaseManager<S> {
       const unWatch = this.apolloClient.cache.watch({
          query: this.query,
          callback: ({ result }) => {
-            const fullState = (result as { [key: string]: ApolloFormState<S> })[this.name];
+            const fullState = (result as { [key: string]: FormState<S> })[this.name];
 
             if (!fullState) {
                return;
@@ -77,4 +77,4 @@ class Index<S extends object> extends BaseManager<S> {
    }
 }
 
-export default Index;
+export default ApolloManager;

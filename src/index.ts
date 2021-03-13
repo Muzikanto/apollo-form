@@ -4,7 +4,7 @@ import StateConsumer, { StateConsumerProps } from './consumers/StateConsumer';
 // fields
 import Field, { FieldProps } from './field/Field';
 import FieldArray, { FieldArrayProps } from './field/FieldArray';
-import FieldFile, { FileFieldProps, FileFieldRenderProps, FileFieldError } from './field/FieldFile';
+import FieldFile, { FieldFileError, FieldFileProps, FieldFileRenderProps } from './field/FieldFile';
 import FieldImage, {
    ImageFieldError,
    ImageFieldProps,
@@ -16,39 +16,29 @@ import withField, { WithFieldProps } from './hocs/withField';
 import withFieldArray, { WithFieldArrayProps } from './hocs/withFieldArray';
 import withForm, { WithFormProps } from './hocs/withForm';
 // hooks
-import useApolloForm, { UseFormProps } from './hooks/useApolloForm';
-import useApolloFormCtx from './hooks/useApolloFormCtx';
+import useForm, { UseFormProps } from './hooks/useForm';
+import useFormCtx from './hooks/useFormCtx';
 import useField, { UseFieldProps } from './hooks/useField';
 import useFieldArray, { UseFieldArrayProps } from './hooks/useFieldArray';
 // managers
 import FormManager from './form/FormManager';
 // utils
-import ErrorMessage from './consumers/ErrorMessage';
-import ResponseMessage from './consumers/ResponseMessage';
-import FormLoader from './consumers/FormLoader';
-import Submit from './consumers/Submit';
-import Reset from './consumers/Reset';
-import FirstError from './consumers/FirstError';
+import ErrorMessage, { ErrorMessageProps } from './consumers/ErrorMessage';
+import ResponseMessage, { ResponseMessageProps } from './consumers/ResponseMessage';
+import FormLoader, { FormLoaderProps } from './consumers/FormLoader';
+import Submit, { SubmitProps } from './consumers/Submit';
+import Reset, { ResetProps } from './consumers/Reset';
+import FirstError, { FirstErrorProps } from './consumers/FirstError';
 import FormContext from './form/FormContext';
 // form
-import ApolloForm from './Form';
-import {
-   FormTouches,
-   ApolloFormState,
-   FormErrors,
-   FormManagerParams,
-   FieldValidator,
-} from './types';
-import FilePicker, {
-   FilePickerProps,
-   FilePickerError,
-   FilePickerRenderProps,
-} from './basic/FilePicker';
+import Form, { FormProps } from './Form';
+import { FormTouches, FormState, FormErrors, FormManagerParams, FieldValidator } from './types';
 
 export {
-   ApolloForm,
+   Form,
+   FormContext,
    FormManager,
-   useApolloFormCtx,
+   useFormCtx,
    useField,
    useFieldArray,
    Field,
@@ -63,24 +53,19 @@ export {
    FormLoader,
    FirstError,
    FormConsumer,
-   useApolloForm,
+   useForm,
    withForm,
    getFieldProps,
-   FormContext,
+   FieldImage,
+   FieldFile,
    FormManagerParams,
    FieldValidator,
    FormErrors,
-   ApolloFormState,
+   FormState,
    FormTouches,
-   FilePicker,
-   FilePickerError,
-   FilePickerProps,
-   FilePickerRenderProps,
-   FieldFile,
-   FileFieldProps,
-   FileFieldRenderProps,
-   FileFieldError,
-   FieldImage,
+   FieldFileProps,
+   FieldFileRenderProps,
+   FieldFileError,
    ImageFieldProps,
    ImageFieldError,
    ImageFieldRenderProps,
@@ -95,4 +80,11 @@ export {
    UseFormProps,
    UseFieldProps,
    UseFieldArrayProps,
+   FormProps,
+   FormLoaderProps,
+   FirstErrorProps,
+   ErrorMessageProps,
+   ResetProps,
+   SubmitProps,
+   ResponseMessageProps,
 };

@@ -1,19 +1,13 @@
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import { firstError, getDeepStatus } from '../utils';
-import {
-   ApolloFormState,
-   FieldValidator,
-   FormErrors,
-   FormManagerParams,
-   FormTouches,
-} from '../types';
+import { FormState, FieldValidator, FormErrors, FormManagerParams, FormTouches } from '../types';
 import React from 'react';
 import StateManipulator from './StateManipulator';
 import BaseManager from '../managers/BaseManager';
 
 const emptyDepencencies: any[] = [];
-const defaultState: Omit<ApolloFormState<{}>, 'values'> = {
+const defaultState: Omit<FormState<{}>, 'values'> = {
    errors: {},
    touches: {},
    isValid: true,
@@ -88,10 +82,10 @@ class FormManager<S extends object> {
       this.timeouts.push(timeout);
    }
 
-   public set(state: ApolloFormState<S>) {
+   public set(state: FormState<S>) {
       return this.manager.set(state);
    }
-   public get(): ApolloFormState<S> {
+   public get(): FormState<S> {
       let data = this.manager.get() as any;
 
       if (!data) {
@@ -105,7 +99,7 @@ class FormManager<S extends object> {
          data = this.manager.get();
       }
 
-      return cloneDeep(data) as ApolloFormState<S>;
+      return cloneDeep(data) as FormState<S>;
    }
    public exists(): boolean {
       try {
@@ -117,8 +111,8 @@ class FormManager<S extends object> {
       }
    }
 
-   public useState<P = ApolloFormState<S>>(
-      selector: (state: ApolloFormState<S>) => P = ((s: ApolloFormState<S>) => s) as any,
+   public useState<P = FormState<S>>(
+      selector: (state: FormState<S>) => P = ((s: FormState<S>) => s) as any,
       dependencies: any[] = emptyDepencencies,
    ): P {
       const fullState = this.get();
@@ -130,8 +124,8 @@ class FormManager<S extends object> {
 
       return state as P;
    }
-   public watch<P = ApolloFormState<S>>(
-      selector: ((state: ApolloFormState<S>) => P) | null,
+   public watch<P = FormState<S>>(
+      selector: ((state: FormState<S>) => P) | null,
       handler: (next: P, prev: P) => void,
    ): () => void {
       return this.manager.watch(selector, handler, (selector
