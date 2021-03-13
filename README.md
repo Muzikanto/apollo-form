@@ -87,7 +87,7 @@ const initialState = {
 
 function CreatePlanForm() {
    return (
-      <ApolloForm<CreatePlanFormValues>
+      <Form<CreatePlanFormValues>
          name='CreatePlanForm'
          enableReinitialize
          initialState={initialState}
@@ -149,7 +149,7 @@ function CreatePlanForm() {
                </button>
             )}
          </Reset>
-      </ApolloForm>
+      </Form>
    );
 }
 ```
@@ -227,9 +227,9 @@ function FormTextFieldArray(props: { name: string; validate: FieldValidator<stri
 ### create file field
 
 ```typescript jsx
-function ImageField(props: Omit<ImageFieldProps, 'children'>) {
+function FieldImage(props: Omit<ImageFieldProps, 'children'>) {
    return (
-      <FileField accept={['image/jpeg', 'image/png']} maxSize={1024 * 500} {...props}>
+      <FieldFile accept={['image/jpeg', 'image/png']} maxSize={1024 * 500} {...props}>
          {({ field, onClick }) => {
             const [img, setImg] = React.useState<string | null>(null);
 
@@ -260,7 +260,7 @@ function ImageField(props: Omit<ImageFieldProps, 'children'>) {
                </>
             );
          }}
-      </FileField>
+      </FieldFile>
    );
 }
 ```
@@ -336,12 +336,12 @@ function useMyFormState() {
 
 function Form() {
    return (
-      <ApolloForm
+      <Form
          name='my-form'
          ...
       >
          ...
-      </ApolloForm>
+      </Form>
    );
 }
 ```
@@ -350,22 +350,22 @@ function Form() {
 
 ### Form api
 
-| Name               | Type         | Required | Description                                                                 |
-| ------------------ | ------------ | -------- | --------------------------------------------------------------------------- |
-| name               | string       | yes      | graphql client value name, like this `query ApolloForm { ${name} @client }` |
-| initialState       | object       | yes      | Initial form state                                                          |
-| initialErrors      | FormErrors   | no       | Initial errors                                                              |
-| initialTouches     | FormTouches  | no       | Initial touched fields                                                      |
-| validationSchema   | ObjectSchema | no       | Yup validation schema                                                       |
-| validate           | Function     | no       | Custom form validation, function returned errors state                      |
-| resetOnSubmit      | boolean      | no       | Reset form with `initialState` after submit                                 |
-| validateOnMount    | boolean      | no       | Validate form on mount                                                      |
-| enableReinitialize | boolean      | no       | Reset form with new `initialState`                                          |
-| onInit             | Function     | no       | Function for save form reference                                            |
-| onSubmit           | Function     | no       | Async function for handle form submit                                       |
-| onChange           | Function     | no       | Handle state changes (called only if values changed)                        |
-| saveOnUnmount      | boolean      | no       | Save form state in apollo global state                                      |
-| resetOnUnmount     | boolean      | no       | Reset form with `initialState` after unmount form                           |
+| Name               | Type         | Required | Description                                                           |
+| ------------------ | ------------ | -------- | --------------------------------------------------------------------- |
+| name               | string       | yes      | graphql client value name, like this `query Form { ${name} @client }` |
+| initialState       | object       | yes      | Initial form state                                                    |
+| initialErrors      | FormErrors   | no       | Initial errors                                                        |
+| initialTouches     | FormTouches  | no       | Initial touched fields                                                |
+| validationSchema   | ObjectSchema | no       | Yup validation schema                                                 |
+| validate           | Function     | no       | Custom form validation, function returned errors state                |
+| resetOnSubmit      | boolean      | no       | Reset form with `initialState` after submit                           |
+| validateOnMount    | boolean      | no       | Validate form on mount                                                |
+| enableReinitialize | boolean      | no       | Reset form with new `initialState`                                    |
+| onInit             | Function     | no       | Function for save form reference                                      |
+| onSubmit           | Function     | no       | Async function for handle form submit                                 |
+| onChange           | Function     | no       | Handle state changes (called only if values changed)                  |
+| saveOnUnmount      | boolean      | no       | Save form state in apollo global state                                |
+| resetOnUnmount     | boolean      | no       | Reset form with `initialState` after unmount form                     |
 
 ### Field api
 

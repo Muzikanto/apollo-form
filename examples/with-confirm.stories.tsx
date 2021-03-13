@@ -5,12 +5,13 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { CodeHighlighter } from './utils';
+import { CodeHighlighter, PreviewState } from './utils';
 import { useQuery } from '@apollo/client';
 import Dialog from '@material-ui/core/Dialog';
 import Box from '@material-ui/core/Box';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import FormManager from '../src/form/FormManager';
 
 export default {
    title: 'Components',
@@ -71,6 +72,8 @@ function SubmitConfirm(props: ButtonProps) {
 }
 
 export function WithConfirm() {
+   const [form, setForm] = React.useState<FormManager<FormState> | null>(null);
+
    return (
       <Grid container spacing={3}>
          <Grid item xs={12} md={6}>
@@ -82,6 +85,9 @@ export function WithConfirm() {
                   onSubmit={async ({ values }, form) => {
                      await wait(1000);
                      console.log('Submit state: ', values);
+                  }}
+                  onInit={form => {
+                     setForm(form);
                   }}
                >
                   <Grid container spacing={2}>
@@ -100,21 +106,9 @@ export function WithConfirm() {
             </Paper>
          </Grid>
          <Grid item xs={12} md={6}>
-            <PreviewState />
+            {form && <PreviewState form={form} />}
          </Grid>
       </Grid>
-   );
-}
-
-const query = makeApolloFormQuery('withConfirm');
-
-function PreviewState() {
-   const { data } = useQuery(query);
-
-   return (
-      <Paper style={{ maxWidth: 500, padding: 20 }}>
-         {data && <CodeHighlighter>{JSON.stringify(data, null, 2)}</CodeHighlighter>}
-      </Paper>
    );
 }
 

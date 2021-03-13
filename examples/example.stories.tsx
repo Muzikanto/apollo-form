@@ -4,13 +4,14 @@ import * as Yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import ErrorMessage from '../src/utils/ErrorMessage';
-import Submit from '../src/utils/Submit';
+import ErrorMessage from '../src/consumers/ErrorMessage';
+import Submit from '../src/consumers/Submit';
 import FormConsumer from '../src/consumers/FormConsumer';
 import FieldArray from '../src/field/FieldArray';
 import { Paper } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { PreviewState } from './utils';
+import FormManager from '../src/form/FormManager';
 
 export default {
    title: 'Components',
@@ -117,6 +118,8 @@ type FormState = {
 };
 
 export function Example() {
+   const [form, setForm] = React.useState<FormManager<FormState> | null>(null);
+
    const [initialState, setState] = React.useState<FormState>({
       email: '1',
       password: '',
@@ -152,6 +155,9 @@ export function Example() {
             });
          }}
          onChange={(state, form) => console.log('Values: ', state)}
+         onInit={form => {
+            setForm(form);
+         }}
       >
          <Grid container spacing={2}>
             <Grid item xs={8}>
@@ -279,7 +285,7 @@ export function Example() {
                </Grid>
             </Grid>
             <Grid item xs={4}>
-               <PreviewState name='example' />
+               {form && <PreviewState form={form} />}
             </Grid>
          </Grid>
       </ApolloForm>

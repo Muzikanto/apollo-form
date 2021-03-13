@@ -14,8 +14,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { PreviewState, wait } from './utils';
 import getFieldProps from '../src/field/getFieldProps';
 import Alert from '@material-ui/lab/Alert';
-import FormManager from '../src/managers/FormManager';
-import Reset from '../src/utils/Reset';
+import FormManager from '../src/form/FormManager';
+import Reset from '../src/consumers/Reset';
+import FormManagerProvider from '../src/form/FormManagerProvider';
+import ObservableManager from '../src/managers/ObservableManager/ObservableManager';
+import Observable from '../src/managers/ObservableManager/Observable';
 
 export default {
    title: 'Components',
@@ -81,10 +84,9 @@ function SubmitButton(props: ButtonProps) {
    );
 }
 
-function Form() {
-   const [state, setState] = React.useState(initialState);
-   // const apollo = useApolloClient();
+const store = new Observable({});
 
+function Form() {
    const ref = React.useRef<FormManager<SignInFormState>>(null);
    const [form, setForm] = React.useState<FormManager<SignInFormState> | null>(null);
 
@@ -97,93 +99,95 @@ function Form() {
    }, [form]);
 
    return (
-      <Grid container spacing={3}>
-         <Grid item xs={12} md={6}>
-            <Paper style={{ maxWidth: 500, padding: 20 }}>
-               <ApolloForm<SignInFormState>
-                  ref={ref}
-                  name='signin'
-                  enableReinitialize
-                  initialState={initialState}
-                  validationSchema={validationSchema}
-                  onSubmit={async ({ values }, form) => {
-                     try {
-                        await wait(1000);
-                        console.log('Submit state: ', values);
+      <FormManagerProvider getManager={(name: string) => new ObservableManager(name, store)}>
+         <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+               <Paper style={{ maxWidth: 500, padding: 20 }}>
+                  <ApolloForm<SignInFormState>
+                     ref={ref}
+                     name='signin'
+                     enableReinitialize
+                     initialState={initialState}
+                     validationSchema={validationSchema}
+                     onSubmit={async ({ values }, form) => {
+                        try {
+                           await wait(1000);
+                           console.log('Submit state: ', values);
 
-                        form.reset({ ...initialState, email: 'reseted' });
-                        // apollo.resetStore().then();
-                     } catch (e) {
-                        form.responseMessage('Invalid password');
-                     }
-                  }}
-                  formatState={({ next, prev, event }) => ({
-                     ...next,
-                     email2: event.key === 'email' ? next.email : prev.email,
-                  })}
-                  onChange={(state, prev, form, event) => {
-                     console.log(event);
-                  }}
-                  onInit={form => {
-                     setForm(form);
-                  }}
-               >
-                  <Grid container spacing={2}>
-                     <Grid item xs={12}>
-                        <Typography variant='h5' align='center'>
-                           Sign in form
-                        </Typography>
+                           form.reset({ ...initialState, email: 'reseted' });
+                           // apollo.resetStore().then();
+                        } catch (e) {
+                           form.responseMessage('Invalid password');
+                        }
+                     }}
+                     formatState={({ next, prev, event }) => ({
+                        ...next,
+                        email2: event.key === 'email' ? next.email : prev.email,
+                     })}
+                     onChange={(state, prev, form, event) => {
+                        // console.log(event);
+                     }}
+                     onInit={form => {
+                        setForm(form);
+                     }}
+                  >
+                     <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                           <Typography variant='h5' align='center'>
+                              Sign in form
+                           </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                           <ResponseMessage>
+                              {({ error }) => (
+                                 <Alert variant='filled' severity='error'>
+                                    {error}
+                                 </Alert>
+                              )}
+                           </ResponseMessage>
+                        </Grid>
+                        <Grid item xs={12}>
+                           <FormTextField
+                              name='email'
+                              type='email'
+                              label='Enter email'
+                              validate={email => {
+                                 if (email && email.includes('@mail.ru')) {
+                                    return 'Please don`t use @mail.ru email';
+                                 }
+                              }}
+                              fullWidth
+                           />
+                        </Grid>
+                        <Grid item xs={12}>
+                           <FormPassword name='password' label='Enter password' fullWidth />
+                        </Grid>
+                        <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
+                           <SubmitButton type='submit' variant='contained' color='primary'>
+                              Sign in
+                           </SubmitButton>
+                           <Reset>
+                              {({ disabled }) => (
+                                 <Button
+                                    variant='contained'
+                                    style={{ marginLeft: 16 }}
+                                    type='reset'
+                                    disabled={disabled}
+                                 >
+                                    Reset
+                                 </Button>
+                              )}
+                           </Reset>
+                        </Grid>
                      </Grid>
-                     <Grid item xs={12}>
-                        <ResponseMessage>
-                           {({ error }) => (
-                              <Alert variant='filled' severity='error'>
-                                 {error}
-                              </Alert>
-                           )}
-                        </ResponseMessage>
-                     </Grid>
-                     <Grid item xs={12}>
-                        <FormTextField
-                           name='email'
-                           type='email'
-                           label='Enter email'
-                           validate={email => {
-                              if (email && email.includes('@mail.ru')) {
-                                 return 'Please don`t use @mail.ru email';
-                              }
-                           }}
-                           fullWidth
-                        />
-                     </Grid>
-                     <Grid item xs={12}>
-                        <FormPassword name='password' label='Enter password' fullWidth />
-                     </Grid>
-                     <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
-                        <SubmitButton type='submit' variant='contained' color='primary'>
-                           Sign in
-                        </SubmitButton>
-                        <Reset>
-                           {({ disabled }) => (
-                              <Button
-                                 variant='contained'
-                                 style={{ marginLeft: 16 }}
-                                 type='reset'
-                                 disabled={disabled}
-                              >
-                                 Reset
-                              </Button>
-                           )}
-                        </Reset>
-                     </Grid>
-                  </Grid>
-               </ApolloForm>
-            </Paper>
+                  </ApolloForm>
+               </Paper>
+            </Grid>
+            <Grid item xs={12} md={6}>
+               {form && <PreviewState form={form} />}
+            </Grid>
          </Grid>
-         <Grid item xs={12} md={6}>
-            {form && <PreviewState name={form.name} />}
-         </Grid>
-      </Grid>
+      </FormManagerProvider>
    );
 }
 

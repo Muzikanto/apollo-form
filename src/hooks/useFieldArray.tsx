@@ -1,12 +1,12 @@
-import useField, { FieldParams } from './useField';
+import useField, { UseFieldParams } from './useField';
 import { FieldValidator } from '../types';
 
-export interface IUseFieldArrayProps<Value> {
+export interface UseFieldArrayProps<Value> {
    name: string;
    validate?: FieldValidator<Value[]>;
 }
 
-export interface FieldArrayParams<Value> extends FieldParams<Value[]> {
+export interface UseFieldArrayParams<Value> extends UseFieldParams<Value[]> {
    push: (value: Value) => void;
    removeAt: (index: number) => void;
    insertAt: (index: number) => void;
@@ -15,7 +15,7 @@ export interface FieldArrayParams<Value> extends FieldParams<Value[]> {
    clear: () => void;
 }
 
-function useFieldArray<Value>(props: IUseFieldArrayProps<Value>): FieldArrayParams<Value> {
+function useFieldArray<Value>(props: UseFieldArrayProps<Value>): UseFieldArrayParams<Value> {
    const field = useField<Value[]>({
       name: props.name,
       validate: props.validate,

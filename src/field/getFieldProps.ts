@@ -1,7 +1,7 @@
-import { FieldParams } from '../hooks/useField';
+import { UseFieldParams } from '../hooks/useField';
 import React from 'react';
 
-export type IGetFieldProps<T> = {
+export type GetFieldProps<T> = {
    value: T;
    error: boolean;
    helperText?: string;
@@ -10,7 +10,7 @@ export type IGetFieldProps<T> = {
    onBlur: (e: any) => any;
 };
 
-function getFieldProps<T>(field: FieldParams<T>): IGetFieldProps<T> {
+function getFieldProps<T>(field: UseFieldParams<T>): GetFieldProps<T> {
    const error = Boolean(!field.focused && field.touched && field.error);
 
    return {

@@ -1,10 +1,10 @@
 import React from 'react';
-import useField, { FieldParams, IUseFieldProps } from '../hooks/useField';
+import useField, { UseFieldParams, UseFieldProps } from '../hooks/useField';
 import useApolloFormCtx from '../hooks/useApolloFormCtx';
-import FormManager from '../managers/FormManager';
+import FormManager from '../form/FormManager';
 
-export interface FieldProps<Value, S extends object = {}> extends IUseFieldProps<Value> {
-   children: (props: { field: FieldParams<Value>; form: FormManager<S> }) => JSX.Element;
+export interface FieldProps<Value, S extends object = {}> extends UseFieldProps<Value> {
+   children: (props: { field: UseFieldParams<Value>; form: FormManager<S> }) => JSX.Element;
 }
 
 function Field<Value, S extends object = {}>(props: FieldProps<Value, S>) {

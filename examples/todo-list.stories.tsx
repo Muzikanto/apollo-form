@@ -1,20 +1,15 @@
 import * as Yup from 'yup';
-import { ApolloForm, Field, makeApolloFormQuery, Submit, useFieldArray } from '../src';
-import TextField, { OutlinedTextFieldProps } from '@material-ui/core/TextField';
+import { ApolloForm, Submit, useFieldArray } from '../src';
 import * as React from 'react';
 import { IUseFieldProps } from '../src/hooks/useField';
 import { ButtonProps, Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { CodeHighlighter } from './utils';
-import { useQuery } from '@apollo/client';
-import Box from '@material-ui/core/Box';
+import { PreviewState } from './utils';
 import Chip from '@material-ui/core/Chip';
+import FormManager from '../src/form/FormManager';
 
 export default {
    title: 'Components',
@@ -110,6 +105,8 @@ function SubmitButton(props: ButtonProps) {
 }
 
 export function TodoList() {
+   const [form, setForm] = React.useState<FormManager<FormState> | null>(null);
+
    return (
       <Grid container spacing={3}>
          <Grid item xs={12} md={6}>
@@ -126,6 +123,9 @@ export function TodoList() {
                      form.reset({
                         todos: [],
                      });
+                  }}
+                  onInit={form => {
+                     setForm(form);
                   }}
                >
                   <Grid container spacing={2}>
@@ -147,21 +147,9 @@ export function TodoList() {
             </Paper>
          </Grid>
          <Grid item xs={12} md={6}>
-            <PreviewState />
+            {form && <PreviewState form={form} />}
          </Grid>
       </Grid>
-   );
-}
-
-function PreviewState() {
-   const [query] = React.useState(makeApolloFormQuery('todolist'));
-
-   const { data } = useQuery(query);
-
-   return (
-      <Paper style={{ maxWidth: 500, padding: 20 }}>
-         {data && <CodeHighlighter>{JSON.stringify(data, null, 2)}</CodeHighlighter>}
-      </Paper>
    );
 }
 

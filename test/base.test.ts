@@ -1,9 +1,10 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
-import FormManager from '../src/managers/FormManager';
+import FormManager from '../src/form/FormManager';
 import _ from 'lodash';
 import { FormManagerParams } from '../src';
 import * as Yup from 'yup';
 import { firstError } from '../src/utils';
+import Index from '../src/managers/ApolloManager';
 
 interface FormState {
    text: string;
@@ -26,7 +27,7 @@ const getApolloClient = function() {
 const getFormManager = function(params?: Partial<FormManagerParams<FormState>>) {
    return new FormManager<FormState>({
       name: 'test',
-      apolloClient: getApolloClient(),
+      manager: new Index('test', getApolloClient()),
       initialState: { text: '', deep: { one: '' }, arr: [1, 2, 3] },
       validate: function({ values }) {
          let errors: any = {};

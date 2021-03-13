@@ -1,14 +1,18 @@
 import React from 'react';
-import useFieldArray, { FieldArrayParams, IUseFieldArrayProps } from '../hooks/useFieldArray';
+import useFieldArray, { UseFieldArrayProps, UseFieldArrayParams } from '../hooks/useFieldArray';
 
-export interface WithFieldArray<Value> {
-   field: FieldArrayParams<Value>;
-}
+export type WithFieldArrayProps<Value> = UseFieldArrayProps<Value>;
 
-function withFieldArray<Value, Props>(props: IUseFieldArrayProps<Value>) {
+function withFieldArray<Value, Props>(props: WithFieldArrayProps<Value>) {
    const fieldArray = useFieldArray(props);
 
-   return (Component: React.ComponentType<Props>): React.FC<Props & WithFieldArray<Value>> => {
+   return (
+      Component: React.ComponentType<Props>,
+   ): React.FC<
+      Props & {
+         field: UseFieldArrayParams<Value>;
+      }
+   > => {
       return (props: Props) => {
          return <Component {...props} field={fieldArray} />;
       };

@@ -1,6 +1,6 @@
-import { ApolloClient } from '@apollo/client';
 import { ObjectSchema } from 'yup';
-import FormManager from './managers/FormManager';
+import FormManager from './form/FormManager';
+import BaseManager from './managers/BaseManager';
 
 export type FieldValidator<Value> = (value: Value) => string | null | void;
 
@@ -33,7 +33,7 @@ export type FormChangeEvent = { type: 'all' | 'field'; key?: string; value?: any
 
 export interface FormManagerParams<S extends object> {
    name: string;
-   apolloClient: ApolloClient<object>;
+   manager: BaseManager<S>;
 
    initialState: S;
    initialErrors?: FormErrors<S>;

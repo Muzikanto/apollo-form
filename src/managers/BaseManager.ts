@@ -5,9 +5,10 @@ abstract class BaseManager<S extends object> {
    abstract set(state: ApolloFormState<S>): void;
    abstract watch<P = ApolloFormState<S>>(
       selector: ((state: ApolloFormState<S>) => P) | null,
-      handler: (value: P) => void,
+      handler: (prev: P, next: P) => void,
       defaultState: P,
    ): () => void;
+   abstract remove(): void;
 }
 
 export default BaseManager;

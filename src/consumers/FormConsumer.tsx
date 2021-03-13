@@ -1,5 +1,5 @@
 import React from 'react';
-import FormManager from '../managers/FormManager';
+import FormManager from '../form/FormManager';
 import useApolloFormCtx from '../hooks/useApolloFormCtx';
 
 export interface FormConsumerProps<S extends object> {

@@ -1,10 +1,13 @@
-import FormManager from '../managers/FormManager';
+import FormManager from '../form/FormManager';
 import React from 'react';
 import { useApolloClient } from '@apollo/client';
 import { FormManagerParams } from '../types';
 import isEqual from 'lodash/isEqual';
+import Index from '../managers/ApolloManager';
+import FormManagerContext from '../form/FormManagerContext';
 
-export type IuseFormProps<S extends object> = Omit<FormManagerParams<S>, 'apolloClient'> & {
+export type UseFormProps<S extends object> = Omit<FormManagerParams<S>, 'manager'> & {
+   name: string;
    resetOnUnmount?: boolean;
    saveOnUnmount?: boolean;
 };
@@ -14,28 +17,41 @@ function useApolloForm<S extends object>({
    saveOnUnmount,
    enableReinitialize,
    initialState,
+   name,
    ...props
-}: IuseFormProps<S>) {
-   const mountedRef = React.useRef(false);
+}: UseFormProps<S>) {
    const apolloClient = useApolloClient();
-   const manager = React.useMemo(
-      () => new FormManager<S>({ ...props, initialState, apolloClient }),
+
+   const formManagerCreator = React.useContext(FormManagerContext);
+   const formManager = React.useMemo(
+      () => (formManagerCreator ? formManagerCreator(name) : new Index(name, apolloClient)),
+      [formManagerCreator, name, apolloClient],
+   );
+   const mountedRef = React.useRef(false);
+   const form = React.useMemo(
+      () =>
+         new FormManager<S>({
+            ...props,
+            name,
+            manager: formManager,
+            initialState,
+         }),
       [],
    );
 
    if (enableReinitialize && typeof window === 'undefined') {
-      if (!isEqual(manager.get().values, initialState)) {
-         manager.reset(initialState);
+      if (!isEqual(form.get().values, initialState)) {
+         form.reset(initialState);
       }
    }
 
    React.useEffect(() => {
       if (enableReinitialize && mountedRef.current) {
-         const state = manager.get();
+         const state = form.get();
 
          if (state) {
-            if (!isEqual(manager.getInitialState(), initialState)) {
-               manager.reset(initialState);
+            if (!isEqual(form.getInitialState(), initialState)) {
+               form.reset(initialState);
             }
          }
       }
@@ -45,31 +61,31 @@ function useApolloForm<S extends object>({
    React.useEffect(() => {
       return () => {
          if (!saveOnUnmount) {
-            apolloClient.cache.evict({ id: 'ROOT_QUERY', fieldName: manager.name });
+            formManager.remove();
          } else {
             if (resetOnUnmount) {
-               if (manager.exists()) {
-                  manager.reset();
+               if (form.exists()) {
+                  form.reset();
                }
             }
          }
       };
-   }, [resetOnUnmount, saveOnUnmount, manager]);
+   }, [resetOnUnmount, saveOnUnmount, form]);
 
    React.useEffect(() => {
-      manager.renewOnChange(props.onChange);
+      form.renewOnChange(props.onChange);
    }, [props.onChange]);
 
    React.useEffect(() => {
-      manager.renewOnSubmit(props.onSubmit);
+      form.renewOnSubmit(props.onSubmit);
    }, [props.onSubmit]);
    React.useEffect(() => {
       return () => {
-         manager.stopTimeouts();
+         form.stopTimeouts();
       };
-   }, [manager]);
+   }, [form]);
 
-   return manager;
+   return form;
 }
 
 export default useApolloForm;

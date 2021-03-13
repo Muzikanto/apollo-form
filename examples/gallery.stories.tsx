@@ -7,11 +7,11 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { PreviewState, wait } from './utils';
 import Alert from '@material-ui/lab/Alert';
-import FormManager from '../src/managers/FormManager';
-import FileField, { FileFieldProps } from '../src/field/FileField';
-import FirstError from '../src/utils/FirstError';
-import ImageField from '../src/field/ImageField';
-import FilePicker from '../src/consumers/FilePicker';
+import FormManager from '../src/form/FormManager';
+import FieldFile, { FileFieldProps } from '../src/field/FieldFile';
+import FirstError from '../src/consumers/FirstError';
+import FieldImage from '../src/field/FieldImage';
+import FilePicker from '../src/basic/FilePicker';
 
 export default {
    title: 'Components',
@@ -77,7 +77,7 @@ function Form() {
                         </FirstError>
                      </Grid>
                      <Grid item xs={12}>
-                        <ImageField name='image' compressFunc={async f => f} maxSize={1024 * 1}>
+                        <FieldImage name='image' compressFunc={async f => f} maxSize={1024 * 1}>
                            {({ field, image, onClick }) => (
                               <>
                                  {field.value ? (
@@ -102,7 +102,7 @@ function Form() {
                                  )}
                               </>
                            )}
-                        </ImageField>
+                        </FieldImage>
                      </Grid>
                      <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
                         <SubmitButton type='submit' variant='contained' color='primary'>
@@ -114,7 +114,7 @@ function Form() {
             </Paper>
          </Grid>
          <Grid item xs={12} md={6}>
-            {form && <PreviewState name={form.name} />}
+            {form && <PreviewState form={form} />}
          </Grid>
       </Grid>
    );

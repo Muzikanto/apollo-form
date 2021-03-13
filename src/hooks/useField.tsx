@@ -2,7 +2,7 @@ import React from 'react';
 import useApolloFormCtx from './useApolloFormCtx';
 import { FieldProps } from '../types';
 
-export interface FieldParams<Value> {
+export interface UseFieldParams<Value> {
    value: Value;
    error?: string;
    touched?: boolean;
@@ -14,9 +14,9 @@ export interface FieldParams<Value> {
    setFieldFocused: () => void;
 }
 
-export type IUseFieldProps<Value> = FieldProps<Value>;
+export type UseFieldProps<Value> = FieldProps<Value>;
 
-function useField<Value>(props: IUseFieldProps<Value>): FieldParams<Value> {
+function useField<Value>(props: UseFieldProps<Value>): UseFieldParams<Value> {
    const apolloForm = useApolloFormCtx();
    const randName = React.useMemo(
       () => 'unnamed-field-' + Math.ceil(Math.random() * 999999999),
