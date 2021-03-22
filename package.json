@@ -1,6 +1,6 @@
 {
    "name": "apollo-form",
-   "version": "3.0.0",
+   "version": "3.0.1",
    "description": "Form state manager",
    "license": "MIT",
    "maintainers": [
@@ -29,7 +29,7 @@
    "scripts": {
       "start": "start-storybook -p 5001",
       "build:docs": "build-storybook -o docs",
-      "clean": "rm -rf *.ts && rm -rf *.tsx && rm -rf *.js && rm -rf consumers && rm -rf field && rm -rf hocs && rm -rf hooks && rm -rf utils && rm -rf managers",
+      "clean": "rm -rf *.ts && rm -rf *.tsx && rm -rf *.js && rm -rf consumers && rm -rf field && rm -rf hocs && rm -rf hooks && rm -rf utils && rm -rf managers && rm -rf basic && rm -rf form",
       "build": "tsc -b",
       "lint": "tslint -c tslint.json 'src/**/*.ts' --fix",
       "prepublish": "npm run build && npm run test",

@@ -15,14 +15,16 @@ export interface UseFieldArrayParams<Value> extends UseFieldParams<Value[]> {
    clear: () => void;
 }
 
+const isProd = process.env.NODE_ENV === 'production';
+
 function useFieldArray<Value>(props: UseFieldArrayProps<Value>): UseFieldArrayParams<Value> {
    const field = useField<Value[]>({
       name: props.name,
       validate: props.validate,
    });
 
-   if (!Array.isArray(field.value)) {
-      console.error(props.name + ' is not array');
+   if (!Array.isArray(field.value) && isProd) {
+      console.warn(props.name + ' is not array');
    }
 
    const push = (...args: Value[]) => {
