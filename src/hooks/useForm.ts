@@ -78,6 +78,14 @@ function useForm<S extends object>({
       return () => {
          if (!saveOnUnmount) {
             formManager.remove();
+
+            if (typeof window !== 'undefined') {
+               // @ts-ignore
+               if (window['__FORMS__']) {
+                  // @ts-ignore
+                  delete window['__FORMS__'][name];
+               }
+            }
          } else {
             if (resetOnUnmount) {
                if (form.exists()) {
