@@ -28,16 +28,16 @@ function useForm<S extends object>({
       [formManagerCreator, name, apolloClient],
    );
    const mountedRef = React.useRef(false);
-   const form = React.useMemo(
-      () =>
-         new FormManager<S>({
-            ...props,
-            name,
-            manager: formManager,
-            initialState,
-         }),
-      [],
-   );
+   const form = React.useMemo(() => {
+      const f = new FormManager<S>({
+         ...props,
+         name,
+         manager: formManager,
+         initialState,
+      });
+
+      return f;
+   }, []);
 
    if (enableReinitialize && typeof window === 'undefined') {
       if (!isEqual(form.get().values, initialState)) {

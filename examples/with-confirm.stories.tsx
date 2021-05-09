@@ -1,12 +1,11 @@
-import { ApolloForm, makeApolloFormQuery, Submit } from '../src';
+import { Form, Submit } from '../src';
 import * as React from 'react';
 import { ButtonProps, Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { CodeHighlighter, PreviewState } from './utils';
-import { useQuery } from '@apollo/client';
+import { PreviewState } from './utils';
 import Dialog from '@material-ui/core/Dialog';
 import Box from '@material-ui/core/Box';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -78,7 +77,7 @@ export function WithConfirm() {
       <Grid container spacing={3}>
          <Grid item xs={12} md={6}>
             <Paper style={{ maxWidth: 500, padding: 20 }}>
-               <ApolloForm<WithConfirmFormState>
+               <Form<WithConfirmFormState>
                   name='withConfirm'
                   saveOnUnmount
                   initialState={initialState}
@@ -102,7 +101,7 @@ export function WithConfirm() {
                         </SubmitConfirm>
                      </Grid>
                   </Grid>
-               </ApolloForm>
+               </Form>
             </Paper>
          </Grid>
          <Grid item xs={12} md={6}>

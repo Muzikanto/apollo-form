@@ -1,8 +1,8 @@
 import * as Yup from 'yup';
-import { ApolloForm, ResponseMessage, Submit } from '../src';
+import { ResponseMessage, Submit } from '../src';
 import TextField, { OutlinedTextFieldProps } from '@material-ui/core/TextField';
 import * as React from 'react';
-import useField, { IUseFieldProps } from '../src/hooks/useField';
+import useField, { UseFieldProps } from '../src/hooks/useField';
 import { ButtonProps, Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -19,6 +19,7 @@ import Reset from '../src/consumers/Reset';
 import FormManagerProvider from '../src/form/FormManagerProvider';
 import ObservableManager from '../src/managers/ObservableManager/ObservableManager';
 import Observable from '../src/managers/ObservableManager/Observable';
+import Form from '../src/Form';
 
 export default {
    title: 'Components',
@@ -43,7 +44,7 @@ const initialState: SignInFormState = {
    password: '',
 };
 
-type FormTextFieldProps = Omit<OutlinedTextFieldProps, 'variant'> & IUseFieldProps<string>;
+type FormTextFieldProps = Omit<OutlinedTextFieldProps, 'variant'> & UseFieldProps<string>;
 
 function FormTextField({ name, validate, ...other }: FormTextFieldProps) {
    const field = useField<string>({ name, validate });
@@ -86,7 +87,7 @@ function SubmitButton(props: ButtonProps) {
 
 const store = new Observable({});
 
-function Form() {
+function SignInForm() {
    const ref = React.useRef<FormManager<SignInFormState>>(null);
    const [form, setForm] = React.useState<FormManager<SignInFormState> | null>(null);
 
@@ -103,7 +104,7 @@ function Form() {
          <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
                <Paper style={{ maxWidth: 500, padding: 20 }}>
-                  <ApolloForm<SignInFormState>
+                  <Form<SignInFormState>
                      ref={ref}
                      name='signin'
                      enableReinitialize
@@ -180,7 +181,7 @@ function Form() {
                            </Reset>
                         </Grid>
                      </Grid>
-                  </ApolloForm>
+                  </Form>
                </Paper>
             </Grid>
             <Grid item xs={12} md={6}>
@@ -192,5 +193,5 @@ function Form() {
 }
 
 export function SignIn() {
-   return <Form />;
+   return <SignInForm />;
 }

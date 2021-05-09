@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
-import { ApolloForm, Submit, useFieldArray } from '../src';
+import { Form, Submit, useFieldArray } from '../src';
 import * as React from 'react';
-import { IUseFieldProps } from '../src/hooks/useField';
+import { UseFieldProps } from '../src/hooks/useField';
 import { ButtonProps, Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -30,7 +30,7 @@ const initialState: SignInFormState = {
    todos: [addDay(new Date(), 1), addDay(new Date(), 2), addDay(new Date(), 3)],
 };
 
-type FormTodoManagerProps = IUseFieldProps<Date[]>;
+type FormTodoManagerProps = UseFieldProps<Date[]>;
 
 function FormTodoManager({ name, validate, ...other }: FormTodoManagerProps) {
    const field = useFieldArray({ name, validate });
@@ -105,13 +105,13 @@ function SubmitButton(props: ButtonProps) {
 }
 
 export function TodoList() {
-   const [form, setForm] = React.useState<FormManager<FormState> | null>(null);
+   const [form, setForm] = React.useState<FormManager<SignInFormState> | null>(null);
 
    return (
       <Grid container spacing={3}>
          <Grid item xs={12} md={6}>
             <Paper style={{ maxWidth: 500, padding: 20 }}>
-               <ApolloForm<SignInFormState>
+               <Form<SignInFormState>
                   name='todolist'
                   saveOnUnmount
                   initialState={initialState}
@@ -143,7 +143,7 @@ export function TodoList() {
                         </SubmitButton>
                      </Grid>
                   </Grid>
-               </ApolloForm>
+               </Form>
             </Paper>
          </Grid>
          <Grid item xs={12} md={6}>

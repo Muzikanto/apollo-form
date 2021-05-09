@@ -1,4 +1,4 @@
-import { ApolloForm, Submit } from '../src';
+import { Form, Submit } from '../src';
 import * as React from 'react';
 import { ButtonProps, Grid } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
@@ -8,10 +8,8 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { PreviewState, wait } from './utils';
 import Alert from '@material-ui/lab/Alert';
 import FormManager from '../src/form/FormManager';
-import FieldFile, { FileFieldProps } from '../src/field/FieldFile';
 import FirstError from '../src/consumers/FirstError';
 import FieldImage from '../src/field/FieldImage';
-import FilePicker from '../src/basic/FilePicker';
 
 export default {
    title: 'Components',
@@ -39,14 +37,14 @@ function SubmitButton(props: ButtonProps) {
    );
 }
 
-function Form() {
+function GalleryForm() {
    const [form, setForm] = React.useState<FormManager<GalleryFormState> | null>(null);
 
    return (
       <Grid container spacing={3}>
          <Grid item xs={12} md={6}>
             <Paper style={{ maxWidth: 500, padding: 20 }}>
-               <ApolloForm<GalleryFormState>
+               <Form<GalleryFormState>
                   name='gallery'
                   saveOnUnmount
                   initialState={initialState}
@@ -110,7 +108,7 @@ function Form() {
                         </SubmitButton>
                      </Grid>
                   </Grid>
-               </ApolloForm>
+               </Form>
             </Paper>
          </Grid>
          <Grid item xs={12} md={6}>
@@ -121,5 +119,5 @@ function Form() {
 }
 
 export function Gallery() {
-   return <Form />;
+   return <GalleryForm />;
 }

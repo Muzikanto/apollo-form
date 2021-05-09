@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ApolloForm, Field, FieldValidator, FormErrors } from '../src';
+import { Form, Field, FieldValidator, FormErrors } from '../src';
 import * as Yup from 'yup';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -128,7 +128,7 @@ export function Example() {
    });
 
    return (
-      <ApolloForm<FormState>
+      <Form<FormState>
          name='example'
          saveOnUnmount
          initialState={initialState}
@@ -288,7 +288,7 @@ export function Example() {
                {form && <PreviewState form={form} />}
             </Grid>
          </Grid>
-      </ApolloForm>
+      </Form>
    );
 }
 
