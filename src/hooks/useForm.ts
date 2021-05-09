@@ -29,12 +29,28 @@ function useForm<S extends object>({
    );
    const mountedRef = React.useRef(false);
    const form = React.useMemo(() => {
+      if (typeof window !== 'undefined') {
+         // @ts-ignore
+         if (!window['__FORMS__']) {
+            // @ts-ignore
+            window['__FORMS__'] = {};
+         }
+
+         // @ts-ignore
+         if (window['__FORMS__'][name]) {
+            // @ts-ignore
+            return window['__FORMS__'][name];
+         }
+      }
+
       const f = new FormManager<S>({
          ...props,
          name,
          manager: formManager,
          initialState,
       });
+
+      window['__FORMS__'][name] = f;
 
       return f;
    }, []);

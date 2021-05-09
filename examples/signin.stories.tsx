@@ -193,5 +193,10 @@ function SignInForm() {
 }
 
 export function SignIn() {
-   return <SignInForm />;
+   return (
+      <>
+         <SignInForm />
+         <SignInForm />
+      </>
+   );
 }
