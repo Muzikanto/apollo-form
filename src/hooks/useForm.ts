@@ -50,7 +50,11 @@ function useForm<S extends object>({
          initialState,
       });
 
-      window['__FORMS__'][name] = f;
+      // @ts-ignore
+      if (typeof window['__FORMS__'] !== 'undefined') {
+         // @ts-ignore
+         window['__FORMS__'][name] = f;
+      }
 
       return f;
    }, []);
