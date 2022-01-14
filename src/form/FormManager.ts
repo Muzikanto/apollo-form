@@ -139,7 +139,7 @@ class FormManager<S extends object> {
          },
          [key],
       );
-      const value = this.useState(watcher);
+      const value = this.useState(watcher, [key]);
 
       return value;
    }
@@ -150,7 +150,7 @@ class FormManager<S extends object> {
          },
          [key],
       );
-      const value = this.useState(watcher);
+      const value = this.useState(watcher, [key]);
 
       return value;
    }
@@ -162,7 +162,7 @@ class FormManager<S extends object> {
          [key],
       );
 
-      const value = this.useState(watcher);
+      const value = this.useState(watcher, [key]);
 
       return value;
    }

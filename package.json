@@ -1,6 +1,6 @@
 {
    "name": "apollo-form",
-   "version": "3.1.2",
+   "version": "3.1.3",
    "description": "Form state manager",
    "license": "MIT",
    "maintainers": [
@@ -33,7 +33,7 @@
       "build": "tsc -b",
       "lint": "tslint -c tslint.json 'src/**/*.ts' --fix",
       "prepublish": "npm run build && npm run test",
-      "postpublish": "npm run clean && /bin/zsh ./coverage.sh",
+      "postpublish": "npm run clean",
       "test": "jest",
       "test:info": "jest --coverage",
       "pretty": "pretty-quick --staged"
