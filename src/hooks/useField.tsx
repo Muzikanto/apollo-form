@@ -3,6 +3,7 @@ import useFormCtx from './useFormCtx';
 import { FieldProps } from '../types';
 
 export interface UseFieldParams<Value> {
+   name: string;
    value: Value;
    error?: string;
    touched?: boolean;
@@ -18,12 +19,8 @@ export type UseFieldProps<Value> = FieldProps<Value>;
 
 function useField<Value>(props: UseFieldProps<Value>): UseFieldParams<Value> {
    const apolloForm = useFormCtx();
-   const randName = React.useMemo(
-      () => 'unnamed-field-' + Math.ceil(Math.random() * 999999999),
-      [],
-   );
 
-   const name = props.name || randName;
+   const name = props.name;
 
    const value = apolloForm.useValue(name);
    const error = apolloForm.useError(name);
@@ -34,23 +31,23 @@ function useField<Value>(props: UseFieldProps<Value>): UseFieldParams<Value> {
       (v: Value) => {
          apolloForm.setFieldValue(name, v);
       },
-      [apolloForm],
+      [apolloForm, name],
    );
    const setFieldError = React.useCallback(
       (v: string | undefined) => {
          apolloForm.setFieldError(name, v);
       },
-      [apolloForm],
+      [apolloForm, name],
    );
    const setFieldTouched = React.useCallback(
       (v: boolean) => {
          apolloForm.setFieldTouched(name, v);
       },
-      [apolloForm],
+      [apolloForm, name],
    );
    const setFieldFocused = React.useCallback(() => {
       apolloForm.setFieldFocused(name);
-   }, [apolloForm]);
+   }, [apolloForm, name]);
 
    // @ts-ignore
    React.useEffect(() => {
@@ -59,17 +56,10 @@ function useField<Value>(props: UseFieldProps<Value>): UseFieldParams<Value> {
 
          return () => apolloForm.removeFieldValidator(name);
       }
-   }, [apolloForm]);
-
-   React.useEffect(() => {
-      if (!props.name) {
-         console.error(
-            'Apollo-Form: The `name` of field is not provided. You should provide `name` to control form field.',
-         );
-      }
-   }, [props.name]);
+   }, [apolloForm, name, props.validate]);
 
    return {
+      name,
       value,
       error,
       touched,
