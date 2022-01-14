@@ -119,6 +119,11 @@ class FormManager<S extends object> {
       const [state, setState] = React.useState(selector ? selector(fullState) : fullState);
 
       React.useEffect(() => {
+         const nextState = selector ? selector(fullState) : fullState;
+
+         if (JSON.stringify(state) !== JSON.stringify(nextState)) {
+            setState(nextState);
+         }
          return this.watch(selector, s => setState(s));
       }, [selector, ...dependencies]);
 

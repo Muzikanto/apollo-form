@@ -46,7 +46,6 @@ function FormTextField(props: { name: string; validate?: FieldValidator<string>;
       <Field<string> name={props.name} validate={props.validate}>
          {({ field }) => {
             const err = Boolean(field.touched && field.error);
-            // console.log('render ' + props.name);
 
             return (
                <TextField
@@ -170,10 +169,10 @@ export function Example() {
                            </Grid>
                            <Grid item xs={6}>
                               <FormTextField
-                                 name='email'
+                                 name={'email'}
                                  label='email'
                                  validate={v => {
-                                    if (v.length === 1) {
+                                    if (v && v.length === 1) {
                                        return 'custom error';
                                     }
                                  }}
